@@ -1,5 +1,25 @@
-<<<<<<< HEAD
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>My Blog</title><link>https://lilfry09.github.io/</link><description>This is my cool site</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Fri, 28 Mar 2025 17:00:19 +0800</lastBuildDate><atom:link href="https://lilfry09.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Auto Deploy Test</title><link>https://lilfry09.github.io/posts/auto-deploy-test/</link><pubDate>Fri, 28 Mar 2025 17:00:19 +0800</pubDate><author>xxxx</author><guid>https://lilfry09.github.io/posts/auto-deploy-test/</guid><description></description></item><item><title>我的第一篇博客</title><link>https://lilfry09.github.io/posts/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/</link><pubDate>Thu, 27 Mar 2025 13:45:08 +0800</pubDate><author>xxxx</author><guid>https://lilfry09.github.io/posts/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/</guid><description></description></item></channel></rss>
-=======
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>My Blog</title><link>https://lilfry09.github.io/</link><description>This is my cool site</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 27 Mar 2025 13:45:08 +0800</lastBuildDate><atom:link href="https://lilfry09.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>我的第一篇博客</title><link>https://lilfry09.github.io/posts/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/</link><pubDate>Thu, 27 Mar 2025 13:45:08 +0800</pubDate><author>xxxx</author><guid>https://lilfry09.github.io/posts/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/</guid><description></description></item></channel></rss>
->>>>>>> f38e45422e055abe98f0b8780bd51331bc10a2bd
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>My Blog</title>
+        <link>https://lilfry09.github.io/</link>
+        <description>This is my cool site</description>
+        <generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Fri, 28 Mar 2025 17:00:19 &#43;0800</lastBuildDate>
+            <atom:link href="https://lilfry09.github.io/index.xml" rel="self" type="application/rss+xml" />
+        <item>
+    <title>Auto Deploy Test</title>
+    <link>https://lilfry09.github.io/posts/auto-deploy-test/</link>
+    <pubDate>Fri, 28 Mar 2025 17:00:19 &#43;0800</pubDate>
+    <author>xxxx</author>
+    <guid>https://lilfry09.github.io/posts/auto-deploy-test/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
+    <title>我的第一篇博客</title>
+    <link>https://lilfry09.github.io/posts/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/</link>
+    <pubDate>Thu, 27 Mar 2025 13:45:08 &#43;0800</pubDate>
+    <author>xxxx</author>
+    <guid>https://lilfry09.github.io/posts/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/</guid>
+    <description><![CDATA[]]></description>
+</item>
+</channel>
+</rss>
