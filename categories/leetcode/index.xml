@@ -1,0 +1,118 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>LeetCode - Category - My Blog</title><link>https://lilfry09.github.io/categories/leetcode/</link><description>LeetCode - Category - My Blog</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 31 Mar 2025 21:32:46 +0800</lastBuildDate><atom:link href="https://lilfry09.github.io/categories/leetcode/" rel="self" type="application/rss+xml"/><item><title>寻找重复子树</title><link>https://lilfry09.github.io/leetcode/%E4%B8%A4%E6%95%B0%E4%B9%8B%E5%92%8C/</link><pubDate>Mon, 31 Mar 2025 21:32:46 +0800</pubDate><author>xxxx</author><guid>https://lilfry09.github.io/leetcode/%E4%B8%A4%E6%95%B0%E4%B9%8B%E5%92%8C/</guid><description><![CDATA[<h2 id="题目描述">题目描述</h2>
+<p>给你一棵二叉树的根节点 root ，返回所有 重复的子树 。</p>
+<p>对于同一类的重复子树，你只需要返回其中任意 一棵 的根结点即可。</p>
+<p>如果两棵树具有 相同的结构 和 相同的结点值 ，则认为二者是 重复 的。</p>
+<p><a href="https://assets.leetcode.com/uploads/2020/08/16/e1.jpg" target="_blank" rel="noopener noreffer ">https://assets.leetcode.com/uploads/2020/08/16/e1.jpg</a></p>
+<p>输入：root = [1,2,3,4,null,2,4,null,null,4]
+输出：[[2,4],[4]]</p>
+<h2 id="解题思路">解题思路</h2>
+<h2 id="使用后序遍历哈希">使用后序遍历+哈希！</h2>
+<p>思路：
+1，给每个子树一个“身份证”（后序遍历的字符串）
+2，记录每个子树出现的次数（哈希，计数器）</p>
+<h3 id="为什么这个方法有效"><strong>为什么这个方法有效？</strong></h3>
+<ol>
+<li>
+<p><strong>字符串描述唯一确定子树结构</strong><br>
+比如<code>&quot;2,4,#,#,#&quot;</code>只能对应一个二叉树（根-&gt;左-&gt;右）</p>
+</li>
+<li>
+<p><strong>计数器精准捕捉重复</strong><br>
+当同一个字符串出现第二次时，说明结构完全相同的子树出现了两次。</p>
+</li>
+</ol>
+<h3 id="1-为什么想到用字符串表示子树"><strong>1. 为什么想到用字符串表示子树？</strong></h3>
+<ul>
+<li><strong>直观需求</strong>：判断两棵子树是否相同，需要比较它们的<strong>完整结构</strong>（包括节点值和左右子树）。</li>
+<li><strong>字符串的特性</strong>：<br>
+字符串可以<strong>唯一编码一棵树的结构</strong>（比如 <code>&quot;2,#,#&quot;</code> 只能对应一个单节点2的子树）。</li>
+<li><strong>递归的天然适配</strong>：<br>
+树的遍历本身就是递归的，而字符串拼接也天然适合递归（左+右+根=完整结构）。</li>
+</ul>
+<hr>
+<h3 id="2-为什么用后序遍历"><strong>2. 为什么用后序遍历？</strong></h3>
+<ul>
+<li><strong>后序（左→右→根）的顺序</strong>：<br>
+只有先知道左右子树的序列化结果，才能拼接当前子树的字符串。<br>
+（比如必须先知道 <code>4,#,#</code> 和 <code>#</code>，才能拼出 <code>2,4,#,#,#</code>）</li>
+</ul>
+<hr>
+<h3 id="3-为什么用哈希表或计数器"><strong>3. 为什么用哈希表（或计数器）？</strong></h3>
+<ul>
+<li><strong>快速判重</strong>：<br>
+当序列化字符串第二次出现时，说明遇到了<strong>结构完全相同的子树</strong>。<br>
+（哈希表能在O(1)时间内判断是否重复，比暴力遍历高效得多）</li>
+</ul>
+<hr>
+<h3 id="4-为什么空节点要用"><strong>4. 为什么空节点要用 <code>#</code> 表示？</strong></h3>
+<ul>
+<li><strong>避免歧义</strong>：<br>
+比如子树 <code>2</code> 的左为空、右为 <code>3</code>，序列化为 <code>&quot;2,#,3,#,#&quot;</code>；<br>
+如果不用 <code>#</code>，<code>&quot;2,3&quot;</code> 可能被误认为是 <code>2</code> 的左为 <code>3</code>。</li>
+</ul>
+<hr>
+<h3 id="5-这个方法的灵感来源"><strong>5. 这个方法的灵感来源</strong></h3>
+<ul>
+<li><strong>数据库中的“序列化”</strong>：<br>
+类似把复杂数据转换成字符串存储（如JSON）。</li>
+<li><strong>编译器中的“语法树”</strong>：<br>
+编译代码时会用字符串哈希优化语法树的重复结构检测。</li>
+<li><strong>人类的自然思维</strong>：<br>
+想象你要向别人描述一棵树的结构，你会怎么说？<br>
+→ “根是2，左是4，右是空” → 正好对应 <code>&quot;2,4,#,#,#&quot;</code>！</li>
+</ul>
+<h2 id="代码实现">代码实现</h2>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-c&#43;&#43;">
+        <span class="code-title"><i class="arrow fas fa-angle-right fa-fw" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h fa-fw" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy fa-fw" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">all_subtrees</span><span class="p">;</span>  <span class="c1">// 存储所有子树的序列化字符串
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="n">unordered_map</span><span class="o">&lt;</span><span class="n">string</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">count</span><span class="p">;</span>  <span class="c1">// 记录每个序列出现的次数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="n">vector</span><span class="o">&lt;</span><span class="n">TreeNode</span><span class="o">*&gt;</span> <span class="n">result</span><span class="p">;</span>     <span class="c1">// 存储重复子树的根节点
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">string</span> <span class="nf">serialize</span><span class="p">(</span><span class="n">TreeNode</span><span class="o">*</span> <span class="n">node</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">node</span> <span class="o">==</span> <span class="k">nullptr</span><span class="p">)</span> <span class="k">return</span> <span class="s">&#34;#&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">string</span> <span class="n">left</span> <span class="o">=</span> <span class="n">serialize</span><span class="p">(</span><span class="n">node</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">string</span> <span class="n">right</span> <span class="o">=</span> <span class="n">serialize</span><span class="p">(</span><span class="n">node</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1">// 当前子树的序列化表示
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">        <span class="n">string</span> <span class="n">subtree</span> <span class="o">=</span> <span class="n">to_string</span><span class="p">(</span><span class="n">node</span><span class="o">-&gt;</span><span class="n">val</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#34;,&#34;</span> <span class="o">+</span> <span class="n">left</span> <span class="o">+</span> <span class="s">&#34;,&#34;</span> <span class="o">+</span> <span class="n">right</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1">// 检查是否已经出现过
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">count</span><span class="p">[</span><span class="n">subtree</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">            <span class="n">result</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">node</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">count</span><span class="p">[</span><span class="n">subtree</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">subtree</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">vector</span><span class="o">&lt;</span><span class="n">TreeNode</span><span class="o">*&gt;</span> <span class="n">findDuplicateSubtrees</span><span class="p">(</span><span class="n">TreeNode</span><span class="o">*</span> <span class="n">root</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">serialize</span><span class="p">(</span><span class="n">root</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">};</span></span></span></code></pre></div></div>]]></description></item></channel></rss>
