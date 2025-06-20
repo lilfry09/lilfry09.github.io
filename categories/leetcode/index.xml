@@ -1,4 +1,66 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>LeetCode - Category - lilfry's library</title><link>https://lilfry09.github.io/categories/leetcode/</link><description>LeetCode - Category - lilfry's library</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>lilfry@sjtu.edu.cn (lilfry)</managingEditor><webMaster>lilfry@sjtu.edu.cn (lilfry)</webMaster><lastBuildDate>Mon, 31 Mar 2025 21:32:46 +0800</lastBuildDate><atom:link href="https://lilfry09.github.io/categories/leetcode/" rel="self" type="application/rss+xml"/><item><title>寻找重复子树</title><link>https://lilfry09.github.io/leetcode/%E4%B8%A4%E6%95%B0%E4%B9%8B%E5%92%8C/</link><pubDate>Mon, 31 Mar 2025 21:32:46 +0800</pubDate><author>fry</author><guid>https://lilfry09.github.io/leetcode/%E4%B8%A4%E6%95%B0%E4%B9%8B%E5%92%8C/</guid><description><![CDATA[<p>leetcode:
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>LeetCode - Category - lilfry's library</title><link>https://lilfry09.github.io/categories/leetcode/</link><description>LeetCode - Category - lilfry's library</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>lilfry@sjtu.edu.cn (lilfry)</managingEditor><webMaster>lilfry@sjtu.edu.cn (lilfry)</webMaster><lastBuildDate>Fri, 20 Jun 2025 00:00:00 +0800</lastBuildDate><atom:link href="https://lilfry09.github.io/categories/leetcode/" rel="self" type="application/rss+xml"/><item><title>字母异位词分组</title><link>https://lilfry09.github.io/leetcode/49%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D%E5%88%86%E7%BB%84/</link><pubDate>Fri, 20 Jun 2025 00:00:00 +0800</pubDate><author>lilfry</author><guid>https://lilfry09.github.io/leetcode/49%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D%E5%88%86%E7%BB%84/</guid><description><![CDATA[<p>leetcode:
+difficulty: &ldquo;中等&rdquo;</p>
+<p>number: 49</p>
+<p>link: &ldquo;<a href="https://leetcode.cn/problems/group-anagrams/description/?envType=study-plan-v2&amp;envId=top-100-liked%22" target="_blank" rel="noopener noreffer ">https://leetcode.cn/problems/group-anagrams/description/?envType=study-plan-v2&envId=top-100-liked"</a></p>
+<h2 id="题目描述">题目描述</h2>
+<p>给你一个字符串数组，请你将 字母异位词 组合在一起。可以按任意顺序返回结果列表。</p>
+<p>示例 1:</p>
+<p>输入: strs = [&ldquo;eat&rdquo;, &ldquo;tea&rdquo;, &ldquo;tan&rdquo;, &ldquo;ate&rdquo;, &ldquo;nat&rdquo;, &ldquo;bat&rdquo;]</p>
+<p>输出: [[&ldquo;bat&rdquo;],[&ldquo;nat&rdquo;,&ldquo;tan&rdquo;],[&ldquo;ate&rdquo;,&ldquo;eat&rdquo;,&ldquo;tea&rdquo;]]</p>
+<p>解释：</p>
+<p>在 strs 中没有字符串可以通过重新排列来形成 &ldquo;bat&rdquo;。
+字符串 &ldquo;nat&rdquo; 和 &ldquo;tan&rdquo; 是字母异位词，因为它们可以重新排列以形成彼此。
+字符串 &ldquo;ate&rdquo; ，&ldquo;eat&rdquo; 和 &ldquo;tea&rdquo; 是字母异位词，因为它们可以重新排列以形成彼此。
+示例 2:</p>
+<p>输入: strs = [&rdquo;&quot;]</p>
+<p>输出: [[&quot;&quot;]]</p>
+<p>示例 3:</p>
+<p>输入: strs = [&ldquo;a&rdquo;]</p>
+<p>输出: [[&ldquo;a&rdquo;]]</p>
+<h2 id="解题思路">解题思路</h2>
+<ol>
+<li><strong>关键点</strong>
+<ul>
+<li>思路1：哈希表，使用每个字符串排序后的结果作为key，将异位词分组</li>
+<li>思路2：计数，每个字符串的每个字符出现的次数作为key，将异位词分组</li>
+</ul>
+</li>
+</ol>
+<h2 id="代码实现c">代码实现（c++）</h2>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-">
+        <span class="code-title"><i class="arrow fas fa-angle-right fa-fw" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h fa-fw" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy fa-fw" aria-hidden="true"></i></span>
+    </div><pre tabindex="0"><code>class Solution {
+public:
+    std::vector&lt;std::vector&lt;std::string&gt;&gt; groupAnagrams(std::vector&lt;std::string&gt;&amp; strs) {
+        // 创建一个哈希表，键是排序后的字符串，值是字母异位词列表
+        std::unordered_map&lt;std::string, std::vector&lt;std::string&gt;&gt; map;
+
+        // 遍历输入的每一个字符串
+        for (const std::string&amp; str : strs) {
+            // 创建一个副本用于排序，得到 key
+            std::string key = str;
+            std::sort(key.begin(), key.end());
+
+            // 将原始字符串 str 添加到 key 对应的分组中
+            // 如果 key 不存在，C++ 的 map 会自动创建一个空 vector
+            map[key].push_back(str);
+        }
+
+        // 创建结果列表
+        std::vector&lt;std::vector&lt;std::string&gt;&gt; result;
+        
+        // 遍历哈希表，将每个分组（map中的值）添加到结果列表中
+        // C++17 的结构化绑定，让代码更简洁
+        for (auto const&amp; [key, val] : map) {
+            result.push_back(val);
+        }
+
+        return result;
+    }
+};</code></pre></div>]]></description></item><item><title>寻找重复子树</title><link>https://lilfry09.github.io/leetcode/%E5%AF%BB%E6%89%BE%E9%87%8D%E5%A4%8D%E5%AD%90%E6%A0%91/</link><pubDate>Mon, 31 Mar 2025 21:32:46 +0800</pubDate><author>fry</author><guid>https://lilfry09.github.io/leetcode/%E5%AF%BB%E6%89%BE%E9%87%8D%E5%A4%8D%E5%AD%90%E6%A0%91/</guid><description><![CDATA[<p>leetcode:
 difficulty: &ldquo;中等&rdquo;<br>
 number: 652     <br>
 link: <a href="https://leetcode.cn/problems/find-duplicate-subtrees/" target="_blank" rel="noopener noreffer ">https://leetcode.cn/problems/find-duplicate-subtrees/</a></p>
