@@ -26,7 +26,44 @@ link: &ldquo;<a href="https://leetcode.cn/problems/merge-sorted-array/descriptio
 </span></span><span class="line"><span class="cl">            <span class="n">nums1</span><span class="p">[</span><span class="n">k</span><span class="o">--</span><span class="p">]</span> <span class="o">=</span> <span class="n">nums2</span><span class="p">[</span><span class="n">j</span><span class="o">--</span><span class="p">];</span>
 </span></span><span class="line"><span class="cl">        <span class="p">}</span>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
-</span></span><span class="line"><span class="cl"><span class="p">};</span></span></span></code></pre></div></div>]]></description></item><item><title>字母异位词分组</title><link>https://lilfry09.github.io/leetcode/49%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D%E5%88%86%E7%BB%84/</link><pubDate>Fri, 20 Jun 2025 00:00:00 +0800</pubDate><author>lilfry</author><guid>https://lilfry09.github.io/leetcode/49%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D%E5%88%86%E7%BB%84/</guid><description><![CDATA[<p>leetcode:
+</span></span><span class="line"><span class="cl"><span class="p">};</span></span></span></code></pre></div></div>]]></description></item><item><title>合并两个有序数组 - LeetCode 88</title><link>https://lilfry09.github.io/posts/merge-sorted-arrays/</link><pubDate>Wed, 17 Sep 2025 20:40:46 +0800</pubDate><author>fry</author><guid>https://lilfry09.github.io/posts/merge-sorted-arrays/</guid><description><![CDATA[<h2 id="题目描述">题目描述</h2>
+<p><strong>难度</strong>：简单<br>
+<strong>题号</strong>：88<br>
+<strong>链接</strong>：<a href="https://leetcode.cn/problems/merge-sorted-array/description/" target="_blank" rel="noopener noreffer ">合并两个有序数组</a></p>
+<h2 id="解题思路">解题思路</h2>
+<p>使用尾指针从后往前遍历，比较两个数组的元素，将较大的元素放到 nums1 的末尾，然后移动指针，重复这个过程，直到遍历完 nums2。</p>
+<p>如果 nums2 还有剩余元素，继续将它们放到 nums1 的末尾。</p>
+<h2 id="代码实现">代码实现</h2>
+<div class="code-block code-line-numbers" style="counter-reset: code-block 0">
+    <div class="code-header language-cpp">
+        <span class="code-title"><i class="arrow fas fa-angle-right fa-fw" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h fa-fw" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy fa-fw" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">void</span> <span class="n">merge</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">nums1</span><span class="p">,</span> <span class="kt">int</span> <span class="n">m</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">nums2</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">m</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="n">m</span> <span class="o">+</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="k">while</span> <span class="p">(</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">j</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="p">(</span><span class="n">nums1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">nums2</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">nums1</span><span class="p">[</span><span class="n">k</span><span class="o">--</span><span class="p">]</span> <span class="o">=</span> <span class="n">nums1</span><span class="p">[</span><span class="n">i</span><span class="o">--</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">nums1</span><span class="p">[</span><span class="n">k</span><span class="o">--</span><span class="p">]</span> <span class="o">=</span> <span class="n">nums2</span><span class="p">[</span><span class="n">j</span><span class="o">--</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="k">while</span> <span class="p">(</span><span class="n">j</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">nums1</span><span class="p">[</span><span class="n">k</span><span class="o">--</span><span class="p">]</span> <span class="o">=</span> <span class="n">nums2</span><span class="p">[</span><span class="n">j</span><span class="o">--</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span></span></span></code></pre></div></div>
+<h2 id="复杂度分析">复杂度分析</h2>
+<ul>
+<li><strong>时间复杂度</strong>：O(m + n)</li>
+<li><strong>空间复杂度</strong>：O(1)</li>
+</ul>]]></description></item><item><title>字母异位词分组</title><link>https://lilfry09.github.io/leetcode/49%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D%E5%88%86%E7%BB%84/</link><pubDate>Fri, 20 Jun 2025 00:00:00 +0800</pubDate><author>lilfry</author><guid>https://lilfry09.github.io/leetcode/49%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D%E5%88%86%E7%BB%84/</guid><description><![CDATA[<p>leetcode:
 difficulty: &ldquo;中等&rdquo;</p>
 <p>number: 49</p>
 <p>link: &ldquo;<a href="https://leetcode.cn/problems/group-anagrams/description/?envType=study-plan-v2&amp;envId=top-100-liked%22" target="_blank" rel="noopener noreffer ">https://leetcode.cn/problems/group-anagrams/description/?envType=study-plan-v2&envId=top-100-liked"</a></p>
