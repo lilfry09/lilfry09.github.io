@@ -1,4 +1,19 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>All Posts - lilfry's library</title><link>https://lilfry09.github.io/posts/</link><description>All Posts | lilfry's library</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>lilfry@sjtu.edu.cn (lilfry)</managingEditor><webMaster>lilfry@sjtu.edu.cn (lilfry)</webMaster><lastBuildDate>Mon, 13 Oct 2025 10:00:00 +0800</lastBuildDate><atom:link href="https://lilfry09.github.io/posts/" rel="self" type="application/rss+xml"/><item><title>寻找数组最大值和最小值</title><link>https://lilfry09.github.io/posts/%E5%AF%BB%E6%89%BE%E6%95%B0%E7%BB%84%E6%9C%80%E5%A4%A7%E5%80%BC%E5%92%8C%E6%9C%80%E5%B0%8F%E5%80%BC/</link><pubDate>Mon, 13 Oct 2025 10:00:00 +0800</pubDate><author>fry</author><guid>https://lilfry09.github.io/posts/%E5%AF%BB%E6%89%BE%E6%95%B0%E7%BB%84%E6%9C%80%E5%A4%A7%E5%80%BC%E5%92%8C%E6%9C%80%E5%B0%8F%E5%80%BC/</guid><description><![CDATA[<h2 id="题目描述">题目描述</h2>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>All Posts - lilfry's library</title><link>https://lilfry09.github.io/posts/</link><description>All Posts | lilfry's library</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>lilfry@sjtu.edu.cn (lilfry)</managingEditor><webMaster>lilfry@sjtu.edu.cn (lilfry)</webMaster><lastBuildDate>Mon, 13 Oct 2025 12:00:00 +0800</lastBuildDate><atom:link href="https://lilfry09.github.io/posts/" rel="self" type="application/rss+xml"/><item><title>快速傅里叶变换（FFT）详解</title><link>https://lilfry09.github.io/posts/fft/</link><pubDate>Mon, 13 Oct 2025 12:00:00 +0800</pubDate><author>fry</author><guid>https://lilfry09.github.io/posts/fft/</guid><description><![CDATA[<h2 id="1-什么是傅里叶变换">1. 什么是傅里叶变换？</h2>
+<p>傅里叶变换是一种将信号从时域转换到频域的数学工具。它可以将任意周期信号分解为一系列正弦波和余弦波的叠加。</p>
+<h3 id="离散傅里叶变换dft">离散傅里叶变换（DFT）</h3>
+<p>对于长度为 $N$ 的序列 $x[0], x[1], &hellip;, x[N-1]$，其 DFT 定义为：</p>
+<p>$$X[k] = \sum_{n=0}^{N-1} x[n] \cdot e^{-i \frac{2\pi}{N} kn}, \quad k = 0, 1, &hellip;, N-1$$</p>
+<p>其中 $i$ 是虚数单位，$e^{-i\theta} = \cos\theta - i\sin\theta$（欧拉公式）。</p>
+<h3 id="时间复杂度问题">时间复杂度问题</h3>
+<p>直接计算 DFT 需要 $O(N^2)$ 的时间复杂度，因为：</p>
+<ul>
+<li>需要计算 $N$ 个频率分量 $X[k]$</li>
+<li>每个 $X[k]$ 需要对 $N$ 个时域样本求和</li>
+</ul>
+<p>当 $N$ 很大时（如音频处理中 $N=4096$），计算量非常大。</p>
+<hr>
+<h2 id="2-快速傅里叶变换fft">2. 快速傅里叶变换（FFT）</h2>
+<p>FFT 是一种高效计算 DFT 的算法，由 Cooley 和 Tukey 在 1965 年提出。它将复杂度从 $O(N^2)$ 降低到 $O(N\log N)$。</p>]]></description></item><item><title>寻找数组最大值和最小值</title><link>https://lilfry09.github.io/posts/%E5%AF%BB%E6%89%BE%E6%95%B0%E7%BB%84%E6%9C%80%E5%A4%A7%E5%80%BC%E5%92%8C%E6%9C%80%E5%B0%8F%E5%80%BC/</link><pubDate>Mon, 13 Oct 2025 10:00:00 +0800</pubDate><author>fry</author><guid>https://lilfry09.github.io/posts/%E5%AF%BB%E6%89%BE%E6%95%B0%E7%BB%84%E6%9C%80%E5%A4%A7%E5%80%BC%E5%92%8C%E6%9C%80%E5%B0%8F%E5%80%BC/</guid><description><![CDATA[<h2 id="题目描述">题目描述</h2>
 <p>伪代码：
 FindMinMax(A, left, right)
 if left = right
