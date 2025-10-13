@@ -1,4 +1,46 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>lilfry's library</title><link>https://lilfry09.github.io/</link><description>This is my cool site</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>lilfry@sjtu.edu.cn (lilfry)</managingEditor><webMaster>lilfry@sjtu.edu.cn (lilfry)</webMaster><lastBuildDate>Thu, 09 Oct 2025 20:45:08 +0800</lastBuildDate><atom:link href="https://lilfry09.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>数值分析hw1</title><link>https://lilfry09.github.io/posts/numerical_analysis/</link><pubDate>Wed, 24 Sep 2025 09:00:00 +0800</pubDate><author>fry</author><guid>https://lilfry09.github.io/posts/numerical_analysis/</guid><description><![CDATA[<div class="code-block code-line-numbers" style="counter-reset: code-block 0">
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>lilfry's library</title><link>https://lilfry09.github.io/</link><description>This is my cool site</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>lilfry@sjtu.edu.cn (lilfry)</managingEditor><webMaster>lilfry@sjtu.edu.cn (lilfry)</webMaster><lastBuildDate>Mon, 13 Oct 2025 10:00:00 +0800</lastBuildDate><atom:link href="https://lilfry09.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>寻找数组最大值和最小值</title><link>https://lilfry09.github.io/posts/%E5%AF%BB%E6%89%BE%E6%95%B0%E7%BB%84%E6%9C%80%E5%A4%A7%E5%80%BC%E5%92%8C%E6%9C%80%E5%B0%8F%E5%80%BC/</link><pubDate>Mon, 13 Oct 2025 10:00:00 +0800</pubDate><author>fry</author><guid>https://lilfry09.github.io/posts/%E5%AF%BB%E6%89%BE%E6%95%B0%E7%BB%84%E6%9C%80%E5%A4%A7%E5%80%BC%E5%92%8C%E6%9C%80%E5%B0%8F%E5%80%BC/</guid><description><![CDATA[<h2 id="题目描述">题目描述</h2>
+<p>伪代码：
+FindMinMax(A, left, right)
+if left = right
+return A[left], A[left]  # 只有一个元素，它既是最大值也是最小值</p>
+<pre><code>mid = (left + right) / 2
+left_min, left_max = FindMinMax(A, left, mid)      # 递归处理左半部分
+right_min, right_max = FindMinMax(A, mid + 1, right) # 递归处理右半部分
+
+total_min = min(left_min, right_min)  # 比较左右部分的最小值
+total_max = max(left_max, right_max)  # 比较左右部分的最大值
+
+return total_min, total_max
+</code></pre>]]></description></item><item><title>Useful Python Tips</title><link>https://lilfry09.github.io/posts/useful_python/</link><pubDate>Thu, 09 Oct 2025 10:00:08 +0800</pubDate><author>fry</author><guid>https://lilfry09.github.io/posts/useful_python/</guid><description><![CDATA[<p>一些有用的Python小技巧，以及学习过程中遇到的问题和记录。</p>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-python">
+        <span class="code-title"><i class="arrow fas fa-angle-right fa-fw" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h fa-fw" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy fa-fw" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">numbers</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">11</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">numbers</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">squared</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">numbers</span><span class="p">]</span> <span class="c1"># 列表解析</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">squared</span>\<span class="n">n</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">a</span> <span class="o">=</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">numbers</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">s</span> <span class="o">=</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span>
+</span></span><span class="line"><span class="cl">    <span class="n">a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">a</span><span class="p">)</span></span></span></code></pre></div></div>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-python">
+        <span class="code-title"><i class="arrow fas fa-angle-right fa-fw" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h fa-fw" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy fa-fw" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">favorite_languages</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;A&#39;</span><span class="p">:</span><span class="s1">&#39;Python&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;B&#39;</span><span class="p">:</span><span class="s1">&#39;C++&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;C&#39;</span><span class="p">:</span><span class="s1">&#39;Java&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;D&#39;</span><span class="p">:</span><span class="s1">&#39;JavaScript&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;E&#39;</span><span class="p">:</span><span class="s1">&#39;Ruby&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">language</span> <span class="ow">in</span> <span class="n">favorite_languages</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">title</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&#34;&#39;s favorite language is &#34;</span> <span class="o">+</span> <span class="n">language</span><span class="o">.</span><span class="n">title</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&#34;.&#34;</span><span class="p">)</span></span></span></code></pre></div></div>]]></description></item><item><title>数值分析hw1</title><link>https://lilfry09.github.io/posts/numerical_analysis/</link><pubDate>Wed, 24 Sep 2025 09:00:00 +0800</pubDate><author>fry</author><guid>https://lilfry09.github.io/posts/numerical_analysis/</guid><description><![CDATA[<div class="code-block code-line-numbers" style="counter-reset: code-block 0">
     <div class="code-header language-python">
         <span class="code-title"><i class="arrow fas fa-angle-right fa-fw" aria-hidden="true"></i></span>
         <span class="ellipses"><i class="fas fa-ellipsis-h fa-fw" aria-hidden="true"></i></span>
