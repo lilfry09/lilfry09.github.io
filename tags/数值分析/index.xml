@@ -1,4 +1,33 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>数值分析 - Tag - lilfry's library</title><link>https://lilfry09.github.io/tags/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90/</link><description>数值分析 - Tag - lilfry's library</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>lilfry@sjtu.edu.cn (lilfry)</managingEditor><webMaster>lilfry@sjtu.edu.cn (lilfry)</webMaster><lastBuildDate>Wed, 24 Sep 2025 09:00:00 +0800</lastBuildDate><atom:link href="https://lilfry09.github.io/tags/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90/" rel="self" type="application/rss+xml"/><item><title>数值分析hw1</title><link>https://lilfry09.github.io/posts/numerical_analysis/</link><pubDate>Wed, 24 Sep 2025 09:00:00 +0800</pubDate><author>fry</author><guid>https://lilfry09.github.io/posts/numerical_analysis/</guid><description><![CDATA[<div class="code-block code-line-numbers" style="counter-reset: code-block 0">
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>数值分析 - Tag - lilfry's library</title><link>https://lilfry09.github.io/tags/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90/</link><description>数值分析 - Tag - lilfry's library</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>lilfry@sjtu.edu.cn (lilfry)</managingEditor><webMaster>lilfry@sjtu.edu.cn (lilfry)</webMaster><lastBuildDate>Thu, 16 Oct 2025 09:00:00 +0800</lastBuildDate><atom:link href="https://lilfry09.github.io/tags/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90/" rel="self" type="application/rss+xml"/><item><title>实数在计算机里的浮点表示</title><link>https://lilfry09.github.io/posts/%E5%AE%9E%E6%95%B0%E5%9C%A8%E8%AE%A1%E7%AE%97%E6%9C%BA%E9%87%8C%E7%9A%84%E6%B5%AE%E7%82%B9%E8%A1%A8%E7%A4%BA/</link><pubDate>Thu, 16 Oct 2025 09:00:00 +0800</pubDate><author>fry</author><guid>https://lilfry09.github.io/posts/%E5%AE%9E%E6%95%B0%E5%9C%A8%E8%AE%A1%E7%AE%97%E6%9C%BA%E9%87%8C%E7%9A%84%E6%B5%AE%E7%82%B9%E8%A1%A8%E7%A4%BA/</guid><description><![CDATA[<h2 id="浮点数在计算机里的表示">浮点数在计算机里的表示</h2>
+<h3 id="一计算机只能存有限的比特">一、计算机只能存有限的比特</h3>
+<p>计算机存储一切东西都是<strong>有限比特的二进制数</strong>。
+整数很好表示，比如 13 是 <code>1101₂</code>。
+但一旦出现小数，比如 <code>0.1₁₀</code>，问题就来了——它在二进制里是个<strong>无限循环小数</strong>：</p>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-">
+        <span class="code-title"><i class="arrow fas fa-angle-right fa-fw" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h fa-fw" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy fa-fw" aria-hidden="true"></i></span>
+    </div><pre tabindex="0"><code>0.1₁₀ = 0.0001100110011001100...₂ （0011循环）</code></pre></div>
+<p>也就是说，<strong>用有限的位数装不下</strong>，只能截断或四舍五入，于是产生误差。</p>
+<hr>
+<h3 id="二浮点数的科学计数法形式">二、浮点数的科学计数法形式</h3>
+<p>为了既能表示很大也能表示很小的数，IEEE 标准（现代计算机的浮点规范）采用了类似<strong>科学计数法</strong>的格式：</p>
+<p>在十进制里我们常写：</p>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-">
+        <span class="code-title"><i class="arrow fas fa-angle-right fa-fw" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h fa-fw" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy fa-fw" aria-hidden="true"></i></span>
+    </div><pre tabindex="0"><code>1.23 × 10^4</code></pre></div>
+<p>在二进制浮点数里，写成：</p>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-">
+        <span class="code-title"><i class="arrow fas fa-angle-right fa-fw" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h fa-fw" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy fa-fw" aria-hidden="true"></i></span>
+    </div><pre tabindex="0"><code>±1.XXXX... × 2^E</code></pre></div>
+<p>这三个部分分别叫：</p>]]></description></item><item><title>数值分析hw1</title><link>https://lilfry09.github.io/posts/numerical_analysis/</link><pubDate>Wed, 24 Sep 2025 09:00:00 +0800</pubDate><author>fry</author><guid>https://lilfry09.github.io/posts/numerical_analysis/</guid><description><![CDATA[<div class="code-block code-line-numbers" style="counter-reset: code-block 0">
     <div class="code-header language-python">
         <span class="code-title"><i class="arrow fas fa-angle-right fa-fw" aria-hidden="true"></i></span>
         <span class="ellipses"><i class="fas fa-ellipsis-h fa-fw" aria-hidden="true"></i></span>
