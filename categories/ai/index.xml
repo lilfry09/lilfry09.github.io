@@ -1,0 +1,37 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>AI - Category - lilfry's library</title><link>https://lilfry09.github.io/categories/ai/</link><description>AI - Category - lilfry's library</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>lilfry@sjtu.edu.cn (lilfry)</managingEditor><webMaster>lilfry@sjtu.edu.cn (lilfry)</webMaster><lastBuildDate>Mon, 20 Oct 2025 17:00:00 +0800</lastBuildDate><atom:link href="https://lilfry09.github.io/categories/ai/" rel="self" type="application/rss+xml"/><item><title>生成式AI模型架构与技术</title><link>https://lilfry09.github.io/posts/genai%E6%A8%A1%E5%9E%8B%E6%9E%B6%E6%9E%84%E4%B8%8E%E6%8A%80%E6%9C%AF/</link><pubDate>Mon, 20 Oct 2025 17:00:00 +0800</pubDate><author>fry</author><guid>https://lilfry09.github.io/posts/genai%E6%A8%A1%E5%9E%8B%E6%9E%B6%E6%9E%84%E4%B8%8E%E6%8A%80%E6%9C%AF/</guid><description><![CDATA[<h2 id="llm">LLM</h2>
+<p>GPT-5，dsR1</p>
+<h2 id="clip">CLIP</h2>
+<p>CLIP 模型（Contrastive Language–Image Pre-training，对比语言-图像预训练）的基本结构相对简洁且高度模块化。它主要由<strong>两个独立的编码器</strong>和一个<strong>对比学习目标函数</strong>构成，这两个编码器将图像和文本映射到同一个<strong>联合嵌入空间</strong>中。</p>
+<p>CLIP 模型的基本结构如下：</p>
+<h3 id="1-图像编码器image-encoder">1. 图像编码器（Image Encoder）</h3>
+<ul>
+<li><strong>功能：</strong> 接收原始图像作为输入，并将其转换为一个固定长度的<strong>图像嵌入向量</strong>（Image Embedding）。</li>
+<li><strong>常用架构：</strong>
+<ul>
+<li>最初的 CLIP 论文采用了两种主要的视觉 Transformer 变体：
+<ul>
+<li><strong>ResNet-50 的改进版本：</strong> 结合了 Attention 机制和一些性能改进。</li>
+<li><strong>Vision Transformer (ViT)：</strong> 图像被分割成一系列的 patch，然后输入到标准的 Transformer 编码器中进行处理。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>输出：</strong> 一个代表图像语义内容的 $N$ 维向量。</li>
+</ul>
+<h3 id="2-文本编码器text-encoder">2. 文本编码器（Text Encoder）</h3>
+<ul>
+<li><strong>功能：</strong> 接收描述图像的文本（即 Caption 或 Prompt）作为输入，并将其转换为一个固定长度的<strong>文本嵌入向量</strong>（Text Embedding）。</li>
+<li><strong>常用架构：</strong>
+<ul>
+<li>一个<strong>因果自注意力 Transformer</strong> 的变体（如 GPT-2 或类似 Transformer 解码器的结构），用于处理文本序列。</li>
+</ul>
+</li>
+<li><strong>输出：</strong> 一个与图像嵌入向量<strong>维度相同</strong>的 $N$ 维向量。</li>
+</ul>
+<h3 id="3-联合嵌入空间joint-embedding-space">3. 联合嵌入空间（Joint Embedding Space）</h3>
+<ul>
+<li>这是 CLIP 的核心所在。图像编码器和文本编码器的目标是将各自的输入映射到一个<strong>共享的、多模态的向量空间</strong>中。</li>
+<li><strong>特性：</strong> 在这个空间中，<strong>相互匹配</strong>的图像和文本（即描述同一事物的图文对）它们的嵌入向量会彼此<strong>靠近</strong>，而<strong>不匹配</strong>的图文对的嵌入向量则会彼此<strong>远离</strong>。</li>
+</ul>
+<h3 id="4-训练目标对比学习contrastive-learning">4. 训练目标：对比学习（Contrastive Learning）</h3>
+<p>CLIP 的训练不是传统的分类或回归任务，而是一个<strong>对比学习</strong>任务：</p>]]></description></item></channel></rss>
