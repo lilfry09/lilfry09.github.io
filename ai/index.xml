@@ -1,9 +1,11 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AIs on lilfry's library</title><link>https://lilfry09.github.io/ai/</link><description>Recent content in AIs on lilfry's library</description><generator>Hugo</generator><language>en</language><managingEditor>lilfry@sjtu.edu.cn (lilfry)</managingEditor><webMaster>lilfry@sjtu.edu.cn (lilfry)</webMaster><lastBuildDate>Sun, 29 Jun 2025 13:20:08 +0800</lastBuildDate><atom:link href="https://lilfry09.github.io/ai/index.xml" rel="self" type="application/rss+xml"/><item><title>Transformer架构代码详解</title><link>https://lilfry09.github.io/ai/transfromer%E6%9E%B6%E6%9E%84%E4%BB%A3%E7%A0%81%E8%AF%A6%E8%A7%A3/</link><pubDate>Sun, 29 Jun 2025 13:20:08 +0800</pubDate><author>lilfry@sjtu.edu.cn (lilfry)</author><guid>https://lilfry09.github.io/ai/transfromer%E6%9E%B6%E6%9E%84%E4%BB%A3%E7%A0%81%E8%AF%A6%E8%A7%A3/</guid><description>&lt;h1 id="1位置编码">1，位置编码&lt;/h1>
-&lt;div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AIs on lilfry's library</title><link>https://lilfry09.github.io/ai/</link><description>Recent content in AIs on lilfry's library</description><generator>Hugo</generator><language>zh-CN</language><managingEditor>lilfry@sjtu.edu.cn (lilfry)</managingEditor><webMaster>lilfry@sjtu.edu.cn (lilfry)</webMaster><copyright>All rights reserved.</copyright><lastBuildDate>Mon, 06 Apr 2026 19:40:00 +0800</lastBuildDate><atom:link href="https://lilfry09.github.io/ai/index.xml" rel="self" type="application/rss+xml"/><item><title>读 OLMo 3：真正重要的不是新架构，而是训练信号</title><link>https://lilfry09.github.io/ai/olmo3-training-signals/</link><pubDate>Mon, 06 Apr 2026 19:00:00 +0800</pubDate><author>lilfry@sjtu.edu.cn (lilfry)</author><guid>https://lilfry09.github.io/ai/olmo3-training-signals/</guid><description>&lt;p>最近读 &lt;code>OLMo 3&lt;/code>，我最大的感受不是“开源社区又做出了一个更强的模型”，而是它把一件经常被说得很模糊的事情讲清楚了：&lt;/p>
+&lt;p>&lt;strong>一个大模型最终会长成什么样，核心不是由几处架构微调决定，而是由它在每个阶段反复接收到什么训练信号决定。&lt;/strong>&lt;/p>
+&lt;p>这句话听起来很朴素，但如果真把它想透，很多关于 LLM 的问题都会变得更清楚。为什么有些模型底座不差，后训练却拉不上去？为什么有些模型上下文窗口变长了，却还是不会真正利用长上下文？为什么有些 RL recipe 看起来很先进，最后却没有明显收益？答案往往不在“结构又改了什么”，而在“梯度到底从哪里来”。&lt;/p></description></item><item><title>Transformer架构代码详解</title><link>https://lilfry09.github.io/ai/transfromer%E6%9E%B6%E6%9E%84%E4%BB%A3%E7%A0%81%E8%AF%A6%E8%A7%A3/</link><pubDate>Sun, 29 Jun 2025 13:20:08 +0800</pubDate><author>lilfry@sjtu.edu.cn (lilfry)</author><guid>https://lilfry09.github.io/ai/transfromer%E6%9E%B6%E6%9E%84%E4%BB%A3%E7%A0%81%E8%AF%A6%E8%A7%A3/</guid><description>&lt;h1 id="1位置编码">1，位置编码&lt;/h1>
+&lt;div class="code-block code-line-numbers" style="counter-reset: code-block 0">
  &lt;div class="code-header language-python">
  &lt;span class="code-title">&lt;i class="arrow fas fa-angle-right fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
  &lt;span class="ellipses">&lt;i class="fas fa-ellipsis-h fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
- &lt;span class="copy" title="Copy to clipboard">&lt;i class="far fa-copy fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
+ &lt;span class="copy" title="复制到剪贴板">&lt;i class="far fa-copy fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
  &lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">torch&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">torch.nn&lt;/span> &lt;span class="k">as&lt;/span> &lt;span class="nn">nn&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">torch.nn.functional&lt;/span> &lt;span class="k">as&lt;/span> &lt;span class="nn">F&lt;/span>
@@ -59,7 +61,7 @@
  &lt;div class="code-header language-python">
  &lt;span class="code-title">&lt;i class="arrow fas fa-angle-right fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
  &lt;span class="ellipses">&lt;i class="fas fa-ellipsis-h fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
- &lt;span class="copy" title="Copy to clipboard">&lt;i class="far fa-copy fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
+ &lt;span class="copy" title="复制到剪贴板">&lt;i class="far fa-copy fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
  &lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">MultiHeadAttention&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">nn&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">Module&lt;/span>&lt;span class="p">):&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="fm">__init__&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">d_model&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">nhead&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">dropout&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mf">0.1&lt;/span>&lt;span class="p">):&lt;/span> 
@@ -130,7 +132,7 @@
  &lt;div class="code-header language-python">
  &lt;span class="code-title">&lt;i class="arrow fas fa-angle-right fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
  &lt;span class="ellipses">&lt;i class="fas fa-ellipsis-h fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
- &lt;span class="copy" title="Copy to clipboard">&lt;i class="far fa-copy fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
+ &lt;span class="copy" title="复制到剪贴板">&lt;i class="far fa-copy fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
  &lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">PositionwiseFeedForward&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">nn&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">Module&lt;/span>&lt;span class="p">):&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="fm">__init__&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">d_model&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">d_ff&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">dropout&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mf">0.1&lt;/span>&lt;span class="p">):&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;&amp;#34;&amp;#34;
@@ -154,7 +156,7 @@
  &lt;div class="code-header language-python">
  &lt;span class="code-title">&lt;i class="arrow fas fa-angle-right fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
  &lt;span class="ellipses">&lt;i class="fas fa-ellipsis-h fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
- &lt;span class="copy" title="Copy to clipboard">&lt;i class="far fa-copy fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
+ &lt;span class="copy" title="复制到剪贴板">&lt;i class="far fa-copy fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
  &lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">LayerNorm&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">nn&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">Module&lt;/span>&lt;span class="p">):&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="fm">__init__&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">features&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">eps&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mf">1e-6&lt;/span>&lt;span class="p">):&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">super&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">LayerNorm&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="fm">__init__&lt;/span>&lt;span class="p">()&lt;/span>
@@ -171,7 +173,7 @@
  &lt;div class="code-header language-python">
  &lt;span class="code-title">&lt;i class="arrow fas fa-angle-right fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
  &lt;span class="ellipses">&lt;i class="fas fa-ellipsis-h fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
- &lt;span class="copy" title="Copy to clipboard">&lt;i class="far fa-copy fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
+ &lt;span class="copy" title="复制到剪贴板">&lt;i class="far fa-copy fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
  &lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">ResidualConnection&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">nn&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">Module&lt;/span>&lt;span class="p">):&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="fm">__init__&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">size&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">dropout&lt;/span>&lt;span class="p">):&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">super&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">ResidualConnection&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="fm">__init__&lt;/span>&lt;span class="p">()&lt;/span>
@@ -187,7 +189,7 @@
  &lt;div class="code-header language-python">
  &lt;span class="code-title">&lt;i class="arrow fas fa-angle-right fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
  &lt;span class="ellipses">&lt;i class="fas fa-ellipsis-h fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
- &lt;span class="copy" title="Copy to clipboard">&lt;i class="far fa-copy fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
+ &lt;span class="copy" title="复制到剪贴板">&lt;i class="far fa-copy fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
  &lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">EncoderLayer&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">nn&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">Module&lt;/span>&lt;span class="p">):&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="fm">__init__&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">d_model&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">nhead&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">d_ff&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">dropout&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mf">0.1&lt;/span>&lt;span class="p">):&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">super&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">EncoderLayer&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="fm">__init__&lt;/span>&lt;span class="p">()&lt;/span>
@@ -220,7 +222,7 @@
  &lt;div class="code-header language-python">
  &lt;span class="code-title">&lt;i class="arrow fas fa-angle-right fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
  &lt;span class="ellipses">&lt;i class="fas fa-ellipsis-h fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
- &lt;span class="copy" title="Copy to clipboard">&lt;i class="far fa-copy fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
+ &lt;span class="copy" title="复制到剪贴板">&lt;i class="far fa-copy fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
  &lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">DecoderLayer&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">nn&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">Module&lt;/span>&lt;span class="p">):&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="fm">__init__&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">d_model&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">nhead&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">d_ff&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">dropout&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mf">0.1&lt;/span>&lt;span class="p">):&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">super&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">DecoderLayer&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="fm">__init__&lt;/span>&lt;span class="p">()&lt;/span>
@@ -266,7 +268,7 @@
  &lt;div class="code-header language-python">
  &lt;span class="code-title">&lt;i class="arrow fas fa-angle-right fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
  &lt;span class="ellipses">&lt;i class="fas fa-ellipsis-h fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
- &lt;span class="copy" title="Copy to clipboard">&lt;i class="far fa-copy fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
+ &lt;span class="copy" title="复制到剪贴板">&lt;i class="far fa-copy fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
  &lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">torch&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">torch.nn&lt;/span> &lt;span class="k">as&lt;/span> &lt;span class="nn">nn&lt;/span>
@@ -337,7 +339,7 @@
  &lt;div class="code-header language-python">
  &lt;span class="code-title">&lt;i class="arrow fas fa-angle-right fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
  &lt;span class="ellipses">&lt;i class="fas fa-ellipsis-h fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
- &lt;span class="copy" title="Copy to clipboard">&lt;i class="far fa-copy fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
+ &lt;span class="copy" title="复制到剪贴板">&lt;i class="far fa-copy fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
  &lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">torch.optim&lt;/span> &lt;span class="k">as&lt;/span> &lt;span class="nn">optim&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">Transformer&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">nn&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">Module&lt;/span>&lt;span class="p">):&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="fm">__init__&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">src_vocab_size&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">trg_vocab_size&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">d_model&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">nhead&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">num_encoder_layers&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">num_decoder_layers&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">d_ff&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">max_len&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">5000&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">dropout&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mf">0.1&lt;/span>&lt;span class="p">):&lt;/span>
@@ -371,7 +373,7 @@
  &lt;div class="code-header language-python">
  &lt;span class="code-title">&lt;i class="arrow fas fa-angle-right fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
  &lt;span class="ellipses">&lt;i class="fas fa-ellipsis-h fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
- &lt;span class="copy" title="Copy to clipboard">&lt;i class="far fa-copy fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
+ &lt;span class="copy" title="复制到剪贴板">&lt;i class="far fa-copy fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
  &lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="nf">save_model&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">path&lt;/span>&lt;span class="p">):&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">torch&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">save&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">state_dict&lt;/span>&lt;span class="p">(),&lt;/span> &lt;span class="n">path&lt;/span>&lt;span class="p">)&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="sa">f&lt;/span>&lt;span class="s1">&amp;#39;Model saved to &lt;/span>&lt;span class="si">{&lt;/span>&lt;span class="n">path&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s1">&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
