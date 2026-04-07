@@ -1,6 +1,0 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>双指针 - 标签 - lilfry's library</title><link>https://lilfry09.github.io/tags/%E5%8F%8C%E6%8C%87%E9%92%88/</link><description>双指针 - 标签 - lilfry's library</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lilfry@sjtu.edu.cn (lilfry)</managingEditor><webMaster>lilfry@sjtu.edu.cn (lilfry)</webMaster><copyright>All rights reserved.</copyright><lastBuildDate>Wed, 17 Sep 2025 20:40:46 +0800</lastBuildDate><atom:link href="https://lilfry09.github.io/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" rel="self" type="application/rss+xml"/><item><title>合并两个有序数组 - LeetCode 88</title><link>https://lilfry09.github.io/posts/merge-sorted-arrays/</link><pubDate>Wed, 17 Sep 2025 20:40:46 +0800</pubDate><author>fry</author><guid>https://lilfry09.github.io/posts/merge-sorted-arrays/</guid><description><![CDATA[<h2 id="题目描述">题目描述</h2>
-<p><strong>难度</strong>：简单<br>
-<strong>题号</strong>：88<br>
-<strong>链接</strong>：<a href="https://leetcode.cn/problems/merge-sorted-array/description/" target="_blank" rel="noopener noreffer ">合并两个有序数组</a></p>
-<h2 id="解题思路">解题思路</h2>
-<p>使用尾指针从后往前遍历，比较两个数组的元素，将较大的元素放到 nums1 的末尾，然后移动指针，重复这个过程，直到遍历完 nums2。</p>]]></description></item></channel></rss>
