@@ -1,0 +1,6 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Reasoning - 标签 - lilfry's library</title><link>https://lilfry09.github.io/tags/reasoning/</link><description>Reasoning - 标签 - lilfry's library</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lilfry@sjtu.edu.cn (lilfry)</managingEditor><webMaster>lilfry@sjtu.edu.cn (lilfry)</webMaster><copyright>All rights reserved.</copyright><lastBuildDate>Tue, 07 Apr 2026 20:55:00 +0800</lastBuildDate><atom:link href="https://lilfry09.github.io/tags/reasoning/" rel="self" type="application/rss+xml"/><item><title>读《Reasoning with Sampling》：RL 没让模型变聪明，它只是在重分配推理能力</title><link>https://lilfry09.github.io/ai/reasoning-with-sampling-rl-redistribution/</link><pubDate>Tue, 07 Apr 2026 20:55:00 +0800</pubDate><author>fry</author><guid>https://lilfry09.github.io/ai/reasoning-with-sampling-rl-redistribution/</guid><description><![CDATA[<p>最近看到一篇我很喜欢的论文：<code>Reasoning with Sampling: Your Base Model is Smarter Than You Think</code>。</p>
+<p>它吸引我的地方，不是又提出了一个更复杂的推理框架，而是它把一个现在非常主流、但经常被默认接受的叙事正面顶了回去：</p>
+<p><strong>RL 真的让大模型学会了“新的推理能力”吗？</strong></p>
+<p>这篇论文给出的回答非常不客气，也非常值得认真看一遍：</p>
+<p><strong>不一定。很多时候，RL 更像是在把 base model 原本分散在多次尝试里的能力，重新压缩到单次回答里。</strong></p>
+<p>这不是一个小修小补的观点，而是在重新定义“推理增强”到底意味着什么。</p>]]></description></item></channel></rss>
