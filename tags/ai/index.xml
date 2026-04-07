@@ -1,4 +1,13 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>AI - 标签 - lilfry's library</title><link>https://lilfry09.github.io/tags/ai/</link><description>AI - 标签 - lilfry's library</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lilfry@sjtu.edu.cn (lilfry)</managingEditor><webMaster>lilfry@sjtu.edu.cn (lilfry)</webMaster><copyright>All rights reserved.</copyright><lastBuildDate>Tue, 07 Apr 2026 20:55:00 +0800</lastBuildDate><atom:link href="https://lilfry09.github.io/tags/ai/" rel="self" type="application/rss+xml"/><item><title>读《Reasoning with Sampling》：RL 没让模型变聪明，它只是在重分配推理能力</title><link>https://lilfry09.github.io/ai/reasoning-with-sampling-rl-redistribution/</link><pubDate>Tue, 07 Apr 2026 20:55:00 +0800</pubDate><author>fry</author><guid>https://lilfry09.github.io/ai/reasoning-with-sampling-rl-redistribution/</guid><description><![CDATA[<p>最近看到一篇我很喜欢的论文：<code>Reasoning with Sampling: Your Base Model is Smarter Than You Think</code>。</p>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>AI - 标签 - lilfry's library</title><link>https://lilfry09.github.io/tags/ai/</link><description>AI - 标签 - lilfry's library</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lilfry@sjtu.edu.cn (lilfry)</managingEditor><webMaster>lilfry@sjtu.edu.cn (lilfry)</webMaster><copyright>All rights reserved.</copyright><lastBuildDate>Tue, 07 Apr 2026 21:12:00 +0800</lastBuildDate><atom:link href="https://lilfry09.github.io/tags/ai/" rel="self" type="application/rss+xml"/><item><title>读 YaRN：长上下文扩展，核心不是硬拉窗口，而是别把 RoPE 拉坏了</title><link>https://lilfry09.github.io/ai/yarn-context-window-extension/</link><pubDate>Tue, 07 Apr 2026 21:12:00 +0800</pubDate><author>fry</author><guid>https://lilfry09.github.io/ai/yarn-context-window-extension/</guid><description><![CDATA[<p>如果让我选一篇“看起来像在讲长上下文，实际上在讲位置编码工程本质”的论文，<code>YaRN</code> 一定是其中之一。</p>
+<p>很多人第一次接触长上下文时，会把问题想得很直接：</p>
+<ul>
+<li>预训练是 <code>4k</code></li>
+<li>我想要 <code>32k</code>、<code>64k</code> 甚至 <code>128k</code></li>
+<li>那是不是只要把窗口拉长，再补点训练就行了</li>
+</ul>
+<p>但 <code>YaRN</code> 这篇论文告诉你，事情没有这么简单。</p>
+<p><strong>长上下文扩展真正难的地方，不是“把窗口数字改大”，而是模型内部用来感知位置的那套几何结构，会不会在这个过程中被你拉坏。</strong></p>
+<p>而它研究的核心对象，就是今天几乎所有开源大模型都会碰到的 <code>RoPE</code>。</p>]]></description></item><item><title>读《Reasoning with Sampling》：RL 没让模型变聪明，它只是在重分配推理能力</title><link>https://lilfry09.github.io/ai/reasoning-with-sampling-rl-redistribution/</link><pubDate>Tue, 07 Apr 2026 20:55:00 +0800</pubDate><author>fry</author><guid>https://lilfry09.github.io/ai/reasoning-with-sampling-rl-redistribution/</guid><description><![CDATA[<p>最近看到一篇我很喜欢的论文：<code>Reasoning with Sampling: Your Base Model is Smarter Than You Think</code>。</p>
 <p>它吸引我的地方，不是又提出了一个更复杂的推理框架，而是它把一个现在非常主流、但经常被默认接受的叙事正面顶了回去：</p>
 <p><strong>RL 真的让大模型学会了“新的推理能力”吗？</strong></p>
 <p>这篇论文给出的回答非常不客气，也非常值得认真看一遍：</p>
