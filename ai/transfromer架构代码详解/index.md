@@ -65,7 +65,7 @@ class MultiHeadAttention(nn.Module):
         :param d_model: 词嵌入的维度
         :param nhead: 注意力头的数量
         """
-        super(MultiHeadAttention, self).__init__() # 初始化父类
+        super().__init__() # 初始化父类
         assert d_model % nhead == 0, "d_model 必须能被 nhead 整除"
 
         self.d_model = d_model # 输入和输出的维度

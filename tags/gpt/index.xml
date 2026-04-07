@@ -1,0 +1,6 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>GPT - 标签 - lilfry's library</title><link>https://lilfry09.github.io/tags/gpt/</link><description>GPT - 标签 - lilfry's library</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lilfry@sjtu.edu.cn (lilfry)</managingEditor><webMaster>lilfry@sjtu.edu.cn (lilfry)</webMaster><copyright>All rights reserved.</copyright><lastBuildDate>Fri, 24 Oct 2025 11:00:00 +0800</lastBuildDate><atom:link href="https://lilfry09.github.io/tags/gpt/" rel="self" type="application/rss+xml"/><item><title>拉格朗日插值</title><link>https://lilfry09.github.io/ai/reproduce-gpt-2/</link><pubDate>Fri, 24 Oct 2025 11:00:00 +0800</pubDate><author>fry</author><guid>https://lilfry09.github.io/ai/reproduce-gpt-2/</guid><description><![CDATA[<h2 id="1">1</h2>
+<p>可以把这两个层想象成：</p>
+<p>self.c_attn: &ldquo;问题生成器&rdquo;
+把输入信息转换成：要查询什么(Q)、用什么匹配(K)、提取什么信息(V)
+self.c_proj: &ldquo;答案整合器&rdquo;
+把各个&quot;专家&quot;(注意力头)的答案整合成最终结果</p>]]></description></item></channel></rss>

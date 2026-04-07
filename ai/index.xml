@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AI on lilfry's library</title><link>https://lilfry09.github.io/ai/</link><description>Recent content in AI on lilfry's library</description><generator>Hugo</generator><language>zh-CN</language><managingEditor>lilfry@sjtu.edu.cn (lilfry)</managingEditor><webMaster>lilfry@sjtu.edu.cn (lilfry)</webMaster><copyright>All rights reserved.</copyright><atom:link href="https://lilfry09.github.io/ai/index.xml" rel="self" type="application/rss+xml"/><item><title>读 OLMo 3：真正重要的不是新架构，而是训练信号</title><link>https://lilfry09.github.io/ai/olmo3-training-signals/</link><pubDate>Mon, 06 Apr 2026 19:00:00 +0800</pubDate><author>lilfry@sjtu.edu.cn (lilfry)</author><guid>https://lilfry09.github.io/ai/olmo3-training-signals/</guid><description>&lt;p>最近读 &lt;code>OLMo 3&lt;/code>，我最大的感受不是“开源社区又做出了一个更强的模型”，而是它把一件经常被说得很模糊的事情讲清楚了：&lt;/p>
 &lt;p>&lt;strong>一个大模型最终会长成什么样，核心不是由几处架构微调决定，而是由它在每个阶段反复接收到什么训练信号决定。&lt;/strong>&lt;/p>
-&lt;p>这句话听起来很朴素，但如果真把它想透，很多关于 LLM 的问题都会变得更清楚。为什么有些模型底座不差，后训练却拉不上去？为什么有些模型上下文窗口变长了，却还是不会真正利用长上下文？为什么有些 RL recipe 看起来很先进，最后却没有明显收益？答案往往不在“结构又改了什么”，而在“梯度到底从哪里来”。&lt;/p></description></item><item><title>Transformer架构代码详解</title><link>https://lilfry09.github.io/ai/transfromer%E6%9E%B6%E6%9E%84%E4%BB%A3%E7%A0%81%E8%AF%A6%E8%A7%A3/</link><pubDate>Sun, 29 Jun 2025 13:20:08 +0800</pubDate><author>lilfry@sjtu.edu.cn (lilfry)</author><guid>https://lilfry09.github.io/ai/transfromer%E6%9E%B6%E6%9E%84%E4%BB%A3%E7%A0%81%E8%AF%A6%E8%A7%A3/</guid><description>&lt;h1 id="1位置编码">1，位置编码&lt;/h1>
+&lt;p>这句话听起来很朴素，但如果真把它想透，很多关于 LLM 的问题都会变得更清楚。为什么有些模型底座不差，后训练却拉不上去？为什么有些模型上下文窗口变长了，却还是不会真正利用长上下文？为什么有些 RL recipe 看起来很先进，最后却没有明显收益？答案往往不在“结构又改了什么”，而在“梯度到底从哪里来”。&lt;/p></description></item><item><title>拉格朗日插值</title><link>https://lilfry09.github.io/ai/reproduce-gpt-2/</link><pubDate>Fri, 24 Oct 2025 11:00:00 +0800</pubDate><author>lilfry@sjtu.edu.cn (lilfry)</author><guid>https://lilfry09.github.io/ai/reproduce-gpt-2/</guid><description>&lt;h2 id="1">1&lt;/h2>
+&lt;p>可以把这两个层想象成：&lt;/p>
+&lt;p>self.c_attn: &amp;ldquo;问题生成器&amp;rdquo;
+把输入信息转换成：要查询什么(Q)、用什么匹配(K)、提取什么信息(V)
+self.c_proj: &amp;ldquo;答案整合器&amp;rdquo;
+把各个&amp;quot;专家&amp;quot;(注意力头)的答案整合成最终结果&lt;/p></description></item><item><title>Transformer架构代码详解</title><link>https://lilfry09.github.io/ai/transfromer%E6%9E%B6%E6%9E%84%E4%BB%A3%E7%A0%81%E8%AF%A6%E8%A7%A3/</link><pubDate>Sun, 29 Jun 2025 13:20:08 +0800</pubDate><author>lilfry@sjtu.edu.cn (lilfry)</author><guid>https://lilfry09.github.io/ai/transfromer%E6%9E%B6%E6%9E%84%E4%BB%A3%E7%A0%81%E8%AF%A6%E8%A7%A3/</guid><description>&lt;h1 id="1位置编码">1，位置编码&lt;/h1>
 &lt;div class="code-block code-line-numbers" style="counter-reset: code-block 0">
  &lt;div class="code-header language-python">
  &lt;span class="code-title">&lt;i class="arrow fas fa-angle-right fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
@@ -69,7 +74,7 @@
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> :param d_model: 词嵌入的维度
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> :param nhead: 注意力头的数量
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> &amp;#34;&amp;#34;&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">super&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">MultiHeadAttention&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="fm">__init__&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="c1"># 初始化父类&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">super&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="fm">__init__&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="c1"># 初始化父类&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">assert&lt;/span> &lt;span class="n">d_model&lt;/span> &lt;span class="o">%&lt;/span> &lt;span class="n">nhead&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;d_model 必须能被 nhead 整除&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">d_model&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">d_model&lt;/span> &lt;span class="c1"># 输入和输出的维度&lt;/span>
@@ -152,7 +157,7 @@
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">x&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">linear2&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">x&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="c1"># 再通过第二层线性变换&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">x&lt;/span> &lt;span class="c1"># 输出形状仍然是 [batch_size, seq_len, d_model]&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
 &lt;h1 id="4层归一化">4，层归一化&lt;/h1>
-&lt;div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+&lt;div class="code-block code-line-numbers" style="counter-reset: code-block 0">
  &lt;div class="code-header language-python">
  &lt;span class="code-title">&lt;i class="arrow fas fa-angle-right fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
  &lt;span class="ellipses">&lt;i class="fas fa-ellipsis-h fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
