@@ -1,13 +1,5 @@
 # 字母异位词分组
 
-leetcode:
-difficulty: "中等"
-
-number: 49
-
-link: "https://leetcode.cn/problems/group-anagrams/description/?envType=study-plan-v2&envId=top-100-liked"
-
-
 ## 题目描述
 给你一个字符串数组，请你将 字母异位词 组合在一起。可以按任意顺序返回结果列表。
 
@@ -42,7 +34,7 @@ link: "https://leetcode.cn/problems/group-anagrams/description/?envType=study-pl
    - 思路2：计数，每个字符串的每个字符出现的次数作为key，将异位词分组
 
 ## 代码实现（c++）
-```
+```c++
 class Solution {
 public:
     std::vector<std::vector<std::string>> groupAnagrams(std::vector<std::string>& strs) {
@@ -73,3 +65,4 @@ public:
     }
 };
 ```
+

@@ -1,11 +1,6 @@
 # 寻找重复子树
 
 
-leetcode:
-difficulty: "中等"  
-number: 652        
-link: https://leetcode.cn/problems/find-duplicate-subtrees/
-
 ## 题目描述
 给你一棵二叉树的根节点 root ，返回所有 重复的子树 。
 
@@ -131,3 +126,4 @@ public:
 
 };
 ```
+
