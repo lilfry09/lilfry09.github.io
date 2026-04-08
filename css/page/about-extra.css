@@ -1,0 +1,22 @@
+.page.single.special .about-container {
+  position: relative;
+}
+
+.page.single.special .about-container.about-enhanced::before {
+  content: "About";
+  position: absolute;
+  right: 0;
+  top: -0.2rem;
+  padding: 0.18rem 0.62rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in oklab, var(--cute-sky) 58%, var(--border));
+  background: color-mix(in oklab, var(--cute-sky) 42%, var(--surface));
+  color: var(--text-soft);
+  font-size: 0.76rem;
+  letter-spacing: 0.04em;
+}
+
+[lang="zh-CN"] .page.single.special .about-container.about-enhanced::before,
+[lang="zh-cn"] .page.single.special .about-container.about-enhanced::before {
+  content: "关于";
+}
