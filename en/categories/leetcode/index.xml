@@ -1,0 +1,28 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>LeetCode - Category - lilfry's library</title><link>https://lilfry09.github.io/en/categories/leetcode/</link><description>LeetCode - Category - lilfry's library</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>lilfry@sjtu.edu.cn (lilfry)</managingEditor><webMaster>lilfry@sjtu.edu.cn (lilfry)</webMaster><copyright>All rights reserved.</copyright><lastBuildDate>Fri, 20 Jun 2025 00:00:00 +0800</lastBuildDate><atom:link href="https://lilfry09.github.io/en/categories/leetcode/" rel="self" type="application/rss+xml"/><item><title>Letter anagram grouping</title><link>https://lilfry09.github.io/en/leetcode/49%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D%E5%88%86%E7%BB%84/</link><pubDate>Fri, 20 Jun 2025 00:00:00 +0800</pubDate><author>lilfry</author><guid>https://lilfry09.github.io/en/leetcode/49%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D%E5%88%86%E7%BB%84/</guid><description><![CDATA[<h2 id="question-description">Question description</h2>
+<p>You are given an array of strings, and you are asked to combine the anagrams together. The list of results can be returned in any order.</p>
+<p>Example 1:</p>
+<p>Input: strs = [&ldquo;eat&rdquo;, &ldquo;tea&rdquo;, &ldquo;tan&rdquo;, &ldquo;ate&rdquo;, &ldquo;nat&rdquo;, &ldquo;bat&rdquo;]</p>
+<p>Output: [[&ldquo;bat&rdquo;],[&ldquo;nat&rdquo;,&ldquo;tan&rdquo;],[&ldquo;ate&rdquo;,&ldquo;eat&rdquo;,&ldquo;tea&rdquo;]]</p>
+<p>explain:</p>
+<p>There are no strings in strs that can be rearranged to form &ldquo;bat&rdquo;.
+The strings &ldquo;nat&rdquo; and &ldquo;tan&rdquo; are anagrams because they can be rearranged to form each other.
+The strings &ldquo;ate&rdquo; , &ldquo;eat&rdquo; and &ldquo;tea&rdquo; are anagrams because they can be rearranged to form each other.
+Example 2:</p>]]></description></item><item><title>Find duplicate subtrees</title><link>https://lilfry09.github.io/en/leetcode/%E5%AF%BB%E6%89%BE%E9%87%8D%E5%A4%8D%E5%AD%90%E6%A0%91/</link><pubDate>Mon, 31 Mar 2025 21:32:46 +0800</pubDate><author>fry</author><guid>https://lilfry09.github.io/en/leetcode/%E5%AF%BB%E6%89%BE%E9%87%8D%E5%A4%8D%E5%AD%90%E6%A0%91/</guid><description><![CDATA[<h2 id="question-description">Question description</h2>
+<p>Given the root node root of a binary tree, return all duplicate subtrees.</p>
+<p>For duplicate subtrees of the same type, you only need to return the root node of any one of them.</p>
+<p>If two trees have the same structure and the same node values, they are considered duplicates.</p>
+<p><a href="https://assets.leetcode.com/uploads/2020/08/16/e1.jpg" target="_blank" rel="noopener noreffer ">https://assets.leetcode.com/uploads/2020/08/16/e1.jpg</a></p>
+<p>Input: root = [1,2,3,4,null,2,4,null,null,4]
+Output: [[2,4],[4]]</p>
+<h2 id="problem-solving-ideas">Problem-solving ideas</h2>
+<h2 id="use-postorder-traversal--hashing">Use postorder traversal + hashing!</h2>
+<p>Idea:</p>
+<ol>
+<li>Give each subtree an &ldquo;ID card&rdquo; (a string traversed in post-order)</li>
+<li>Record the number of occurrences of each subtree (hash, counter)</li>
+</ol>
+<h3 id="why-does-this-method-work-">**Why does this method work? **</h3>
+<ol>
+<li>
+<p><strong>String description uniquely determines the subtree structure</strong>
+For example, <code>&quot;2,4,#,#,#&quot;</code> can only correspond to one binary tree (root-&gt;left-&gt;right)</p>]]></description></item></channel></rss>

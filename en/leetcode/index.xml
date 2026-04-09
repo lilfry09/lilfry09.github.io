@@ -1,1 +1,28 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>LeetCode on lilfry's library</title><link>https://lilfry09.github.io/en/leetcode/</link><description>Recent content in LeetCode on lilfry's library</description><generator>Hugo</generator><language>en</language><managingEditor>lilfry@sjtu.edu.cn (lilfry)</managingEditor><webMaster>lilfry@sjtu.edu.cn (lilfry)</webMaster><copyright>All rights reserved.</copyright><atom:link href="https://lilfry09.github.io/en/leetcode/index.xml" rel="self" type="application/rss+xml"/></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>LeetCode on lilfry's library</title><link>https://lilfry09.github.io/en/leetcode/</link><description>Recent content in LeetCode on lilfry's library</description><generator>Hugo</generator><language>en</language><managingEditor>lilfry@sjtu.edu.cn (lilfry)</managingEditor><webMaster>lilfry@sjtu.edu.cn (lilfry)</webMaster><copyright>All rights reserved.</copyright><atom:link href="https://lilfry09.github.io/en/leetcode/index.xml" rel="self" type="application/rss+xml"/><item><title>Letter anagram grouping</title><link>https://lilfry09.github.io/en/leetcode/49%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D%E5%88%86%E7%BB%84/</link><pubDate>Fri, 20 Jun 2025 00:00:00 +0800</pubDate><author>lilfry@sjtu.edu.cn (lilfry)</author><guid>https://lilfry09.github.io/en/leetcode/49%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D%E5%88%86%E7%BB%84/</guid><description>&lt;h2 id="question-description">Question description&lt;/h2>
+&lt;p>You are given an array of strings, and you are asked to combine the anagrams together. The list of results can be returned in any order.&lt;/p>
+&lt;p>Example 1:&lt;/p>
+&lt;p>Input: strs = [&amp;ldquo;eat&amp;rdquo;, &amp;ldquo;tea&amp;rdquo;, &amp;ldquo;tan&amp;rdquo;, &amp;ldquo;ate&amp;rdquo;, &amp;ldquo;nat&amp;rdquo;, &amp;ldquo;bat&amp;rdquo;]&lt;/p>
+&lt;p>Output: [[&amp;ldquo;bat&amp;rdquo;],[&amp;ldquo;nat&amp;rdquo;,&amp;ldquo;tan&amp;rdquo;],[&amp;ldquo;ate&amp;rdquo;,&amp;ldquo;eat&amp;rdquo;,&amp;ldquo;tea&amp;rdquo;]]&lt;/p>
+&lt;p>explain:&lt;/p>
+&lt;p>There are no strings in strs that can be rearranged to form &amp;ldquo;bat&amp;rdquo;.
+The strings &amp;ldquo;nat&amp;rdquo; and &amp;ldquo;tan&amp;rdquo; are anagrams because they can be rearranged to form each other.
+The strings &amp;ldquo;ate&amp;rdquo; , &amp;ldquo;eat&amp;rdquo; and &amp;ldquo;tea&amp;rdquo; are anagrams because they can be rearranged to form each other.
+Example 2:&lt;/p></description></item><item><title>Find duplicate subtrees</title><link>https://lilfry09.github.io/en/leetcode/%E5%AF%BB%E6%89%BE%E9%87%8D%E5%A4%8D%E5%AD%90%E6%A0%91/</link><pubDate>Mon, 31 Mar 2025 21:32:46 +0800</pubDate><author>lilfry@sjtu.edu.cn (lilfry)</author><guid>https://lilfry09.github.io/en/leetcode/%E5%AF%BB%E6%89%BE%E9%87%8D%E5%A4%8D%E5%AD%90%E6%A0%91/</guid><description>&lt;h2 id="question-description">Question description&lt;/h2>
+&lt;p>Given the root node root of a binary tree, return all duplicate subtrees.&lt;/p>
+&lt;p>For duplicate subtrees of the same type, you only need to return the root node of any one of them.&lt;/p>
+&lt;p>If two trees have the same structure and the same node values, they are considered duplicates.&lt;/p>
+&lt;p>&lt;a href="https://assets.leetcode.com/uploads/2020/08/16/e1.jpg" target="_blank" rel="noopener noreffer ">https://assets.leetcode.com/uploads/2020/08/16/e1.jpg&lt;/a>&lt;/p>
+&lt;p>Input: root = [1,2,3,4,null,2,4,null,null,4]
+Output: [[2,4],[4]]&lt;/p>
+&lt;h2 id="problem-solving-ideas">Problem-solving ideas&lt;/h2>
+&lt;h2 id="use-postorder-traversal--hashing">Use postorder traversal + hashing!&lt;/h2>
+&lt;p>Idea:&lt;/p>
+&lt;ol>
+&lt;li>Give each subtree an &amp;ldquo;ID card&amp;rdquo; (a string traversed in post-order)&lt;/li>
+&lt;li>Record the number of occurrences of each subtree (hash, counter)&lt;/li>
+&lt;/ol>
+&lt;h3 id="why-does-this-method-work-">**Why does this method work? **&lt;/h3>
+&lt;ol>
+&lt;li>
+&lt;p>&lt;strong>String description uniquely determines the subtree structure&lt;/strong>
+For example, &lt;code>&amp;quot;2,4,#,#,#&amp;quot;&lt;/code> can only correspond to one binary tree (root-&amp;gt;left-&amp;gt;right)&lt;/p></description></item></channel></rss>
