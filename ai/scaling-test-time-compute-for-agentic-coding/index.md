@@ -103,3 +103,7 @@ Scaling Test-Time Compute for Agentic Coding
 
 当长程智能体学会了如何更好地思考，它们的上限，将不止于我们今天所见。
 
+## 参考链接
+
+- [Scaling Test-Time Compute for Agentic Coding](https://arxiv.org/abs/2604.16529)
+

@@ -1,4 +1,4 @@
-# GroupDPO：把 DPO 从单对偏好扩展到组级偏好训练
+# GroupDPO: Memory efficient Group-wise Direct Preference Optimization
 
 
 ### **这篇论文提出 GroupDPO：把 DPO 从“一正一负”的单对偏好训练扩展到“多正样本、多负样本”的组级偏好训练，并用一阶梯度等价的省显存 surrogate 实现，使 group-wise preference optimization 在大 group size 下更可行。**
@@ -26,4 +26,8 @@ $$
 效率实验显示，朴素 GroupDPO 的显存会随 group size 增大而快速上升，而论文提出的 surrogate 实现可以让 peak activation memory 对 group size 不那么敏感，在只增加一次 no-grad 预计算带来少量延迟的情况下，显著降低显存占用并支持更大的 response group。
 
 整体来看，这篇论文的关键价值在于：它证明了偏好优化中“多候选回答组”的监督信号值得利用，并提供了一个实际可扩展的省显存实现，使 GroupDPO 不只是一个更丰富的目标函数，也成为一种更可落地的大模型对齐训练方法。
+
+## 参考链接
+
+- [GroupDPO: Memory efficient Group-wise Direct Preference Optimization](https://arxiv.org/abs/2604.15602)
 
