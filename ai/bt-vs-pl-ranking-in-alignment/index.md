@@ -49,3 +49,12 @@ $$P(y_1 \succ y_2 \succ \dots \succ y_K) = \prod_{j=1}^K \frac{\exp(r(y_j))}{\su
 * **Listwise Alignment 算法：** 比如 PRO (Preference Ranking Optimization) 或 LiPO，这些是目前学术界试图超越 DPO 的前沿方向。
 * 信息检索（IR）与推荐系统：学习如何对搜索结果进行排序（如 ListMLE 损失函数）。
 
+## 参考链接
+
+- [Bradley & Terry (1952): Rank Analysis of Incomplete Block Designs: The Method of Paired Comparisons](https://academic.oup.com/biomet/article/39/3-4/324/326091)
+- [Plackett (1975): The Analysis of Permutations](https://academic.oup.com/jrsssc/article/24/2/193/6953554)
+- [Luce (1959): Individual Choice Behavior: A Theoretical Analysis](https://openlibrary.org/books/OL4735832M/Individual_choice_behavior)
+- [DPO: Direct Preference Optimization: Your Language Model is Secretly a Reward Model](https://arxiv.org/abs/2305.18290)
+- [LiPO: Listwise Preference Optimization through Learning-to-Rank](https://arxiv.org/abs/2402.01878)
+- [Listwise Approach to Learning to Rank: Theory and Algorithm](https://icml.cc/Conferences/2008/papers/167.pdf)
+

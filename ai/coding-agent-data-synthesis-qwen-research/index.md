@@ -58,4 +58,12 @@ SWE-bench的出现是这一范式转变的里程碑事件 [[7](https://www.swebe
 
 另一个显著的局限是**能力鸿沟**：目前绝大多数合成数据集中在bug修复（Automated Program Repair, APR）任务上 [[62](https://arxiv.org/pdf/2505.07372?), [127](https://dl.acm.org/doi/10.1145/3631974)]。虽然SWE-Bench++也能处理feature request [[4](https://arxiv.org/html/2512.17419v1)]，但整体上，针对更复杂的软件开发活动，如系统设计、架构演进、性能优化、安全性增强等方面的数据合成，仍然是广阔的蓝海领域。未来的趋势将沿着几个方向发展：第一，**自动化与智能化**，合成流水线将进一步自动化，LLM Agent将在其中扮演更核心的角色，从任务选择、环境构建到轨迹生成全程参与，实现更高程度的自主合成。第二，**仿真环境的成熟**，SWE-World所代表的“元宇宙”式仿真环境将成为主流，降低基础设施依赖，极大提升数据生产速度和规模。第三，**对抗性与红队测试**，合成数据将不仅仅用于正面训练，还将用于主动“攻击”模型，生成具有欺骗性或边缘性的任务，以检验和提升模型的鲁棒性 [[78](https://arxiv.org/html/2508.00923v2), [137](http://arxivdaily.com/thread/72172)]。第四，**跨领域知识迁移**，研究将更深入地探索编码能力与其他认知能力（如数学、科学、逻辑）之间的联系，利用合成数据促进模型的通用智能发展。
 
+## 参考链接
+
+- [SWE-bench: Can Language Models Resolve Real-World GitHub Issues?](https://arxiv.org/abs/2310.06770)
+- [SWE-bench 官方网站](https://www.swebench.com/)
+- [SWE-agent: Agent-Computer Interfaces Enable Automated Software Engineering](https://arxiv.org/abs/2405.15793)
+- [SWE-bench Multimodal: Do AI Systems Generalize to Visual Software Domains?](https://arxiv.org/abs/2410.03859)
+- [The SWE-bench Illusion: When State-of-the-Art LLMs Remember Instead of Reason](https://www.microsoft.com/en-us/research/publication/the-swe-bench-illusion-when-state-of-the-art-llms-remember-instead-of-reason/)
+
 
