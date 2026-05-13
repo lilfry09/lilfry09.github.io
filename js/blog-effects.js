@@ -134,7 +134,7 @@
     });
     toastTimer = window.setTimeout(function () {
       toast.classList.remove("is-visible");
-    }, 3200);
+    }, 2600);
   }
 
   document.addEventListener("click", showClickEffect, { passive: true });
@@ -144,6 +144,11 @@
 
     if (document.hidden) {
       document.title = leaveTitle;
+      restoreTitleTimer = window.setTimeout(function () {
+        if (document.hidden) {
+          document.title = originalTitle;
+        }
+      }, 2500);
       return;
     }
 
@@ -151,6 +156,6 @@
     showWelcomeToast();
     restoreTitleTimer = window.setTimeout(function () {
       document.title = originalTitle;
-    }, 2200);
+    }, 2500);
   });
 })();
