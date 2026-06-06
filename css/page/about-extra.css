@@ -2,7 +2,7 @@
   position: relative;
 }
 
-.page.single.special .about-container.about-enhanced::before {
+.page.single.special .about-container::before {
   content: "About";
   position: absolute;
   right: 0;
@@ -16,7 +16,7 @@
   letter-spacing: 0.04em;
 }
 
-[lang="zh-CN"] .page.single.special .about-container.about-enhanced::before,
-[lang="zh-cn"] .page.single.special .about-container.about-enhanced::before {
+[lang="zh-CN"] .page.single.special .about-container::before,
+[lang="zh-cn"] .page.single.special .about-container::before {
   content: "关于";
 }
