@@ -71,18 +71,11 @@ $$
 
 把 $\hat y$ 对 $q$ 取期望，就得到单步平均接受率：
 
-$$
-\alpha_{\text{RS}}
-= \mathbb{E}_{\hat y \sim q}\left[\min\left(1, \frac{p(\hat y)}{q(\hat y)}\right)\right]
-= \sum_y \min(p(y), q(y))
-$$
+$$\alpha_{\text{RS}} = \mathbb{E}_{\hat y \sim q}\left[\min\left(1, \frac{p(\hat y)}{q(\hat y)}\right)\right] = \sum_y \min(p(y), q(y))$$
 
 而 total variation distance 定义为：
 
-$$
-d_{\text{TV}}(p, q)
-= \frac{1}{2}\sum_y |p(y)-q(y)|
-$$
+$$d_{\text{TV}}(p, q) = \frac{1}{2}\sum_y |p(y)-q(y)|$$
 
 所以有一个非常关键的等式：
 
@@ -100,11 +93,7 @@ $$
 
 期望接受长度可以写成：
 
-$$
-\mathbb{E}[\tau]
-= \sum_{j=1}^{\gamma} P(\tau \ge j)
-= \sum_{j=1}^{\gamma}\prod_{k=1}^{j}\alpha_k
-$$
+$$\mathbb{E}[\tau] = \sum_{j=1}^{\gamma} P(\tau \ge j) = \sum_{j=1}^{\gamma}\prod_{k=1}^{j}\alpha_k$$
 
 这条式子也解释了一个常见现象：后面 token 的质量再高，如果前面第一个低置信 token 被拒了，后面的 token 全部作废。所以 speculative decoding 的优化重点，天然会偏向 prefix，而不是平均对待所有 draft position。
 
@@ -168,35 +157,19 @@ Bebop 的方案可以拆成两层。
 
 传统 CE 可以写成：
 
-$$
-\mathcal{L}_{\text{CE}}
-= - \sum_y p(y)\log q(y)
-$$
+$$\mathcal{L}_{\text{CE}} = - \sum_y p(y)\log q(y)$$
 
 KL 则是：
 
-$$
-D_{\text{KL}}(p\|q)
-= \sum_y p(y)\log \frac{p(y)}{q(y)}
-$$
+$$D_{\text{KL}}(p\|q) = \sum_y p(y)\log \frac{p(y)}{q(y)}$$
 
 它们都在让 $q$ 靠近 $p$，但它们不是接受率本身。Bebop 要优化的是：
 
-$$
-\mathcal{L}_{\text{TV}}
-= d_{\text{TV}}(p, q)
-= 1 - \sum_y \min(p(y), q(y))
-$$
+$$\mathcal{L}_{\text{TV}} = d_{\text{TV}}(p, q) = 1 - \sum_y \min(p(y), q(y))$$
 
 因为：
 
-$$
-\max \alpha_{\text{RS}}
-\Longleftrightarrow
-\min d_{\text{TV}}(p, q)
-\Longleftrightarrow
-\min \mathcal{L}_{\text{TV}}
-$$
+$$\max \alpha_{\text{RS}} \Longleftrightarrow \min d_{\text{TV}}(p, q) \Longleftrightarrow \min \mathcal{L}_{\text{TV}}$$
 
 这比“用 KL 间接约束 TV”更贴近 speculative decoding 的真实目标。
 
@@ -216,11 +189,7 @@ $$
 
 所以 e2e TV loss 的直觉不是“第 1、2、3 步各自像 target 就行”，而是直接优化：
 
-$$
-\mathbb{E}[\tau]
-= \sum_{j=1}^{\gamma}
-\prod_{k=1}^{j}\left(1 - d_{\text{TV}}(p_k, q_k)\right)
-$$
+$$\mathbb{E}[\tau] = \sum_{j=1}^{\gamma}\prod_{k=1}^{j}\left(1 - d_{\text{TV}}(p_k, q_k)\right)$$
 
 也就是说，它在训练时就把“前面一拒绝，后面全没了”的 prefix 结构放进目标里。
 
@@ -284,20 +253,11 @@ $$
 
 而是让 block 内部仍然按一个轻量的因果分解走：
 
-$$
-P(X \mid x_0)
-= \prod_{k=1}^{\gamma}
-p_k(x_k \mid x_0, x_{<k})
-$$
+$$P(X \mid x_0) = \prod_{k=1}^{\gamma}p_k(x_k \mid x_0, x_{<k})$$
 
 其中每个位置的分布由 parallel backbone 的 base logit $U_k$ 加上 sequential head 的 transition bias $B_k$ 得到：
 
-$$
-p_k(v \mid x_0, x_{<k})
-=
-\frac{\exp(U_k(v)+B_k(x_0,x_{<k},v))}
-{\sum_{u \in V}\exp(U_k(u)+B_k(x_0,x_{<k},u))}
-$$
+$$p_k(v \mid x_0, x_{<k}) = \frac{\exp(U_k(v)+B_k(x_0,x_{<k},v))}{\sum_{u \in V}\exp(U_k(u)+B_k(x_0,x_{<k},u))}$$
 
 Markov head 是最轻的实现，它只看前一个 token：
 
@@ -330,19 +290,11 @@ $$
 
 它表示：
 
-$$
-c_k
-\approx
-P(x_k \text{ survives} \mid x_1,\dots,x_{k-1}\text{ all survive})
-$$
+$$c_k \approx P(x_k \text{ survives} \mid x_1,\dots,x_{k-1}\text{ all survive})$$
 
 DSpark 用 TV 距离给这个 confidence 一个软标签：
 
-$$
-c_k^*
-= 1 - \frac{1}{2}\|p_k^d - p_k^t\|_1
-= 1 - d_{\text{TV}}(p_k^d, p_k^t)
-$$
+$$c_k^* = 1 - \frac{1}{2}\|p_k^d - p_k^t\|_1 = 1 - d_{\text{TV}}(p_k^d, p_k^t)$$
 
 于是 prefix 到第 $j$ 个 token 仍然存活的概率就是：
 
@@ -372,30 +324,15 @@ $$
 
 这里的 `1` 是每个请求至少需要 target model 产生的 bonus / anchor token。期望成功产出的 token 数可以写成：
 
-$$
-\tau
-=
-\sum_{r=1}^{R}
-\left(
-1 + \sum_{j=1}^{\ell_r} a_{r,j}
-\right)
-$$
+$$\tau = \sum_{r=1}^{R}\left(1 + \sum_{j=1}^{\ell_r} a_{r,j}\right)$$
 
 如果 `SPS(B)` 表示 serving engine 在 batch size 为 $B$ 时每秒能跑多少个 decode step，那么系统期望吞吐是：
 
-$$
-\Theta(\ell_1,\dots,\ell_R)
-= \tau \cdot \text{SPS}(B)
-$$
+$$\Theta(\ell_1,\dots,\ell_R) = \tau \cdot \text{SPS}(B)$$
 
 DSpark 的 scheduler 本质上就是解：
 
-$$
-\ell_1^*, \dots, \ell_R^*
-=
-\arg\max_{\ell_1,\dots,\ell_R}
-\Theta(\ell_1,\dots,\ell_R)
-$$
+$$\ell_1^*, \dots, \ell_R^* = \arg\max_{\ell_1,\dots,\ell_R}\Theta(\ell_1,\dots,\ell_R)$$
 
 这条式子解释了为什么“固定验证 16 个 token”不是最优：多验证一个 token 的收益是它的 prefix survival probability $a_{r,j}$，但代价是把 $B$ 变大，可能让 `SPS(B)` 掉到硬件吞吐曲线的下一个台阶。
 
