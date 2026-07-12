@@ -294,7 +294,7 @@ $$c_k \approx P(x_k \text{ survives} \mid x_1,\dots,x_{k-1}\text{ all survive})$
 
 DSpark 用 TV 距离给这个 confidence 一个软标签：
 
-$$c_k^* = 1 - \frac{1}{2}\|p_k^d - p_k^t\|_1 = 1 - d_{\text{TV}}(p_k^d, p_k^t)$$
+$$c_k^{\ast} = 1 - \frac{1}{2}\|p_k^d - p_k^t\|_1 = 1 - d_{\text{TV}}(p_k^d, p_k^t)$$
 
 于是 prefix 到第 $j$ 个 token 仍然存活的概率就是：
 
@@ -332,7 +332,7 @@ $$\Theta(\ell_1,\dots,\ell_R) = \tau \cdot \text{SPS}(B)$$
 
 DSpark 的 scheduler 本质上就是解：
 
-$$\ell_1^*, \dots, \ell_R^* = \arg\max_{\ell_1,\dots,\ell_R}\Theta(\ell_1,\dots,\ell_R)$$
+$$\ell_1^{\ast}, \dots, \ell_R^{\ast} = \arg\max_{\ell_1,\dots,\ell_R}\Theta(\ell_1,\dots,\ell_R)$$
 
 这条式子解释了为什么“固定验证 16 个 token”不是最优：多验证一个 token 的收益是它的 prefix survival probability $a_{r,j}$，但代价是把 $B$ 变大，可能让 `SPS(B)` 掉到硬件吞吐曲线的下一个台阶。
 
