@@ -15,11 +15,9 @@
 
 token 由较旧的 rollout policy $\mu=\pi_{\theta_b}$ 产生，但进入训练时，learner 已更新到当前 policy $\pi_{\theta}$：
 
-$$
-a_t \sim \pi_{\theta_b}(\cdot\mid s_t),
-\qquad
-\theta_b \neq \theta
-$$
+{{< raw >}}
+\[ a_t \sim \pi_{\theta_b}(\cdot\mid s_t), \qquad \theta_b \neq \theta \]
+{{< /raw >}}
 
 这是**算法层面的不等价**。异步 RL 知道数据来自旧 policy，并通过 version control、importance sampling、PPO clipping、KL constraint、丢弃过旧样本等方法处理。
 
@@ -45,19 +43,15 @@ $$
 
 对 MoE token $x_t$，rollout 时 router 选择：
 
-$$
-\mathcal E_t^{\mathrm{roll}}
-=
-\operatorname{TopK}\bigl(g_{\theta_b}^{\mathrm{roll}}(x_t)\bigr)
-$$
+{{< raw >}}
+\[ \mathcal E_t^{\mathrm{roll}} = \operatorname{TopK}\bigl(g_{\theta_b}^{\mathrm{roll}}(x_t)\bigr) \]
+{{< /raw >}}
 
 训练重算时，如果重新运行 router，可能得到：
 
-$$
-\mathcal E_t^{\mathrm{train}}
-=
-\operatorname{TopK}\bigl(g_{\theta}^{\mathrm{train}}(x_t)\bigr)
-$$
+{{< raw >}}
+\[ \mathcal E_t^{\mathrm{train}} = \operatorname{TopK}\bigl(g_{\theta}^{\mathrm{train}}(x_t)\bigr) \]
+{{< /raw >}}
 
 两者不同可能有两个来源：
 
@@ -72,57 +66,33 @@ R3 主要针对第一类，并可能为第二类中的“准确重建 behavior f
 
 同步系统里，rollout 结束后立即训练，$\theta_b$ 与 $\theta$ 通常比较接近。异步系统中，样本在 queue 里待一段时间，可能跨过多个 learner updates。此时正确的 PPO ratio 应该是：
 
-$$
-\rho_t
-=
-\frac{
-\pi_{\theta}(a_t\mid s_t)
-}{
-\pi_{\theta_b}(a_t\mid s_t)
-}
-$$
+{{< raw >}}
+\[ \rho_t = \frac{ \pi_{\theta}(a_t\mid s_t) }{ \pi_{\theta_b}(a_t\mid s_t) } \]
+{{< /raw >}}
 
 这里分母必须是**真正生成该 token 的 behavior policy probability**。如果 rollout 时 token 经过 experts $\{E_2,E_7\}$，但训练侧为了计算 old logprob 又重新路由到了 $\{E_3,E_7\}$，你得到的就不是：
 
-$$
-\log \pi_{\theta_b}^{\mathrm{actual}}(a_t\mid s_t)
-$$
+{{< raw >}}
+\[ \log \pi_{\theta_b}^{\mathrm{actual}}(a_t\mid s_t) \]
+{{< /raw >}}
 
 而是某个训练侧重构出来的近似：
 
-$$
-\log \widetilde{\pi}_{\theta_b}(a_t\mid s_t)
-$$
+{{< raw >}}
+\[ \log \widetilde{\pi}_{\theta_b}(a_t\mid s_t) \]
+{{< /raw >}}
 
 于是实际使用的 ratio 变成：
 
-$$
-\widetilde{\rho}_t
-=
-\frac{
-\pi_{\theta}(a_t\mid s_t)
-}{
-\widetilde{\pi}_{\theta_b}(a_t\mid s_t)
-}
-$$
+{{< raw >}}
+\[ \widetilde{\rho}_t = \frac{ \pi_{\theta}(a_t\mid s_t) }{ \widetilde{\pi}_{\theta_b}(a_t\mid s_t) } \]
+{{< /raw >}}
 
 现在 ratio 同时混入了两种变化：
 
-$$
-\log \widetilde{\rho}_t
-=
-\underbrace{
-\log \pi_{\theta}(a_t\mid s_t)
--
-\log \pi_{\theta_b}^{\mathrm{actual}}(a_t\mid s_t)
-}_{\text{真实 policy drift}}
-+
-\underbrace{
-\log \pi_{\theta_b}^{\mathrm{actual}}(a_t\mid s_t)
--
-\log \widetilde{\pi}_{\theta_b}(a_t\mid s_t)
-}_{\text{训推/routing 重构误差}}
-$$
+{{< raw >}}
+\[ \log \widetilde{\rho}_t = \underbrace{ \log \pi_{\theta}(a_t\mid s_t) - \log \pi_{\theta_b}^{\mathrm{actual}}(a_t\mid s_t) }_{\text{真实 policy drift}} + \underbrace{ \log \pi_{\theta_b}^{\mathrm{actual}}(a_t\mid s_t) - \log \widetilde{\pi}_{\theta_b}(a_t\mid s_t) }_{\text{训推/routing 重构误差}} \]
+{{< /raw >}}
 
 异步 RL 的 correction 只想处理第一项；第二项是脏噪声。policy lag 越大，importance ratio 本来就越容易极端，这时再叠加 routing error，会更容易触发 PPO clipping、造成错误 KL 估计或扭曲 advantage weighting。
 
@@ -157,21 +127,15 @@ PPO/GRPO 的分子通常应是当前 policy 对已采样 token 的 probability�
 
 若强制当前 policy 使用 rollout routing，计算的是：
 
-$$
-\pi_{\theta}
-\left(
-a_t\mid s_t,\mathcal E_t^{\mathrm{roll}}
-\right)
-$$
+{{< raw >}}
+\[ \pi_{\theta} \left( a_t\mid s_t,\mathcal E_t^{\mathrm{roll}} \right) \]
+{{< /raw >}}
 
 而不是 current policy 自由路由得到的：
 
-$$
-\pi_{\theta}
-\left(
-a_t\mid s_t,\mathcal E_t^{\mathrm{current}}
-\right)
-$$
+{{< raw >}}
+\[ \pi_{\theta} \left( a_t\mid s_t,\mathcal E_t^{\mathrm{current}} \right) \]
+{{< /raw >}}
 
 前者更稳定，也让梯度流经实际参与 rollout 的 experts；后者更忠实于部署时当前 policy 的真实行为。两者各有道理，但优化对象不同。不能只说“replay routing”就跳过这一层。
 
@@ -197,25 +161,21 @@ $$
 
 更准确的拆法是：
 
-$$
-\pi_\theta(a_t\mid s_t)
-=
-\sum_z
-p_\theta(z\mid s_t)\,
-p_\theta(a_t\mid s_t,z)
-$$
+{{< raw >}}
+\[ \pi_\theta(a_t\mid s_t) = \sum_z p_\theta(z\mid s_t)\, p_\theta(a_t\mid s_t,z) \]
+{{< /raw >}}
 
 其中 $z$ 是 latent routing decision。实际 top-$k$ MoE 通常没有精确求和，而是稀疏选出少量 experts。rollout 记录的是某个 $z_b$。重放 $z_b$ 优化的是近似条件概率：
 
-$$
-p_\theta(a_t\mid s_t,z_b)
-$$
+{{< raw >}}
+\[ p_\theta(a_t\mid s_t,z_b) \]
+{{< /raw >}}
 
 而完整 policy 还包含 router probability：
 
-$$
-p_\theta(z_b\mid s_t)
-$$
+{{< raw >}}
+\[ p_\theta(z_b\mid s_t) \]
+{{< /raw >}}
 
 因此最原则化的方案可能是：
 
@@ -242,29 +202,17 @@ $$
 
 理想的 off-policy ratio 应是：
 
-$$
-\rho_t
-=
-\frac{
-\pi_{\theta}^{\mathrm{free-route}}(a_t\mid s_t)
-}{
-\pi_{\theta_b}^{\mathrm{roll-route}}(a_t\mid s_t)
-}
-$$
+{{< raw >}}
+\[ \rho_t = \frac{ \pi_{\theta}^{\mathrm{free-route}}(a_t\mid s_t) }{ \pi_{\theta_b}^{\mathrm{roll-route}}(a_t\mid s_t) } \]
+{{< /raw >}}
 
 这里分子按当前 policy 自由 routing，分母按行为 policy 的实际 routing。
 
 但这种做法可能导致分子和分母经过不同 experts，ratio 方差很大，梯度也主要更新 current-route experts，而不是 behavior-route experts。为了稳定性，系统可能使用 path-conditioned surrogate：
 
-$$
-\rho_t^{\mathrm{route}}
-=
-\frac{
-\pi_{\theta}(a_t\mid s_t,z_b)
-}{
-\pi_{\theta_b}(a_t\mid s_t,z_b)
-}
-$$
+{{< raw >}}
+\[ \rho_t^{\mathrm{route}} = \frac{ \pi_{\theta}(a_t\mid s_t,z_b) }{ \pi_{\theta_b}(a_t\mid s_t,z_b) } \]
+{{< /raw >}}
 
 它回答的是：
 
@@ -278,27 +226,23 @@ $$
 
 Dense model 的权重变了，前向结果平滑变化的可能性较大。MoE routing 中有一个离散 top-$k$ 边界。两个 expert 得分只差一点时，微小参数变化就可能让路径突然跳变：
 
-$$
-g_2(x)=0.501,\quad g_3(x)=0.499
-$$
+{{< raw >}}
+\[ g_2(x)=0.501,\quad g_3(x)=0.499 \]
+{{< /raw >}}
 
 更新后可能变为：
 
-$$
-g_2(x)=0.498,\quad g_3(x)=0.502
-$$
+{{< raw >}}
+\[ g_2(x)=0.498,\quad g_3(x)=0.502 \]
+{{< /raw >}}
 
 logits 变化很小，实际执行图却从 expert 2 跳到 expert 3。异步 policy lag 让这种 path flip 更频繁。
 
 因此 MoE 异步 RL 有两层 drift：
 
-$$
-\text{policy drift}
-=
-\text{within-path parameter drift}
-+
-\text{routing-path drift}
-$$
+{{< raw >}}
+\[ \text{policy drift} = \text{within-path parameter drift} + \text{routing-path drift} \]
+{{< /raw >}}
 
 后者是离散的，不能总被普通 token-level KL 平滑地捕捉。两个模型可能最终 token distribution 暂时接近，但内部 expert allocation 已大幅变化；也可能只因 routing flip 就出现突然的 logprob 跳变。
 
@@ -350,33 +294,19 @@ Composer 的强异步 RL 可以同时维护三样东西：
 
 相应地，可以监控三种量：
 
-$$
-\mathrm{KL}_{\mathrm{total}}
-=
-\mathrm{KL}
-\left(
-\pi_{\theta_b}^{\mathrm{roll}},
-\pi_\theta^{\mathrm{free}}
-\right)
-$$
+{{< raw >}}
+\[ \mathrm{KL}_{\mathrm{total}} = \mathrm{KL} \left( \pi_{\theta_b}^{\mathrm{roll}}, \pi_\theta^{\mathrm{free}} \right) \]
+{{< /raw >}}
 
-$$
-\mathrm{KL}_{\mathrm{within\ path}}
-=
-\mathrm{KL}
-\left(
-\pi_{\theta_b}(\cdot\mid z_b),
-\pi_\theta(\cdot\mid z_b)
-\right)
-$$
+{{< raw >}}
+\[ \mathrm{KL}_{\mathrm{within\ path}} = \mathrm{KL} \left( \pi_{\theta_b}(\cdot\mid z_b), \pi_\theta(\cdot\mid z_b) \right) \]
+{{< /raw >}}
 
 以及 routing change rate：
 
-$$
-P\left(
-z_\theta\neq z_b
-\right)
-$$
+{{< raw >}}
+\[ P\left( z_\theta\neq z_b \right) \]
+{{< /raw >}}
 
 这三项分别对应整体 policy staleness、固定路径下的参数变化，以及 router path drift。只看普通 KL 或只看 policy version，都不足以描述强异步 MoE 的真实 off-policy 程度。
 
