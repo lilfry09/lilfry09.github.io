@@ -1,0 +1,1632 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SWE Agent Benchmark, Trace, Docker Landscape</title>
+  <style>
+    :root {
+      --ink: #10221d;
+      --muted: #526d66;
+      --paper: #f5fbf8;
+      --panel: #eaf6f1;
+      --line: #bdd8d2;
+      --blue: #2563eb;
+      --blue-deep: #123a8f;
+      --green: #10a36b;
+      --green-deep: #096846;
+      --cyan: #0f8aa6;
+      --warn: #b7791f;
+      --danger: #b42318;
+      --white: #fbfffd;
+      --shadow: 0 18px 44px rgba(20, 83, 65, 0.12);
+      --radius: 8px;
+      --max: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--paper);
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        linear-gradient(90deg, rgba(37, 99, 235, 0.06) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(16, 163, 107, 0.06) 1px, transparent 1px),
+        var(--paper);
+      background-size: 42px 42px;
+      font-family: ui-sans-serif, "Aptos", "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      line-height: 1.62;
+    }
+
+    a {
+      color: var(--blue-deep);
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid rgba(189, 216, 210, 0.78);
+      background: rgba(245, 251, 248, 0.9);
+      backdrop-filter: blur(14px);
+    }
+
+    .nav {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 10px 24px;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .brand {
+      font-size: 13px;
+      font-weight: 750;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--green-deep);
+    }
+
+    .navlinks {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .navlinks a {
+      padding: 7px 10px;
+      border-radius: 6px;
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    .navlinks a:hover {
+      background: rgba(16, 163, 107, .1);
+      color: var(--green-deep);
+    }
+
+    header {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: clamp(46px, 7vw, 92px) 24px 34px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(310px, .85fr);
+      gap: clamp(26px, 5vw, 64px);
+      align-items: end;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      color: var(--green-deep);
+      font-size: 13px;
+      font-weight: 760;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 42px;
+      height: 2px;
+      background: var(--green);
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 900px;
+      font-size: clamp(38px, 7vw, 82px);
+      line-height: .97;
+      letter-spacing: 0;
+      color: #09231d;
+    }
+
+    .hero-copy {
+      margin: 24px 0 0;
+      max-width: 780px;
+      color: var(--muted);
+      font-size: clamp(17px, 2.2vw, 22px);
+    }
+
+    .thesis {
+      border-top: 4px solid var(--blue);
+      background: rgba(251, 255, 253, .82);
+      box-shadow: var(--shadow);
+      padding: 22px;
+      border-radius: var(--radius);
+    }
+
+    .thesis h2 {
+      margin: 0 0 12px;
+      color: var(--blue-deep);
+      font-size: 18px;
+    }
+
+    .thesis p {
+      margin: 0;
+      color: var(--ink);
+      font-size: 15px;
+    }
+
+    .metric-strip {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 8px 24px 54px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(251, 255, 253, .74);
+      padding: 15px 16px;
+    }
+
+    .metric b {
+      display: block;
+      font-size: clamp(24px, 3vw, 36px);
+      line-height: 1;
+      color: var(--blue-deep);
+    }
+
+    .metric span {
+      margin-top: 8px;
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    main {
+      overflow: hidden;
+    }
+
+    section {
+      padding: clamp(48px, 7vw, 92px) 24px;
+      border-top: 1px solid rgba(189, 216, 210, .8);
+    }
+
+    section:nth-of-type(even) {
+      background: rgba(234, 246, 241, .68);
+    }
+
+    .wrap {
+      max-width: var(--max);
+      margin: 0 auto;
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, .72fr) minmax(280px, .28fr);
+      gap: 32px;
+      align-items: start;
+      margin-bottom: 28px;
+    }
+
+    .kicker {
+      color: var(--green-deep);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(29px, 4.5vw, 52px);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin: 0 0 10px;
+      font-size: 22px;
+      line-height: 1.2;
+    }
+
+    .section-copy {
+      color: var(--muted);
+      margin: 16px 0 0;
+      max-width: 780px;
+      font-size: 17px;
+    }
+
+    .aside-note {
+      border-left: 3px solid var(--green);
+      padding-left: 16px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .flow {
+      margin: 28px 0 16px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .flow-step {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px;
+      min-height: 160px;
+      position: relative;
+    }
+
+    .flow-step::before {
+      content: attr(data-step);
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      font-weight: 900;
+      color: rgba(37, 99, 235, .18);
+      font-size: 34px;
+      line-height: 1;
+    }
+
+    .flow-step h3 {
+      color: var(--blue-deep);
+      max-width: 82%;
+    }
+
+    .flow-step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 22px 0 14px;
+    }
+
+    .chip {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 760;
+      color: var(--muted);
+      background: rgba(251, 255, 253, .72);
+    }
+
+    .chip.blue { color: var(--blue-deep); border-color: rgba(37, 99, 235, .34); }
+    .chip.green { color: var(--green-deep); border-color: rgba(16, 163, 107, .36); }
+    .chip.warn { color: var(--warn); border-color: rgba(183, 121, 31, .35); }
+
+    .table-tools {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin: 26px 0 12px;
+      flex-wrap: wrap;
+    }
+
+    .segmented {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    button.filter {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--white);
+      color: var(--muted);
+      padding: 8px 11px;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 750;
+      cursor: pointer;
+    }
+
+    button.filter[aria-pressed="true"] {
+      border-color: var(--green);
+      background: rgba(16, 163, 107, .1);
+      color: var(--green-deep);
+    }
+
+    .search {
+      min-width: min(100%, 320px);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--white);
+      padding: 9px 11px;
+      color: var(--ink);
+      font: inherit;
+      font-size: 14px;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    table {
+      width: 100%;
+      min-width: 980px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 13px 14px;
+      border-bottom: 1px solid #dcece7;
+      vertical-align: top;
+      text-align: left;
+    }
+
+    th {
+      color: var(--green-deep);
+      font-size: 12px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      background: #eef8f4;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    td {
+      font-size: 14px;
+    }
+
+    td strong {
+      color: var(--ink);
+      font-size: 15px;
+    }
+
+    tbody tr:hover {
+      background: rgba(37, 99, 235, .045);
+    }
+
+    .benchmark-split {
+      display: grid;
+      grid-template-columns: minmax(260px, .34fr) minmax(0, .66fr);
+      gap: 16px;
+      margin-top: 26px;
+      align-items: start;
+    }
+
+    .split-label {
+      color: var(--green-deep);
+      font-size: 12px;
+      font-weight: 850;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .classic-bench,
+    .new-bench {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(251, 255, 253, .84);
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    .bench-card {
+      border-top: 1px solid #dcece7;
+      padding: 16px 0 14px;
+    }
+
+    .bench-card:first-of-type {
+      border-top: 0;
+      padding-top: 2px;
+    }
+
+    .bench-card h3 {
+      margin: 0 0 8px;
+      font-size: 19px;
+      color: var(--blue-deep);
+    }
+
+    .bench-card p {
+      margin: 0 0 9px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    details {
+      border-top: 1px solid #dcece7;
+      padding: 13px 0;
+    }
+
+    details:first-of-type {
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    summary {
+      cursor: pointer;
+      list-style: none;
+      display: grid;
+      grid-template-columns: 24px minmax(150px, .35fr) minmax(0, .65fr);
+      gap: 10px;
+      align-items: baseline;
+      color: var(--blue-deep);
+      font-weight: 800;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    summary::before {
+      content: "+";
+      display: inline-grid;
+      place-items: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 1px solid rgba(37, 99, 235, .32);
+      color: var(--blue-deep);
+      font-size: 14px;
+      grid-column: 1;
+      grid-row: 1;
+      justify-self: start;
+    }
+
+    details[open] summary::before {
+      content: "-";
+      background: rgba(16, 163, 107, .1);
+      color: var(--green-deep);
+      border-color: rgba(16, 163, 107, .36);
+    }
+
+    summary span {
+      grid-column: 2;
+      padding-right: 8px;
+    }
+
+    summary span a {
+      color: inherit;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 4px;
+    }
+
+    summary span a:hover {
+      color: #063a7d;
+    }
+
+    summary em {
+      grid-column: 3;
+      color: var(--muted);
+      font-style: normal;
+      font-size: 14px;
+      font-weight: 650;
+    }
+
+    details p {
+      margin: 9px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      max-width: 820px;
+    }
+
+    .tag {
+      display: inline-block;
+      border-radius: 5px;
+      padding: 3px 6px;
+      background: rgba(37, 99, 235, .1);
+      color: var(--blue-deep);
+      font-size: 12px;
+      font-weight: 750;
+      margin: 2px 3px 2px 0;
+      white-space: nowrap;
+    }
+
+    .tag.green {
+      background: rgba(16, 163, 107, .12);
+      color: var(--green-deep);
+    }
+
+    .tag.warn {
+      background: rgba(183, 121, 31, .12);
+      color: #80510f;
+    }
+
+    .tag.red {
+      background: rgba(180, 35, 24, .1);
+      color: var(--danger);
+    }
+
+    .tag.date {
+      background: rgba(15, 138, 166, .1);
+      color: var(--cyan);
+    }
+
+    .matrix {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(251, 255, 253, .78);
+      padding: 20px;
+    }
+
+    .panel ul {
+      padding-left: 18px;
+      margin: 10px 0 0;
+      color: var(--muted);
+    }
+
+    .panel li + li { margin-top: 7px; }
+
+    .pipeline {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(120px, 1fr));
+      gap: 8px;
+      margin-top: 26px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .pipe-node {
+      min-height: 122px;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      padding: 14px;
+      background: var(--white);
+      position: relative;
+    }
+
+    .pipe-node h4 {
+      margin: 0 0 8px;
+      color: var(--blue-deep);
+      font-size: 14px;
+    }
+
+    .pipe-node p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .bar-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: minmax(160px, .35fr) minmax(220px, .65fr) 92px;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .bar-row span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .bar-track {
+      height: 12px;
+      background: #dcece7;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--blue), var(--green));
+      border-radius: inherit;
+      transform-origin: left center;
+    }
+
+    .callout {
+      margin-top: 26px;
+      border-top: 4px solid var(--green);
+      border-radius: var(--radius);
+      background: #fbfffd;
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+
+    .callout strong {
+      color: var(--green-deep);
+    }
+
+    .synthesis-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 26px;
+    }
+
+    .synth-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(251, 255, 253, .86);
+      padding: 18px;
+      min-height: 182px;
+    }
+
+    .synth-card h3 {
+      color: var(--blue-deep);
+      font-size: 19px;
+    }
+
+    .synth-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .source-grid {
+      columns: 2;
+      column-gap: 32px;
+      margin-top: 20px;
+    }
+
+    .source-grid a {
+      display: block;
+      break-inside: avoid;
+      padding: 5px 0;
+      font-size: 14px;
+    }
+
+    footer {
+      padding: 34px 24px 54px;
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+      background: #edf7f3;
+    }
+
+    footer .wrap {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+      font-size: 13px;
+    }
+
+    @media (max-width: 900px) {
+      .hero-grid,
+      .section-head,
+      .flow,
+      .matrix,
+      .benchmark-split,
+      .synthesis-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .metric-strip {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .nav {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .navlinks {
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .metric-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .bar-row {
+        grid-template-columns: 1fr;
+      }
+
+      .source-grid {
+        columns: 1;
+      }
+
+      h1 {
+        font-size: 40px;
+      }
+    }
+
+    @media print {
+      .topbar,
+      .table-tools {
+        display: none;
+      }
+
+      body {
+        background: var(--paper);
+      }
+
+      section,
+      header {
+        break-inside: avoid;
+      }
+
+      .table-wrap {
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <nav class="nav" aria-label="页面导航">
+      <div class="brand">SWE Agent Report</div>
+      <div class="navlinks">
+        <a href="#benchmarks">评测</a>
+        <a href="#traces">轨迹数据</a>
+        <a href="#docker">Docker 资产</a>
+        <a href="#pipeline">我们的 Pipeline</a>
+        <a href="#synthesis">合成方法</a>
+        <a href="#sources">来源</a>
+      </div>
+    </nav>
+  </div>
+
+  <header>
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow">SWE agent landscape</div>
+        <h1>Coding Agent 数据与评测版图</h1>
+        <p class="hero-copy">
+          从 benchmark 到现成轨迹数据，再到可复现实例与 Docker 镜像：这份汇报聚焦一个问题，
+          我们应该测什么、拿什么训、以及怎样把现成任务池变成自己的 agent rollout 工厂。
+        </p>
+      </div>
+      <aside class="thesis">
+        <h2>核心判断</h2>
+        <p>
+          前沿 coding agent 的差距，已经不只体现在一次 patch 写得好不好，而是体现在评测覆盖、可执行轨迹、
+          可复现 SWE 环境和持续造数据的能力上。
+        </p>
+      </aside>
+    </div>
+  </header>
+
+  <div class="metric-strip" aria-label="报告关键数字">
+    <div class="metric"><b>3</b><span>汇报主轴：评测、轨迹、可运行环境</span></div>
+    <div class="metric"><b>20+</b><span>值得跟踪的 SWE benchmark</span></div>
+    <div class="metric"><b>10+</b><span>现成大规模 agent trajectory 数据源</span></div>
+    <div class="metric"><b>13+</b><span>SWE 可运行 / 可构建环境资产</span></div>
+  </div>
+
+  <main>
+    <section id="map">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="kicker">overall map</div>
+            <h2>这份报告看三类资产</h2>
+            <p class="section-copy">
+              Benchmark 负责回答“测什么”，trajectory corpus 负责回答“拿什么训”，Docker/env 资产则决定我们能不能继续自己生产 rollout。
+              三类资产连起来，才是一条完整的 coding agent 数据链路。
+            </p>
+          </div>
+          <div class="aside-note">
+            例如 Open-SWE-Traces 是轨迹集，不是镜像集；SWE-rebench V2 是可执行任务池，既能做评测，也能做 rollout seed。
+          </div>
+        </div>
+        <div class="flow">
+          <article class="flow-step" data-step="01">
+            <h3>值得测什么</h3>
+            <p>从老牌 repair benchmark 到长周期任务，再到仓库探索、定位、QA、技能和诊断。</p>
+          </article>
+          <article class="flow-step" data-step="02">
+            <h3>现成能训什么</h3>
+            <p>看 action/observation 是否完整，resolved 标签是否可靠，teacher、scaffold、语言和去重是否清楚。</p>
+          </article>
+          <article class="flow-step" data-step="03">
+            <h3>自己能跑什么</h3>
+            <p>有镜像或 Dockerfile 的任务池，才能稳定进入 K8s rollout，产出和我们 harness 对齐的新数据。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="benchmarks">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="kicker">part 1</div>
+            <h2>评测版图：从最终修复到子能力诊断</h2>
+            <p class="section-copy">
+              大厂发布 coding 模型时绕不开 SWE-bench Verified / Pro、真实任务和更难的长周期工程任务；
+              学界最近则把能力拆得更细：探索、定位、仓库理解、技能有效性和长期维护都开始单独评。
+            </p>
+          </div>
+          <div class="aside-note">
+            SWE-bench 定义了标准问题；Pro、真实任务和过程诊断，把这把尺子继续推向更难、更真实、也更容易定位问题的方向。
+          </div>
+        </div>
+
+        <div class="benchmark-split">
+          <div class="classic-bench">
+            <div class="split-label">大厂发布常测基准</div>
+            <article class="bench-card">
+              <h3><a href="https://www.swebench.com/" target="_blank" rel="noreferrer">SWE-bench / Lite / Verified</a></h3>
+              <p>真实 GitHub issue repair。Verified 仍然是 sanity、横向对比和回归测试里最稳的基础尺子。</p>
+              <span class="tag">classic</span><span class="tag green">docker</span><span class="tag date">arXiv 2023-10-10</span>
+            </article>
+            <article class="bench-card">
+              <h3><a href="https://github.com/scaleapi/SWE-bench_Pro-os" target="_blank" rel="noreferrer">SWE-Bench Pro / SWEAP</a></h3>
+              <p>更难的工业级长周期 repair 任务，用来拉开 frontier coding agent 的真实工程差距。</p>
+              <span class="tag">new standard</span><span class="tag green">images</span><span class="tag date">arXiv 2025-09-21</span>
+            </article>
+          </div>
+
+          <div class="new-bench">
+            <div class="split-label">近年新增与子能力评测</div>
+            <details open>
+              <summary><span><a href="https://arxiv.org/abs/2606.07297" target="_blank" rel="noreferrer">SWE-Explore</a></span><em>仓库探索 / code-region retrieval</em></summary>
+              <p>给定 repo 和 issue，在有限 line budget 下返回相关代码区域排序。它把修复之前“先找对上下文”的能力单独拎出来。</p>
+              <span class="tag date">arXiv 2026-06-05</span>
+            </details>
+            <details>
+              <summary><span><a href="https://arxiv.org/abs/2607.00990" target="_blank" rel="noreferrer">SWE-Doctor</a></span><em>runtime diagnosis</em></summary>
+              <p>用多角度 bug reproduction tests 生成运行时诊断，把测试失败从一个红叉变成可训练的中间信号。</p>
+              <span class="tag date">arXiv 2026-07-01</span>
+            </details>
+            <details>
+              <summary><span><a href="https://arxiv.org/html/2605.08366v1" target="_blank" rel="noreferrer">SWE Atlas</a></span><em>QA / test writing / refactoring</em></summary>
+              <p>把 software engineering agent 的评测范围，从 issue repair 扩到代码库问答、测试编写和重构。</p>
+              <span class="tag date">arXiv 2026-05-08</span>
+            </details>
+            <details>
+              <summary><span><a href="https://arxiv.org/abs/2509.25242" target="_blank" rel="noreferrer">MULocBench / Multi-CoLoR</a></span><em>多语言定位</em></summary>
+              <p>聚焦文件、函数、行级定位，衡量 agent 在大型仓库里能不能先找对修改位置。</p>
+              <span class="tag date">arXiv 2025-09-26</span>
+            </details>
+            <details>
+              <summary><span><a href="https://arxiv.org/abs/2509.14635" target="_blank" rel="noreferrer">SWE-QA / SWE-QA-Pro</a></span><em>repo-level understanding</em></summary>
+              <p>关注多文件、多跳依赖、架构理解和代码库问答，补上最终 patch 指标看不到的理解能力。</p>
+              <span class="tag date">arXiv 2025-09-18</span>
+            </details>
+            <details>
+              <summary><span><a href="https://arxiv.org/abs/2603.15401" target="_blank" rel="noreferrer">SWE-Skills-Bench</a></span><em>skill effectiveness</em></summary>
+              <p>评估 skill 文档、microagent、工具说明是不是真的帮到了 agent，而不是只把上下文变长。</p>
+              <span class="tag date">arXiv 2026-03-16</span>
+            </details>
+            <details>
+              <summary><span><a href="https://openai.com/index/swe-lancer/" target="_blank" rel="noreferrer">SWE-Lancer</a> / <a href="https://arxiv.org/html/2603.03823v1" target="_blank" rel="noreferrer">SWE-CI</a> / <a href="https://arxiv.org/html/2603.03823v1" target="_blank" rel="noreferrer">SWE-EVO</a></span><em>真实工作流与长期维护</em></summary>
+              <p>SWE-Lancer 更贴近真实付费工程任务；SWE-CI 和 SWE-EVO 则把视角推向 CI、release evolution 和长期维护。</p>
+              <span class="tag date">SWE-CI arXiv 2026-03-04</span>
+            </details>
+          </div>
+        </div>
+
+        <div class="matrix">
+          <article class="panel">
+            <h3>工业界模型发布常见口径</h3>
+            <ul>
+              <li>SWE-bench Verified 仍是基线，但 frontier 模型已经需要 SWE-Bench Pro / SWE-Lancer 这类更难、更抗污染的任务。</li>
+              <li>Codex / Claude Code 一类产品不只看最终 patch，也看长任务、工具调用、sandbox 和真实 SWE workflow。</li>
+              <li>Qwen / DeepSeek / MiniMax 这类可私有化 teacher，正在成为大规模 rollout 数据生成的常见选择。</li>
+            </ul>
+          </article>
+          <article class="panel">
+            <h3>学界新趋势</h3>
+            <ul>
+              <li>SWE-Explore、MULocBench：先看上下文和位置找得准不准，再谈 patch。</li>
+              <li>SWE-Doctor、TrajAudit、SWE-chat：不只看结果，也看 agent 过程里哪里走偏了。</li>
+              <li>SWE-CI、SWE-EVO、SWE Atlas：把任务从单个 issue 推到长期维护、QA、测试和重构。</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="traces">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="kicker">part 2</div>
+            <h2>现成轨迹数据集：可复用的 agent trace corpus</h2>
+            <p class="section-copy">
+              Open-SWE-Traces、Orchard、CoderForge、SWE-ZERO 系列说明，公开 SWE traces 已经足够支撑一个
+              “先学 agent 行为，再用自有 pipeline 对齐”的路线。
+            </p>
+          </div>
+          <div class="aside-note">
+            records 数量只是第一眼。execution-backed、resolved 标签、teacher 分布和 scaffold 一致性，才决定这些数据能不能放心进训练。
+          </div>
+        </div>
+
+        <div class="bar-list" aria-label="数据集规模对比">
+          <div class="bar-row">
+            <span>SWE-ZERO-12M</span>
+            <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
+            <span>12.29M</span>
+          </div>
+          <div class="bar-row">
+            <span>Open-SWE-Traces</span>
+            <div class="bar-track"><div class="bar-fill" style="width:2%"></div></div>
+            <span>207K</span>
+          </div>
+          <div class="bar-row">
+            <span>Orchard</span>
+            <div class="bar-track"><div class="bar-fill" style="width:1%"></div></div>
+            <span>107K</span>
+          </div>
+        </div>
+
+        <div class="table-tools" data-controls="traces-table">
+          <div class="segmented" role="group" aria-label="Trace 过滤">
+            <button class="filter" data-filter="all" aria-pressed="true">全部</button>
+            <button class="filter" data-filter="swe" aria-pressed="false">SWE 主线</button>
+            <button class="filter" data-filter="execution-free" aria-pressed="false">Execution-free</button>
+            <button class="filter" data-filter="real-user" aria-pressed="false">真实用户</button>
+          </div>
+          <input class="search" type="search" placeholder="搜索数据集 / teacher / scaffold" aria-label="搜索轨迹数据集">
+        </div>
+
+        <div class="table-wrap">
+          <table id="traces-table">
+            <thead>
+              <tr>
+                <th>数据集</th>
+                <th>规模</th>
+                <th>Teacher / scaffold</th>
+                <th>性质</th>
+                <th>用途</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <div class="callout">
+          <strong>这一层的定位：</strong>
+          公开轨迹数据主要提供 agentic prior 和格式 warmup；与产品/训练栈对齐的数据，仍然依赖自有 K8s、
+          Docker/env、OpenHands/Claude Code scaffold 持续生产 execution-backed rollout。
+        </div>
+      </div>
+    </section>
+
+    <section id="docker">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="kicker">part 3</div>
+            <h2>可运行环境：哪些任务池能接进 rollout 工厂</h2>
+            <p class="section-copy">
+              镜像、Dockerfile 和稳定测试环境，决定一个任务池能不能真正进入我们的 pipeline。
+              这一节只保留软件工程任务池；没有镜像的数据集和非 SWE 专项任务不混在这里。
+            </p>
+          </div>
+          <div class="aside-note">
+            当前的接入顺序可以很清楚：Verified 做 sanity，SWE-rebench V2 和 Scale-SWE 做规模，SWE-Pro/SWEAP 做难例，多语言和专项池做覆盖补充。
+          </div>
+        </div>
+
+        <div class="table-tools" data-controls="docker-table">
+          <div class="segmented" role="group" aria-label="Docker 资产过滤">
+            <button class="filter" data-filter="all" aria-pressed="true">全部</button>
+            <button class="filter" data-filter="ready" aria-pressed="false">优先接入</button>
+            <button class="filter" data-filter="scale" aria-pressed="false">大规模</button>
+            <button class="filter" data-filter="buildable" aria-pressed="false">可构建</button>
+          </div>
+          <input class="search" type="search" placeholder="搜索镜像 / benchmark / 备注" aria-label="搜索 Docker 资产">
+        </div>
+
+        <div class="table-wrap">
+          <table id="docker-table">
+            <thead>
+              <tr>
+                <th>资产池</th>
+                <th>镜像/环境状态</th>
+                <th>规模</th>
+                <th>接入价值</th>
+                <th>注意事项</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="pipeline">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="kicker">our rollout factory</div>
+            <h2>我们的 pipeline：SWE rollout factory</h2>
+            <p class="section-copy">
+              这里不是重新发明 benchmark，而是把已有可执行任务池变成持续产出 agent 训练轨迹的系统。
+              关注点也不只在最终分数，而是 action、observation、测试反馈、失败原因和 verifier 信号。
+            </p>
+          </div>
+          <div class="aside-note">
+            `SWE-synthesis-pipeline` 正好对应这一层：ltp-docker 起 Pod，OpenHands/Claude Code 跑 agent，Mongo 收 spans，再过滤和导出。
+          </div>
+        </div>
+
+        <div class="pipeline" aria-label="rollout pipeline">
+          <div class="pipe-node"><h4>Benchmark seeds</h4><p>Verified / rebench V2 / Scale-SWE / SWE-Pro / R2E-Gym</p></div>
+          <div class="pipe-node"><h4>Image resolver</h4><p>swe-mirror 重写、镜像存在性检查、网络权限分类</p></div>
+          <div class="pipe-node"><h4>K8s Pod</h4><p>ltp-docker 容器 API，上传脚本，启动 repo 环境</p></div>
+          <div class="pipe-node"><h4>Agent scaffold</h4><p>OpenHands / Claude Code / SWE-agent，统一 action schema</p></div>
+          <div class="pipe-node"><h4>Trace capture</h4><p>spans、token/logprob、stdout/stderr、diff、工具调用</p></div>
+          <div class="pipe-node"><h4>Verifier</h4><p>gold patch filter、resolved scorer、flaky 重跑、弱测试检测</p></div>
+          <div class="pipe-node"><h4>Training views</h4><p>SFT triplet、preference pair、critic、verifier、RL replay</p></div>
+        </div>
+
+        <div class="matrix">
+          <article class="panel">
+            <h3>短期改进</h3>
+            <ul>
+              <li>把 SWE-Pro/SWEAP、Scale-SWE 和多语言 SWE 任务池接进统一 run manifest。</li>
+              <li>给每个 seed 留下 image、语言、repo、issue、验证状态和失败原因。</li>
+              <li>成功和失败轨迹都保留标签，不只导出 resolved==1。</li>
+              <li>按 scaffold 拆分统计，避免 OpenHands / Claude Code 的风格差异混在一起。</li>
+            </ul>
+          </article>
+          <article class="panel">
+            <h3>中期改进</h3>
+            <ul>
+              <li>从成功轨迹里蒸馏 SWE-Explore 式 code-region labels，训练 context selector。</li>
+              <li>引入 SWE-Doctor 式 runtime diagnosis，把测试失败转成中间监督。</li>
+              <li>给 trajectory quality audit 留出标签：定位失败、命令失败、环境失败、patch 作弊、过早结束。</li>
+              <li>用 Open-SWE-Traces / Orchard / CoderForge 做 schema 对齐和 cold-start warmup。</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="synthesis">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="kicker">data synthesis</div>
+            <h2>合成数据，不只有 Docker rollout</h2>
+            <p class="section-copy">
+              Docker rollout 给的是最硬的执行验证，但成本也最高。SWE 数据还可以从 issue、PR、测试、日志、静态结构、teacher traces 和用户交互里长出来。
+            </p>
+          </div>
+          <div class="aside-note">
+            这些方法的区别主要在验证强度：完全可执行、弱执行、静态监督、execution-free 行为蒸馏，各自服务不同训练阶段。
+          </div>
+        </div>
+
+        <div class="synthesis-grid">
+          <article class="synth-card">
+            <h3>PR 反演任务</h3>
+            <p>从真实 merged PR 中隐藏 patch，保留 issue、commit message、diff 上下文和测试变化，反向构造修复任务。</p>
+          </article>
+          <article class="synth-card">
+            <h3>测试驱动合成</h3>
+            <p>先合成或抽取 failing tests，再让 agent 生成实现或修复。功能添加、边界条件、回归测试和 verifier 数据都能从这里来。</p>
+          </article>
+          <article class="synth-card">
+            <h3>Bug 注入</h3>
+            <p>在真实仓库里注入接近真实错误的扰动：条件反转、API 误用、边界错误、类型错误，再用原测试或新增测试验证。</p>
+          </article>
+          <article class="synth-card">
+            <h3>静态定位监督</h3>
+            <p>用 diff、调用图、测试覆盖、stack trace、import graph 生成文件/函数/行级相关区域标签，训练 explorer 和 retriever。</p>
+          </article>
+          <article class="synth-card">
+            <h3>Teacher 轨迹蒸馏</h3>
+            <p>让强 teacher 在无 Docker 或弱验证环境里生成 action/observation 轨迹，清掉格式、重复和明显错误后用于 agentic warmup。</p>
+          </article>
+          <article class="synth-card">
+            <h3>失败轨迹再标注</h3>
+            <p>失败 rollout 不直接丢掉，而是标注定位失败、命令失败、测试误读、环境失败、patch 过拟合，用来训练 critic 和偏好模型。</p>
+          </article>
+          <article class="synth-card">
+            <h3>日志到诊断</h3>
+            <p>从 pytest、build、CI、runtime logs 中抽出“错误现象 -> 根因 -> 下一步动作”，形成类似 SWE-Doctor 的诊断层。</p>
+          </article>
+          <article class="synth-card">
+            <h3>CI 反馈任务</h3>
+            <p>从 CI script、失败测试、build logs 和依赖变更里生成修复任务，训练 agent 读失败原因、改代码并重新验证。</p>
+          </article>
+          <article class="synth-card">
+            <h3>真实会话清洗</h3>
+            <p>从用户和 agent 的真实会话中抽取人类纠错、agent 修改、测试反馈、最终保留代码，形成偏好和行为数据。</p>
+          </article>
+        </div>
+
+        <div class="callout">
+          <strong>训练分工：</strong>
+          execution-free 数据打底行为先验；静态定位和日志诊断补中间监督；Docker rollout 负责最终 resolved 信号和 harness 对齐。
+        </div>
+      </div>
+    </section>
+
+    <section id="sources">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="kicker">reference</div>
+            <h2>主要来源</h2>
+            <p class="section-copy">
+              下面只列汇报中直接使用的核心来源。飞书里的 SFT 统计表可作为内部主数据源，这里补公开论文、HF card 和项目页。
+            </p>
+          </div>
+        </div>
+        <div class="source-grid">
+          <a href="https://www.swebench.com/" target="_blank" rel="noreferrer">SWE-bench official · arXiv 2023-10-10</a>
+          <a href="https://github.com/scaleapi/SWE-bench_Pro-os" target="_blank" rel="noreferrer">SWE-Bench Pro / SWEAP OS · arXiv 2025-09-21</a>
+          <a href="https://openai.com/index/swe-lancer/" target="_blank" rel="noreferrer">OpenAI SWE-Lancer · OpenAI 2025</a>
+          <a href="https://arxiv.org/abs/2606.07297" target="_blank" rel="noreferrer">SWE-Explore · arXiv 2026-06-05</a>
+          <a href="https://arxiv.org/abs/2607.00990" target="_blank" rel="noreferrer">SWE-Doctor · arXiv 2026-07-01</a>
+          <a href="https://arxiv.org/html/2605.08366v1" target="_blank" rel="noreferrer">SWE Atlas · arXiv 2026-05-08</a>
+          <a href="https://huggingface.co/datasets/nvidia/Open-SWE-Traces" target="_blank" rel="noreferrer">NVIDIA Open-SWE-Traces · arXiv 2026-06-14</a>
+          <a href="https://huggingface.co/datasets/microsoft/Orchard" target="_blank" rel="noreferrer">Microsoft Orchard · arXiv 2026-05-14</a>
+          <a href="https://huggingface.co/datasets/AlienKevin/SWE-ZERO-12M-trajectories" target="_blank" rel="noreferrer">SWE-ZERO-12M · SWE-ZERO/HERO arXiv 2026-04-02</a>
+          <a href="https://huggingface.co/datasets/togethercomputer/CoderForge-Preview" target="_blank" rel="noreferrer">CoderForge-Preview · Together blog 2026-02</a>
+          <a href="https://nebius.com/blog/posts/meet-swe-rebench-v2" target="_blank" rel="noreferrer">SWE-rebench V2 · Nebius blog</a>
+          <a href="https://arxiv.org/abs/2602.09892" target="_blank" rel="noreferrer">Scale-SWE · arXiv 2026-02-10</a>
+          <a href="https://arxiv.org/abs/2505.23419" target="_blank" rel="noreferrer">SWE-bench-Live · arXiv 2025-05-29</a>
+          <a href="https://arxiv.org/abs/2504.02605" target="_blank" rel="noreferrer">Multi-SWE-bench · arXiv 2025-04-03</a>
+          <a href="https://arxiv.org/abs/2504.08703" target="_blank" rel="noreferrer">SWE-PolyBench · arXiv 2025-04-11</a>
+          <a href="https://github.com/swe-bench/swe-bench-java" target="_blank" rel="noreferrer">SWE-bench-java · project</a>
+          <a href="https://r2e-gym.github.io/" target="_blank" rel="noreferrer">R2E-Gym · arXiv 2025-04-09</a>
+          <a href="https://github.com/SWE-Gym/SWE-Gym" target="_blank" rel="noreferrer">SWE-Gym · arXiv 2024-12-30</a>
+          <a href="https://github.com/SWE-bench/SWE-smith-envs" target="_blank" rel="noreferrer">SWE-smith environments · project</a>
+          <a href="https://github.com/GAIR-NLP/OpenSWE" target="_blank" rel="noreferrer">OpenSWE / daVinci-Env · arXiv 2026-03-13</a>
+          <a href="https://arxiv.org/abs/2505.16975" target="_blank" rel="noreferrer">SWE-Dev · arXiv 2025-05-22</a>
+          <a href="https://arxiv.org/abs/2507.12415" target="_blank" rel="noreferrer">SWE-Perf · arXiv 2025-07-16</a>
+          <a href="https://www.swe-chat.com/" target="_blank" rel="noreferrer">SWE-chat · arXiv 2026-04-22</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>SWE agent benchmark, trace and rollout factory landscape.</span>
+      <span>Blue + green report theme.</span>
+    </div>
+  </footer>
+
+  <script>
+    const benchmarks = [
+      {
+        name: "SWE-bench / Lite / Verified",
+        link: "https://www.swebench.com/",
+        date: "arXiv 2023-10-10",
+        type: ["core", "repair"],
+        kind: "真实 GitHub issue repair",
+        target: "仓库级定位、patch、测试验证",
+        why: "老牌标准尺子；Verified 稳定，适合 sanity 和横向对比。",
+        status: ["classic", "docker"]
+      },
+      {
+        name: "SWE-Bench Pro / SWEAP",
+        link: "https://github.com/scaleapi/SWE-bench_Pro-os",
+        date: "arXiv 2025-09-21",
+        type: ["core", "new", "repair"],
+        kind: "工业级长周期 repair",
+        target: "更难 issue、更多上下文、企业式任务",
+        why: "OpenAI 等已强调 Verified 对 frontier 不够；Pro 更适合测难例。",
+        status: ["new", "docker", "hard"]
+      },
+      {
+        name: "SWE-Lancer",
+        link: "https://openai.com/index/swe-lancer/",
+        date: "OpenAI 2025",
+        type: ["new", "core"],
+        kind: "freelance engineering tasks",
+        target: "真实付费软件工程任务",
+        why: "工业界真实工作流信号强，反映 benchmark 反污染趋势。",
+        status: ["industry", "hard"]
+      },
+      {
+        name: "SWE-Explore",
+        link: "https://arxiv.org/abs/2606.07297",
+        date: "arXiv 2026-06-05",
+        type: ["new", "diagnostic"],
+        kind: "仓库探索 / code-region retrieval",
+        target: "line budget 下找对 relevant code regions",
+        why: "把最终修复拆成前置探索能力；可从成功 rollout 反向蒸馏标签。",
+        status: ["new", "sub-skill"]
+      },
+      {
+        name: "MULocBench / Multi-CoLoR",
+        link: "https://arxiv.org/abs/2509.25242",
+        date: "arXiv 2025-09-26",
+        type: ["new", "diagnostic"],
+        kind: "定位 benchmark",
+        target: "多语言 issue localization",
+        why: "说明 context selector 是训练对象，而不是 prompt trick。",
+        status: ["sub-skill"]
+      },
+      {
+        name: "SWE-QA / SWE-QA-Pro",
+        link: "https://arxiv.org/abs/2509.14635",
+        date: "arXiv 2025-09-18",
+        type: ["new", "diagnostic"],
+        kind: "repo-level QA",
+        target: "代码库理解、多跳依赖、架构问答",
+        why: "补 repair 之外的代码库理解能力。",
+        status: ["sub-skill"]
+      },
+      {
+        name: "SWE-Skills-Bench",
+        link: "https://arxiv.org/abs/2603.15401",
+        date: "arXiv 2026-03-16",
+        type: ["new", "diagnostic"],
+        kind: "skill effectiveness",
+        target: "skill 文档 / microagent 是否真的提升 agent",
+        why: "直接关联 Claude Code / Codex 式 context and tool engineering。",
+        status: ["sub-skill"]
+      },
+      {
+        name: "SWE-Doctor",
+        link: "https://arxiv.org/abs/2607.00990",
+        date: "arXiv 2026-07-01",
+        type: ["new", "diagnostic"],
+        kind: "runtime diagnosis",
+        target: "bug reproduction tests 到诊断反馈",
+        why: "适合把测试失败转成中间监督，而不只是 pass/fail。",
+        status: ["new", "diagnosis"]
+      },
+      {
+        name: "SWE Atlas",
+        link: "https://arxiv.org/html/2605.08366v1",
+        date: "arXiv 2026-05-08",
+        type: ["new", "diagnostic"],
+        kind: "beyond issue resolution",
+        target: "Codebase QA、Test Writing、Refactoring",
+        why: "把 software engineering agent 从修 issue 推到多任务能力矩阵。",
+        status: ["new", "multi-task"]
+      },
+      {
+        name: "SWE-CI / SWE-EVO",
+        link: "https://arxiv.org/html/2603.03823v1",
+        date: "SWE-CI arXiv 2026-03-04",
+        type: ["new", "diagnostic"],
+        kind: "长期维护 / 演进",
+        target: "CI、release evolution、长期软件维护",
+        why: "从单 issue 修复走向持续工程任务。",
+        status: ["long-horizon"]
+      },
+      {
+        name: "Multi-SWE-bench / Rust-SWE-bench / Multimodal",
+        link: "https://arxiv.org/abs/2504.02605",
+        date: "Multi-SWE-bench arXiv 2025-04-03",
+        type: ["core", "new", "repair"],
+        kind: "语言和领域扩展",
+        target: "多语言、Rust、视觉软件任务",
+        why: "避免 Python-only 的 benchmark 偏置。",
+        status: ["multi-lang"]
+      }
+    ];
+
+    const traces = [
+      {
+        name: "NVIDIA Open-SWE-Traces",
+        link: "https://huggingface.co/datasets/nvidia/Open-SWE-Traces",
+        date: "arXiv 2026-06-14",
+        type: ["swe"],
+        size: "207,489 trajectories",
+        teacher: "MiniMax-M2.5 + Qwen3.5；OpenHands + SWE-agent",
+        nature: "多语言、resolved 三值、SWE-rebench-V2",
+        use: "高优先级 SFT / schema 对齐 / 多语言增量"
+      },
+      {
+        name: "Microsoft Orchard",
+        link: "https://huggingface.co/datasets/microsoft/Orchard",
+        date: "arXiv 2026-05-14",
+        type: ["swe"],
+        size: "107,185 trajectories",
+        teacher: "MiniMax-M2.5 + Qwen3.5；mini-swe-agent + OpenHands",
+        nature: "SWE-rebench + Scale-SWE；含 unresolved",
+        use: "credit assignment、失败轨迹学习、跨 harness 对齐"
+      },
+      {
+        name: "SWE-ZERO-12M",
+        link: "https://huggingface.co/datasets/AlienKevin/SWE-ZERO-12M-trajectories",
+        date: "SWE-ZERO/HERO arXiv 2026-04-02",
+        type: ["execution-free", "swe"],
+        size: "12.29M rollouts / 112B tokens",
+        teacher: "mini-coder-1.7B；mini-swe-agent v1",
+        nature: "execution-free，不建 Docker，不跑测试",
+        use: "agentic mid-training、shell/repo navigation prior"
+      },
+      {
+        name: "CoderForge-Preview",
+        link: "https://huggingface.co/datasets/togethercomputer/CoderForge-Preview",
+        date: "Together blog 2026-02",
+        type: ["swe"],
+        size: "258K test-verified trajectories",
+        teacher: "Qwen3-32B lineage；OpenHands style",
+        nature: "51K tasks，pass/fail 都有",
+        use: "强 SFT warmup；注意 scaffold 偏置"
+      },
+      {
+        name: "Nebius SWE-rebench OpenHands trajectories",
+        link: "https://huggingface.co/datasets/nebius/SWE-rebench-openhands-trajectories",
+        date: "HF dataset",
+        type: ["swe"],
+        size: "约 67K trajectories",
+        teacher: "Qwen3-Coder-480B；OpenHands",
+        nature: "SWE-rebench 上的完整 steps/actions/observations",
+        use: "和我们 pipeline 的 rebench rollout 最容易对齐"
+      },
+      {
+        name: "Nebius SWE-agent-trajectories",
+        link: "https://huggingface.co/datasets/nebius/SWE-agent-trajectories",
+        date: "HF dataset",
+        type: ["swe"],
+        size: "80,036 trajectories",
+        teacher: "多模型；SWE-agent",
+        nature: "SWE-bench-extra + dev",
+        use: "SWE-agent 格式参考，训练/去重需谨慎"
+      },
+      {
+        name: "SWE-Lego Real Data Verified",
+        link: "https://huggingface.co/datasets/PrimeIntellect/SWE-Lego-Real-Data-Verified",
+        date: "arXiv 2026-01-04",
+        type: ["swe"],
+        size: "4,323 verified rows",
+        teacher: "OpenHands/Q480 messages in related release",
+        nature: "gold-patch-validated，配合 refined SFT recipe",
+        use: "讲 SFT recipe 和 verifier-guided TTS"
+      },
+      {
+        name: "MEnvData-SWE-Trajectory",
+        link: "https://huggingface.co/datasets/ernie-research/MEnvData-SWE-Trajectory",
+        date: "MEnvAgent arXiv 2026-01-30",
+        type: ["swe"],
+        size: "3,872 complete trajectories",
+        teacher: "MEnvAgent related",
+        nature: "10 语言、3,005 instances、942 repos",
+        use: "小规模但适合补多语言环境构造案例"
+      },
+      {
+        name: "SWE-chat",
+        link: "https://www.swe-chat.com/",
+        date: "arXiv 2026-04-22",
+        type: ["real-user"],
+        size: "6K sessions / 355K tool calls",
+        teacher: "真实开发者使用数据",
+        nature: "2.7M logged events，含人类接管",
+        use: "真实行为分布、failure taxonomy、产品评估"
+      }
+    ];
+
+    const dockerAssets = [
+      {
+        name: "SWE-bench / Verified",
+        link: "https://hub.docker.com/u/swebench",
+        date: "arXiv 2023-10-10",
+        type: ["ready"],
+        image: "`swebench/sweb.eval...`，官方 harness 也可构建",
+        scale: "Full 2.2K / Verified 500",
+        value: "sanity、标准横向对比、gold smoke",
+        note: "适合 pipeline 连通性和 scorer 校验"
+      },
+      {
+        name: "SWE-rebench V2",
+        link: "https://nebius.com/blog/posts/meet-swe-rebench-v2",
+        date: "Nebius blog",
+        type: ["ready", "scale"],
+        image: "`swerebenchv2/...` 预构建镜像",
+        scale: "约 32K executable tasks",
+        value: "当前最适合大规模 rollout 的主力池",
+        note: "另有 120K+ PR-derived tasks，偏可构建任务池"
+      },
+      {
+        name: "Scale-SWE",
+        link: "https://arxiv.org/abs/2602.09892",
+        date: "arXiv 2026-02-10",
+        type: ["buildable", "scale"],
+        image: "实例含 docker image / problem / validation tests；开源部分需核验 image_url",
+        scale: "100K verified instances；开源约 20.2K",
+        value: "大规模真实 PR 环境构造，Orchard 也把它作为任务源之一",
+        note: "和 SWE-Bench Pro / ScaleAI 不是同一层；接入前先抽样验证镜像可拉取和测试稳定性"
+      },
+      {
+        name: "SWE-Bench Pro / SWEAP",
+        link: "https://github.com/scaleapi/SWE-bench_Pro-os",
+        date: "arXiv 2025-09-21",
+        type: ["ready"],
+        image: "`jefzda/sweap-images`",
+        scale: "1,865 tasks",
+        value: "难例、长周期、工业 benchmark 对齐",
+        note: "建议单独统计，不和 Verified 分数直接混"
+      },
+      {
+        name: "SWE-bench-Live",
+        link: "https://arxiv.org/abs/2505.23419",
+        date: "arXiv 2025-05-29",
+        type: ["ready", "buildable"],
+        image: "每个 instance 配 dedicated Docker image",
+        scale: "1,319 live issue tasks",
+        value: "动态更新、降低污染，适合做 fresh holdout",
+        note: "规模不算大，但很适合评估近期模型和防数据泄漏"
+      },
+      {
+        name: "Multi-SWE-bench",
+        link: "https://arxiv.org/abs/2504.02605",
+        date: "arXiv 2025-04-03",
+        type: ["ready", "buildable"],
+        image: "论文说明发布 Docker images 与 ground-truth patches",
+        scale: "1,632 tasks / 7 languages",
+        value: "补 Python-only 偏置，适合多语言 SWE agent",
+        note: "Rust/JS/Java/Go 等语言环境稳定性需要分语言抽样"
+      },
+      {
+        name: "SWE-PolyBench",
+        link: "https://arxiv.org/abs/2504.08703",
+        date: "arXiv 2025-04-11",
+        type: ["ready", "buildable"],
+        image: "PB500 有 pre-built Docker images",
+        scale: "2,110 multi-language tasks；PB500 curated",
+        value: "多语言、多 repository issue repair",
+        note: "PB500 可优先接入；完整集接入前要重跑稳定性检查"
+      },
+      {
+        name: "SWE-bench-java",
+        link: "https://github.com/swe-bench/swe-bench-java",
+        date: "Project",
+        type: ["buildable"],
+        image: "Java repo tasks with executable tests / Docker workflow",
+        scale: "Java 专项任务池",
+        value: "专门补 Java/Maven/Gradle 工程栈",
+        note: "若已接 Multi-SWE-bench，可作为 Java 专项 sanity 或补充池"
+      },
+      {
+        name: "SWE-Gym",
+        link: "https://github.com/SWE-Gym/SWE-Gym",
+        date: "arXiv 2024-12-30",
+        type: ["ready"],
+        image: "`xingyaoww/sweb.eval.x86_64...`",
+        scale: "2,438 real Python tasks",
+        value: "训练 agent 和 verifier 的 gym 化环境",
+        note: "可作为 Verified 和 rebench 之间的中间难度池"
+      },
+      {
+        name: "R2E-Gym",
+        link: "https://r2e-gym.github.io/",
+        date: "arXiv 2025-04-09",
+        type: ["ready", "scale"],
+        image: "pre-built Docker images",
+        scale: "8.1K+ executable tasks",
+        value: "hybrid verifier、可执行 SWE 环境",
+        note: "适合补 SWE-Gen / environment construction 方法论"
+      },
+      {
+        name: "SWE-smith",
+        link: "https://github.com/SWE-bench/SWE-smith-envs",
+        date: "Project",
+        type: ["ready", "buildable"],
+        image: "SWE-smith env images / Docker Hub",
+        scale: "50K+ synthetic instances family",
+        value: "合成 issue、训练 SWE-agent-LM 类模型",
+        note: "分布和真实 PR 不同，适合作为合成增广"
+      },
+      {
+        name: "OpenSWE / daVinci-Env",
+        link: "https://github.com/GAIR-NLP/OpenSWE",
+        date: "arXiv 2026-03-13",
+        type: ["buildable", "scale"],
+        image: "Dockerfiles、eval scripts、infra 公开",
+        scale: "45,320 executable Docker environments",
+        value: "大规模真实环境构造案例",
+        note: "更偏可构建环境资产，需确认镜像 registry 可用性"
+      },
+      {
+        name: "SWE-Dev",
+        link: "https://arxiv.org/abs/2505.16975",
+        date: "arXiv 2025-05-22",
+        type: ["buildable"],
+        image: "可执行 unit tests；偏 feature development 环境",
+        scale: "14 task suites / 734 tests",
+        value: "从 bug fix 扩到 feature development",
+        note: "更像专项能力评测，接 rollout 前要先确认每个 suite 的环境封装方式"
+      },
+      {
+        name: "SWE-Perf",
+        link: "https://arxiv.org/abs/2507.12415",
+        date: "arXiv 2025-07-16",
+        type: ["buildable"],
+        image: "executable environments with performance tests",
+        scale: "性能优化任务池",
+        value: "补功能正确性之外的 latency/throughput 优化",
+        note: "适合作专项 benchmark；reward 设计要避免只过 correctness test"
+      }
+    ];
+
+    function tagFor(text) {
+      const lower = String(text).toLowerCase();
+      let klass = "";
+      if (lower.includes("docker") || lower.includes("ready") || lower.includes("resolved") || lower.includes("verified")) klass = "green";
+      if (lower.includes("no-image") || lower.includes("execution-free") || lower.includes("待")) klass = "warn";
+      if (lower.includes("hard") || lower.includes("失败")) klass = "red";
+      return `<span class="tag ${klass}">${text}</span>`;
+    }
+
+    function dateTag(row) {
+      return row.date ? `<span class="tag date">${row.date}</span>` : "";
+    }
+
+    function renderTable(tableId, rows, columns) {
+      const tbody = document.querySelector(`#${tableId} tbody`);
+      tbody.innerHTML = rows.map(row => {
+        const filterText = JSON.stringify(row).toLowerCase();
+        return `<tr data-types="${row.type.join(" ")}" data-search="${filterText.replace(/"/g, "&quot;")}">
+          ${columns.map(fn => `<td>${fn(row)}</td>`).join("")}
+        </tr>`;
+      }).join("");
+    }
+
+    renderTable("traces-table", traces, [
+      row => `<strong><a href="${row.link}" target="_blank" rel="noreferrer">${row.name}</a></strong><br>${row.type.map(tagFor).join("")}${dateTag(row)}`,
+      row => row.size,
+      row => row.teacher,
+      row => row.nature,
+      row => row.use
+    ]);
+
+    renderTable("docker-table", dockerAssets, [
+      row => `<strong><a href="${row.link}" target="_blank" rel="noreferrer">${row.name}</a></strong><br>${row.type.map(tagFor).join("")}${dateTag(row)}`,
+      row => row.image,
+      row => row.scale,
+      row => row.value,
+      row => row.note
+    ]);
+
+    document.querySelectorAll(".table-tools").forEach(tool => {
+      const table = document.getElementById(tool.dataset.controls);
+      const buttons = tool.querySelectorAll("button.filter");
+      const input = tool.querySelector(".search");
+
+      function applyFilter() {
+        const active = tool.querySelector("button.filter[aria-pressed='true']").dataset.filter;
+        const query = input.value.trim().toLowerCase();
+        table.querySelectorAll("tbody tr").forEach(row => {
+          const types = row.dataset.types.split(" ");
+          const typeMatch = active === "all" || types.includes(active);
+          const textMatch = !query || row.dataset.search.includes(query);
+          row.style.display = typeMatch && textMatch ? "" : "none";
+        });
+      }
+
+      buttons.forEach(button => {
+        button.addEventListener("click", () => {
+          buttons.forEach(item => item.setAttribute("aria-pressed", "false"));
+          button.setAttribute("aria-pressed", "true");
+          applyFilter();
+        });
+      });
+
+      input.addEventListener("input", applyFilter);
+    });
+  </script>
+</body>
+</html>
