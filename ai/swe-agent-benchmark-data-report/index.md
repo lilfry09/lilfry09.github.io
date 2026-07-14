@@ -11,6 +11,8 @@
 
 报告页面可以直接打开：
 
+**[打开 HTML 汇报：SWE Agent 数据与评测版图](/reports/swe-agent-benchmark-data-report.html)**
+
 {{< raw >}}
 <p>
   <a href="/reports/swe-agent-benchmark-data-report.html" target="_blank" rel="noreferrer" style="display:inline-block;padding:10px 14px;border:1px solid #0f8a65;border-radius:6px;color:#0f5f46;text-decoration:none;font-weight:700;">
@@ -25,5 +27,4 @@
   title="SWE Agent 数据与评测版图"
 ></iframe>
 {{< /raw >}}
-
 
