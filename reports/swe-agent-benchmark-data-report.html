@@ -570,6 +570,133 @@
       margin-top: 24px;
     }
 
+    .release-panel {
+      margin-top: 24px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(251, 255, 253, .84);
+      box-shadow: var(--shadow);
+      padding: 20px;
+    }
+
+    .subsection-heading {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 16px;
+    }
+
+    .subsection-heading h3 {
+      margin: 2px 0 0;
+      color: var(--blue-deep);
+      font-size: 24px;
+    }
+
+    .subsection-heading p {
+      max-width: 650px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .release-table {
+      overflow-x: auto;
+      border: 1px solid #dcece7;
+      border-radius: var(--radius);
+      background: var(--white);
+    }
+
+    .release-table table {
+      min-width: 900px;
+    }
+
+    .release-table th {
+      position: static;
+    }
+
+    .release-table td:first-child {
+      min-width: 180px;
+    }
+
+    .metric-value {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--blue-deep);
+      font-size: 18px;
+      font-weight: 850;
+    }
+
+    .quality-eval {
+      display: grid;
+      grid-template-columns: minmax(280px, .36fr) minmax(0, .64fr);
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .quality-summary,
+    .quality-bench {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(251, 255, 253, .78);
+      padding: 20px;
+    }
+
+    .quality-summary h3,
+    .quality-bench h3 {
+      margin: 0 0 10px;
+      color: var(--blue-deep);
+      font-size: 20px;
+    }
+
+    .quality-summary > p,
+    .quality-bench > p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .coverage-stack,
+    .dimension-list {
+      margin-top: 14px;
+      border-top: 1px solid #dcece7;
+    }
+
+    .coverage-row,
+    .dimension-row {
+      display: grid;
+      grid-template-columns: minmax(92px, .28fr) minmax(0, .72fr);
+      gap: 12px;
+      padding: 11px 0;
+      border-bottom: 1px solid #dcece7;
+      font-size: 13px;
+    }
+
+    .coverage-row:last-child,
+    .dimension-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .coverage-row strong,
+    .dimension-row strong {
+      color: var(--green-deep);
+    }
+
+    .coverage-row span,
+    .dimension-row span {
+      color: var(--muted);
+    }
+
+    .quality-note {
+      margin-top: 16px;
+      padding: 12px 14px;
+      border-left: 3px solid var(--green);
+      background: rgba(16, 163, 107, .07);
+      color: var(--ink);
+      font-size: 13px;
+    }
+
     .panel {
       border: 1px solid var(--line);
       border-radius: var(--radius);
@@ -721,6 +848,7 @@
       .flow,
       .matrix,
       .benchmark-split,
+      .quality-eval,
       .synthesis-grid {
         grid-template-columns: 1fr;
       }
@@ -737,6 +865,11 @@
       .navlinks {
         justify-content: flex-start;
       }
+
+      .subsection-heading {
+        align-items: flex-start;
+        flex-direction: column;
+      }
     }
 
     @media (max-width: 620px) {
@@ -746,6 +879,26 @@
 
       .bar-row {
         grid-template-columns: 1fr;
+      }
+
+      .coverage-row,
+      .dimension-row {
+        grid-template-columns: 1fr;
+        gap: 4px;
+      }
+
+      summary {
+        grid-template-columns: 24px minmax(0, 1fr);
+      }
+
+      summary span {
+        grid-column: 2;
+      }
+
+      summary em {
+        grid-column: 2;
+        grid-row: 2;
+        margin-top: 3px;
       }
 
       .source-grid {
@@ -858,14 +1011,14 @@
         <div class="section-head">
           <div>
             <div class="kicker">part 1</div>
-            <h2>评测版图：从最终修复到子能力诊断</h2>
+            <h2>评测版图：从修复成功到可合并、可维护、可诊断</h2>
             <p class="section-copy">
-              大厂发布 coding 模型时绕不开 SWE-bench Verified / Pro、真实任务和更难的长周期工程任务；
-              学界最近则把能力拆得更细：探索、定位、仓库理解、技能有效性和长期维护都开始单独评。
+              SWE-bench Verified / Pro 仍是大厂发布 coding 模型时最常见的主分数，但它们主要回答补丁是否通过测试。
+              新一批评测开始继续追问：回归有没有挡住、测试是不是有效、改动是否越界、代码会不会越写越乱，以及上线后能否留下足够的诊断信号。
             </p>
           </div>
           <div class="aside-note">
-            SWE-bench 定义了标准问题；Pro、真实任务和过程诊断，把这把尺子继续推向更难、更真实、也更容易定位问题的方向。
+            一套完整评测需要保留 Verified / Pro 的可比性，再用 FrontierCode、SlopCodeBench、安全和可观测性评测补上“能不能合并并长期维护”。
           </div>
         </div>
 
@@ -878,15 +1031,40 @@
               <span class="tag">classic</span><span class="tag green">docker</span><span class="tag date">arXiv 2023-10-10</span>
             </article>
             <article class="bench-card">
-              <h3><a href="https://github.com/scaleapi/SWE-bench_Pro-os" target="_blank" rel="noreferrer">SWE-Bench Pro / SWEAP</a></h3>
-              <p>更难的工业级长周期 repair 任务，用来拉开 frontier coding agent 的真实工程差距。</p>
+              <h3><a href="https://arxiv.org/abs/2509.16941" target="_blank" rel="noreferrer">SWE-Bench Pro</a></h3>
+              <p>更长的执行链、更多跨文件修改和 public / private 任务划分，用容器内测试判断 resolved；难度和工程真实性明显高于普通 SWE-bench，但主指标仍是测试通过率。</p>
               <span class="tag">new standard</span><span class="tag green">images</span><span class="tag date">arXiv 2025-09-21</span>
             </article>
           </div>
 
           <div class="new-bench">
             <div class="split-label">近年新增与子能力评测</div>
+            <details>
+              <summary><span><a href="https://arxiv.org/abs/2607.07946" target="_blank" rel="noreferrer">DeepSWE v1.1</a></span><em>原创长周期任务 / clean verifier</em></summary>
+              <p>113 个原创任务，覆盖 91 个仓库和 5 种语言。agent 必须提交 commit，系统只提取 committed diff，再到独立、干净的 verifier container 中应用并运行测试；CTRF 逐条记录测试状态，同时清理未来 git 历史、依赖漂移和部分 flaky tests。主指标仍是 repeated Pass@1，重点是 correctness、复现和防泄漏，不直接给风格或可维护性打分。</p>
+              <span class="tag green">clean verifier</span><span class="tag">113 tasks</span><span class="tag date">arXiv 2026-07-08</span>
+            </details>
+            <details>
+              <summary><span><a href="https://arxiv.org/abs/2604.01527" target="_blank" rel="noreferrer">ProdCodeBench / REAP · Harvest</a></span><em>真实生产会话 / test relevance</em></summary>
+              <p>从真实 developer-agent 交互中抽取 prompt、committed diff 和 fail-to-pass tests。它先判断任务是否可测试、测试是否与改动有因果关系，再在改动前连续执行三次：前两次 warm-up，第三次必须稳定失败；最终评分只认 executable tests，模型各跑 3 次。论文后续把 benchmark 名称改为 Harvest，arXiv 标题也从 ProdCodeBench 更新为 REAP。</p>
+              <span class="tag green">production</span><span class="tag">3-run validation</span><span class="tag date">arXiv 2026-04-02</span>
+            </details>
             <details open>
+              <summary><span><a href="https://cognition.com/blog/frontier-code-1.1" target="_blank" rel="noreferrer">FrontierCode 1.1</a></span><em>mergeability / rubric grading</em></summary>
+              <p>150 个 maintainer-authored tasks，来自 36 个开源仓库。正确性、回归、build / lint、测试正确性和 scope 是 blocker；全部通过后，再对 readability、design 等 non-blocker 做加权评分。它还检查 agent 自写测试能否在 base commit 上失败、改动范围是否合理，并在 v1.1 加入联网防泄漏 scanner。这是目前最接近“代码能否直接合并”的综合评测。</p>
+              <span class="tag green">quality rubric</span><span class="tag">reverse-classical tests</span><span class="tag date">Cognition 2026-07-07</span>
+            </details>
+            <details>
+              <summary><span><a href="https://arxiv.org/abs/2603.24755" target="_blank" rel="noreferrer">SlopCodeBench</a></span><em>长期维护 / structural erosion</em></summary>
+              <p>36 个问题、196 个连续 checkpoint，agent 每一阶段都在自己上一阶段的代码上继续开发。除 hidden tests 外，它用复杂度集中度衡量 structural erosion，再用 137 条 AST-Grep 模式和 clone lines / LOC 衡量 verbosity。没有 agent 完整解决任何问题；77% 的轨迹 erosion 上升，75.5% 的轨迹 verbosity 上升。</p>
+              <span class="tag green">maintainability</span><span class="tag">196 checkpoints</span><span class="tag date">arXiv 2026-03-25</span>
+            </details>
+            <details>
+              <summary><span><a href="https://arxiv.org/abs/2607.05785" target="_blank" rel="noreferrer">Observability-aware Code Evaluation</a></span><em>instrumentation / runtime diagnosis</em></summary>
+              <p>论文正式标题是 “Can Large Language Models Generate Observability-Aware Code?”。一组任务让 agent 恢复被移除的日志、指标和 tracing，用 Position F1、KeyBag F1 计分；另一组在 Kubernetes 微服务中注入 13 类故障，用 Fault Signal Rate 判断运行时是否真的留下了可定位故障的证据。各模型的 Fault Signal Rate 只有 4.95%–13.99%，加入专项 skill 后最高约 16.53%。</p>
+              <span class="tag green">observability</span><span class="tag">fault signal</span><span class="tag date">arXiv 2026-07-07</span>
+            </details>
+            <details>
               <summary><span><a href="https://arxiv.org/abs/2606.07297" target="_blank" rel="noreferrer">SWE-Explore</a></span><em>仓库探索 / code-region retrieval</em></summary>
               <p>给定 repo 和 issue，在有限 line budget 下返回相关代码区域排序。它把修复之前“先找对上下文”的能力单独拎出来。</p>
               <span class="tag date">arXiv 2026-06-05</span>
@@ -917,29 +1095,80 @@
               <span class="tag date">arXiv 2026-03-16</span>
             </details>
             <details>
-              <summary><span><a href="https://openai.com/index/swe-lancer/" target="_blank" rel="noreferrer">SWE-Lancer</a> / <a href="https://arxiv.org/html/2603.03823v1" target="_blank" rel="noreferrer">SWE-CI</a> / <a href="https://arxiv.org/html/2603.03823v1" target="_blank" rel="noreferrer">SWE-EVO</a></span><em>真实工作流与长期维护</em></summary>
+              <summary><span><a href="https://openai.com/index/swe-lancer/" target="_blank" rel="noreferrer">SWE-Lancer</a> / <a href="https://arxiv.org/abs/2603.03823" target="_blank" rel="noreferrer">SWE-CI</a> / <a href="https://arxiv.org/abs/2512.18470" target="_blank" rel="noreferrer">SWE-EVO</a></span><em>真实工作流与长期维护</em></summary>
               <p>SWE-Lancer 更贴近真实付费工程任务；SWE-CI 和 SWE-EVO 则把视角推向 CI、release evolution 和长期维护。</p>
-              <span class="tag date">SWE-CI arXiv 2026-03-04</span>
+              <span class="tag date">SWE-EVO arXiv 2025-12-20</span><span class="tag date">SWE-CI arXiv 2026-03-04</span>
             </details>
           </div>
         </div>
 
-        <div class="matrix">
-          <article class="panel">
-            <h3>工业界模型发布常见口径</h3>
-            <ul>
-              <li>SWE-bench Verified 仍是基线，但 frontier 模型已经需要 SWE-Bench Pro / SWE-Lancer 这类更难、更抗污染的任务。</li>
-              <li>Codex / Claude Code 一类产品不只看最终 patch，也看长任务、工具调用、sandbox 和真实 SWE workflow。</li>
-              <li>Qwen / DeepSeek / MiniMax 这类可私有化 teacher，正在成为大规模 rollout 数据生成的常见选择。</li>
-            </ul>
+        <div class="release-panel">
+          <div class="subsection-heading">
+            <div>
+              <div class="split-label">近期模型发布与 frontier 对比</div>
+              <h3>公开 headline 仍然以 solve rate 为主</h3>
+            </div>
+            <p>同一个百分比背后可能是不同数据集、scaffold 和采样协议。这里把“测了什么、怎么跑、最终公布了什么”分开列，避免只看榜单数字。</p>
+          </div>
+
+          <div class="release-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>发布 / 日期</th>
+                  <th>SWE benchmark</th>
+                  <th>评测协议</th>
+                  <th>公开结果与覆盖边界</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong><a href="https://openai.com/index/introducing-gpt-5-4/" target="_blank" rel="noreferrer">OpenAI GPT-5.4</a></strong><br><span class="tag date">2026-03-05</span></td>
+                  <td>SWE-Bench Pro（Public）</td>
+                  <td>官方发布页在同一公开子集上对比 GPT-5.4、GPT-5.3-Codex 和 GPT-5.2，headline 采用任务通过率。</td>
+                  <td><span class="metric-value">57.7%</span>同表为 56.8% / 55.6%。没有单列风格、可维护性、测试质量或安全分数。</td>
+                </tr>
+                <tr>
+                  <td><strong><a href="https://www.anthropic.com/news/claude-opus-4-6" target="_blank" rel="noreferrer">Claude Opus 4.6</a></strong><br><span class="tag date">2026-02-05</span></td>
+                  <td>SWE-bench Verified</td>
+                  <td>官方说明 Verified 结果取 25 次试验平均，并另列 prompt modification 下的结果；核心判定仍是 issue 是否 resolved。</td>
+                  <td><span class="metric-value">81.42%</span>该数字对应页面注明的 modified prompt 设置；仍然是 correctness headline，不是 mergeability rubric。</td>
+                </tr>
+                <tr>
+                  <td><strong><a href="https://deepswe.datacurve.ai/blog/deepswe-v1-1" target="_blank" rel="noreferrer">DeepSWE v1.1</a></strong><br><span class="tag date">2026-07-08</span></td>
+                  <td>DeepSWE 113 个原创长周期任务</td>
+                  <td>agent 提交 commit；系统提取 committed diff，在 clean verifier container 中应用并生成 CTRF 测试报告，使用 repeated Pass@1。</td>
+                  <td><span class="metric-value">可复现 correctness</span>比单次跑分更重视环境、flaky test 和泄漏控制，但仍不直接评价风格或长期维护性。</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="quality-eval">
+          <article class="quality-summary">
+            <h3>现在到底测到了什么</h3>
+            <p>功能正确性已经有成熟主线，其他工程质量仍分散在专项 benchmark 里。只跑一个 SWE-bench 分数，很难说明 patch 是否真的适合进入生产代码库。</p>
+            <div class="coverage-stack">
+              <div class="coverage-row"><strong>主流成熟</strong><span>任务完成、fail-to-pass / pass-to-pass tests、最终 resolved。</span></div>
+              <div class="coverage-row"><strong>正在补齐</strong><span>回归、build / lint、scope、测试有效性、代码可读性和长期结构退化。</span></div>
+              <div class="coverage-row"><strong>仍需专项</strong><span>安全、可观测性、运行时诊断、轨迹质量与 review 能力。</span></div>
+            </div>
+            <div class="quality-note">更稳妥的组合是：Verified / Pro 保持横向可比，DeepSWE / ProdCodeBench 检查环境与测试可信度，FrontierCode / SlopCodeBench 看可合并性和长期维护，再补安全与可观测性专项。</div>
           </article>
-          <article class="panel">
-            <h3>学界新趋势</h3>
-            <ul>
-              <li>SWE-Explore、MULocBench：先看上下文和位置找得准不准，再谈 patch。</li>
-              <li>SWE-Doctor、TrajAudit、SWE-chat：不只看结果，也看 agent 过程里哪里走偏了。</li>
-              <li>SWE-CI、SWE-EVO、SWE Atlas：把任务从单个 issue 推到长期维护、QA、测试和重构。</li>
-            </ul>
+
+          <article class="quality-bench">
+            <h3>测试之外的评测维度</h3>
+            <p>这些维度已经有人在测，但还没有一个 benchmark 全部覆盖。</p>
+            <div class="dimension-list">
+              <div class="dimension-row"><strong>功能与回归</strong><span>SWE-bench / Pro、DeepSWE、Harvest 用 executable tests 判定修复；FrontierCode 把 behavioral correctness、regression、build / lint 设为 blocker。</span></div>
+              <div class="dimension-row"><strong>鲁棒性</strong><span>Harvest 在改动前重复跑测试过滤瞬态失败；DeepSWE 清理 flaky tests 和依赖漂移；FrontierCode 1.1 审计过严 rubric 并加入联网泄漏扫描。</span></div>
+              <div class="dimension-row"><strong>测试质量</strong><span>FrontierCode 的 reverse-classical grading 要求 agent 新写的测试在 base commit 上失败；<a href="https://arxiv.org/abs/2607.12068" target="_blank" rel="noreferrer">Beyond Test Presence</a>（arXiv 2026-07-13）进一步看 assertion strength、edge-case coverage 和 flakiness potential。</span></div>
+              <div class="dimension-row"><strong>风格与维护性</strong><span>FrontierCode 对 scope、readability、design 打 rubric 分；SlopCodeBench 追踪 structural erosion、verbosity 和 clone density，观察代码是否随迭代腐化。</span></div>
+              <div class="dimension-row"><strong>安全性</strong><span><a href="https://arxiv.org/abs/2506.11791" target="_blank" rel="noreferrer">SEC-bench</a>（arXiv 2025-06-13）测漏洞复现与修补；<a href="https://arxiv.org/abs/2509.22097" target="_blank" rel="noreferrer">SecureVibeBench</a>（arXiv 2025-09-26）把功能测试与静态、动态安全 oracle 结合，要求 correct and secure。</span></div>
+              <div class="dimension-row"><strong>可观测性</strong><span>Observability-aware evaluation 用插桩位置、诊断变量覆盖和 Fault Signal Rate，判断故障发生时是否留下有用 runtime evidence。</span></div>
+              <div class="dimension-row"><strong>过程与 review</strong><span><a href="https://arxiv.org/abs/2607.06624" target="_blank" rel="noreferrer">AgentLens</a>（arXiv 2026-07-07）看工具使用、自验证和错误恢复；<a href="https://arxiv.org/abs/2607.06065" target="_blank" rel="noreferrer">SWE-Review</a>（arXiv 2026-07-07）测 review correctness 与 revision usefulness。</span></div>
+            </div>
           </article>
         </div>
       </div>
@@ -1024,7 +1253,7 @@
             </p>
           </div>
           <div class="aside-note">
-            当前的接入顺序可以很清楚：Verified 做 sanity，SWE-rebench V2 和 Scale-SWE 做规模，SWE-Pro/SWEAP 做难例，多语言和专项池做覆盖补充。
+            当前的接入顺序可以很清楚：Verified 做 sanity，SWE-rebench V2 和 Scale-SWE 做规模，SWE-Bench Pro 做难例，多语言和专项池做覆盖补充。
           </div>
         </div>
 
@@ -1085,7 +1314,7 @@
           <article class="panel">
             <h3>短期改进</h3>
             <ul>
-              <li>把 SWE-Pro/SWEAP、Scale-SWE 和多语言 SWE 任务池接进统一 run manifest。</li>
+              <li>把 SWE-Bench Pro、Scale-SWE 和多语言 SWE 任务池接进统一 run manifest。</li>
               <li>给每个 seed 留下 image、语言、repo、issue、验证状态和失败原因。</li>
               <li>成功和失败轨迹都保留标签，不只导出 resolved==1。</li>
               <li>按 scaffold 拆分统计，避免 OpenHands / Claude Code 的风格差异混在一起。</li>
@@ -1178,8 +1407,25 @@
         </div>
         <div class="source-grid">
           <a href="https://www.swebench.com/" target="_blank" rel="noreferrer">SWE-bench official · arXiv 2023-10-10</a>
-          <a href="https://github.com/scaleapi/SWE-bench_Pro-os" target="_blank" rel="noreferrer">SWE-Bench Pro / SWEAP OS · arXiv 2025-09-21</a>
+          <a href="https://arxiv.org/abs/2509.16941" target="_blank" rel="noreferrer">SWE-Bench Pro · arXiv 2025-09-21</a>
+          <a href="https://github.com/scaleapi/SWE-bench_Pro-os" target="_blank" rel="noreferrer">SWE-Bench Pro open-source evaluator and images</a>
+          <a href="https://openai.com/index/introducing-gpt-5-4/" target="_blank" rel="noreferrer">OpenAI GPT-5.4 release · 2026-03-05</a>
+          <a href="https://www.anthropic.com/news/claude-opus-4-6" target="_blank" rel="noreferrer">Anthropic Claude Opus 4.6 · 2026-02-05</a>
+          <a href="https://arxiv.org/abs/2607.07946" target="_blank" rel="noreferrer">DeepSWE · arXiv 2026-07-08</a>
+          <a href="https://deepswe.datacurve.ai/blog/deepswe-v1-1" target="_blank" rel="noreferrer">DeepSWE v1.1 evaluation protocol · 2026-07</a>
+          <a href="https://arxiv.org/abs/2604.01527" target="_blank" rel="noreferrer">ProdCodeBench / REAP · Harvest · arXiv 2026-04-02</a>
+          <a href="https://cognition.com/blog/frontier-code" target="_blank" rel="noreferrer">FrontierCode · Cognition 2026-06-08</a>
+          <a href="https://cognition.com/blog/frontier-code-1.1" target="_blank" rel="noreferrer">FrontierCode 1.1 · Cognition 2026-07-07</a>
+          <a href="https://arxiv.org/abs/2603.24755" target="_blank" rel="noreferrer">SlopCodeBench · arXiv 2026-03-25</a>
+          <a href="https://arxiv.org/abs/2607.05785" target="_blank" rel="noreferrer">Observability-Aware Code · arXiv 2026-07-07</a>
+          <a href="https://arxiv.org/abs/2607.12068" target="_blank" rel="noreferrer">Beyond Test Presence · arXiv 2026-07-13</a>
+          <a href="https://arxiv.org/abs/2506.11791" target="_blank" rel="noreferrer">SEC-bench · arXiv 2025-06-13</a>
+          <a href="https://arxiv.org/abs/2509.22097" target="_blank" rel="noreferrer">SecureVibeBench · arXiv 2025-09-26</a>
+          <a href="https://arxiv.org/abs/2607.06624" target="_blank" rel="noreferrer">AgentLens · arXiv 2026-07-07</a>
+          <a href="https://arxiv.org/abs/2607.06065" target="_blank" rel="noreferrer">SWE-Review · arXiv 2026-07-07</a>
           <a href="https://openai.com/index/swe-lancer/" target="_blank" rel="noreferrer">OpenAI SWE-Lancer · OpenAI 2025</a>
+          <a href="https://arxiv.org/abs/2512.18470" target="_blank" rel="noreferrer">SWE-EVO · arXiv 2025-12-20</a>
+          <a href="https://arxiv.org/abs/2603.03823" target="_blank" rel="noreferrer">SWE-CI · arXiv 2026-03-04</a>
           <a href="https://arxiv.org/abs/2606.07297" target="_blank" rel="noreferrer">SWE-Explore · arXiv 2026-06-05</a>
           <a href="https://arxiv.org/abs/2607.00990" target="_blank" rel="noreferrer">SWE-Doctor · arXiv 2026-07-01</a>
           <a href="https://arxiv.org/html/2605.08366v1" target="_blank" rel="noreferrer">SWE Atlas · arXiv 2026-05-08</a>
@@ -1207,8 +1453,8 @@
 
   <footer>
     <div class="wrap">
-      <span>SWE agent benchmark, trace and rollout factory landscape.</span>
-      <span>Blue + green report theme.</span>
+      <span>SWE benchmark、trajectory 与 rollout 环境调研</span>
+      <span>资料核验日期：2026-07-16</span>
     </div>
   </footer>
 
@@ -1225,8 +1471,8 @@
         status: ["classic", "docker"]
       },
       {
-        name: "SWE-Bench Pro / SWEAP",
-        link: "https://github.com/scaleapi/SWE-bench_Pro-os",
+        name: "SWE-Bench Pro",
+        link: "https://arxiv.org/abs/2509.16941",
         date: "arXiv 2025-09-21",
         type: ["core", "new", "repair"],
         kind: "工业级长周期 repair",
@@ -1305,13 +1551,23 @@
         status: ["new", "multi-task"]
       },
       {
-        name: "SWE-CI / SWE-EVO",
-        link: "https://arxiv.org/html/2603.03823v1",
+        name: "SWE-CI",
+        link: "https://arxiv.org/abs/2603.03823",
         date: "SWE-CI arXiv 2026-03-04",
         type: ["new", "diagnostic"],
-        kind: "长期维护 / 演进",
-        target: "CI、release evolution、长期软件维护",
+        kind: "持续集成维护",
+        target: "CI 反馈、回归和持续代码库维护",
         why: "从单 issue 修复走向持续工程任务。",
+        status: ["long-horizon"]
+      },
+      {
+        name: "SWE-EVO",
+        link: "https://arxiv.org/abs/2512.18470",
+        date: "SWE-EVO arXiv 2025-12-20",
+        type: ["new", "diagnostic"],
+        kind: "长期软件演进",
+        target: "release evolution、多阶段长期维护",
+        why: "观察 agent 在连续需求和历史代码累积下能否保持正确性。",
         status: ["long-horizon"]
       },
       {
@@ -1451,7 +1707,7 @@
         note: "和 SWE-Bench Pro / ScaleAI 不是同一层；接入前先抽样验证镜像可拉取和测试稳定性"
       },
       {
-        name: "SWE-Bench Pro / SWEAP",
+        name: "SWE-Bench Pro",
         link: "https://github.com/scaleapi/SWE-bench_Pro-os",
         date: "arXiv 2025-09-21",
         type: ["ready"],
