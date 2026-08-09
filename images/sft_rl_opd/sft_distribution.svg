@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 1024 520" xmlns="http://www.w3.org/2000/svg" aria-label="SFT distribution update pressure figure">
+  <defs>
+    <style type="text/css"><![CDATA[
+  svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .panel-title {
+    font-family: Lora, Georgia, serif;
+    font-size: 20px;
+    font-weight: 500;
+    fill: #171514;
+  }
+
+  .small-label {
+    font-size: 11.5px;
+    font-weight: 500;
+    fill: #1f1d1b;
+  }
+
+  .axis-label {
+    font-size: 11px;
+    fill: #58534e;
+  }
+
+  .legend-title {
+    font-size: 12px;
+    font-weight: 600;
+    fill: #24211f;
+  }
+
+  .legend-sub {
+    font-size: 10.2px;
+    fill: #5f5a54;
+  }
+
+  .left-contour {
+    fill: none;
+    stroke: #d8d1c8;
+    stroke-width: .7;
+    opacity: .58;
+  }
+
+  .right-contour {
+    fill: none;
+    stroke: #b5d9d3;
+    stroke-width: .72;
+    opacity: .58;
+  }
+]]></style>
+    <marker id="arrow-cool" markerWidth="7" markerHeight="6" refX="6.4" refY="3" orient="auto">
+      <path d="M0,0 L6.4,3 L0,6 Z" fill="#0f7d74"/>
+    </marker>
+    <marker id="arrow-warm" markerWidth="7" markerHeight="6" refX="6.4" refY="3" orient="auto">
+      <path d="M0,0 L6.4,3 L0,6 Z" fill="#c45f23"/>
+    </marker>
+    <marker id="arrow-gray" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#9b9791"/>
+    </marker>
+
+    <radialGradient id="left-hill" cx="50%" cy="50%" r="62%">
+      <stop offset="0%" stop-color="#a89080" stop-opacity=".50"/>
+      <stop offset="50%" stop-color="#d0c4b4" stop-opacity=".30"/>
+      <stop offset="100%" stop-color="#f2eee8" stop-opacity=".01"/>
+    </radialGradient>
+
+    <radialGradient id="right-main" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#0f6b61" stop-opacity=".44"/>
+      <stop offset="50%" stop-color="#65b5aa" stop-opacity=".26"/>
+      <stop offset="100%" stop-color="#e3f0ec" stop-opacity=".01"/>
+    </radialGradient>
+
+    <radialGradient id="right-small" cx="50%" cy="50%" r="58%">
+      <stop offset="0%" stop-color="#65b5aa" stop-opacity=".25"/>
+      <stop offset="70%" stop-color="#bde0da" stop-opacity=".11"/>
+      <stop offset="100%" stop-color="#e3f0ec" stop-opacity=".01"/>
+    </radialGradient>
+
+    <filter id="soften">
+      <feGaussianBlur stdDeviation=".25"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect x="0" y="0" width="1024" height="520" fill="#F7F5F2"/>
+
+  <!-- Titles -->
+  <text x="212" y="28" text-anchor="middle" class="panel-title">Starting Model Distribution</text>
+  <text x="813" y="28" text-anchor="middle" class="panel-title">Dataset / SFT Target Distribution</text>
+
+  <!-- Panels -->
+  <rect x="20" y="45" width="385" height="390" rx="12" fill="#f2eee8" stroke="#d7d1c7"/>
+  <rect x="620" y="45" width="385" height="390" rx="12" fill="#e7f0ee" stroke="#bdd2cf"/>
+
+  <!-- LEFT DISTRIBUTION: expanded enclosing isoline -->
+  <path d="M52,238
+           C42,178 78,118 148,112
+           C198,108 228,72 286,62
+           C344,52 376,96 362,154
+           C354,198 392,226 380,286
+           C370,346 328,376 268,368
+           C220,362 196,406 134,398
+           C62,390 36,318 52,238Z"
+        fill="none" stroke="#d4cdc3" stroke-width=".8" opacity=".44" filter="url(#soften)"/>
+
+  <!-- LEFT HILLS: organic irregular isolines, hills packed closer -->
+  <g opacity=".95">
+    <!-- general code ability (shifted right/down for tighter packing) -->
+    <path d="M72,184 C68,142 100,108 154,114 C196,120 234,148 224,196 C216,242 184,272 126,262 C80,254 62,224 72,184Z" fill="url(#left-hill)"/>
+    <path class="left-contour" d="M80,188 C78,156 108,130 150,136 C190,144 212,166 204,202 C198,238 168,256 126,250 C88,244 74,216 80,188Z"/>
+    <path class="left-contour" opacity=".53" d="M92,190 C90,168 114,148 148,154 C178,160 196,178 190,204 C184,230 160,242 132,238 C106,234 88,214 92,190Z"/>
+    <path class="left-contour" opacity=".46" d="M106,192 C104,176 126,166 146,170 C164,174 178,188 172,204 C166,220 148,226 132,222 C116,218 102,206 106,192Z"/>
+
+    <!-- existing reasoning behavior (shifted left/down slightly) -->
+    <path d="M204,132 C208,78 254,52 306,62 C356,72 386,114 372,158 C358,200 316,218 264,204 C222,192 196,168 204,132Z" fill="url(#left-hill)"/>
+    <path class="left-contour" d="M214,134 C218,96 254,76 296,84 C340,94 362,124 354,156 C344,188 310,204 268,193 C232,184 208,160 214,134Z"/>
+    <path class="left-contour" opacity=".53" d="M228,136 C232,106 262,90 294,98 C328,106 346,130 338,154 C330,178 302,190 272,183 C246,176 222,156 228,136Z"/>
+    <path class="left-contour" opacity=".46" d="M242,138 C244,116 268,106 290,110 C312,116 326,134 320,150 C314,166 294,174 274,169 C258,165 238,154 242,138Z"/>
+
+    <!-- syntax / formatting habits (shifted right for closer packing) -->
+    <path d="M64,312 C68,268 106,246 158,256 C206,266 234,302 222,344 C210,382 162,398 114,384 C68,370 56,342 64,312Z" fill="url(#left-hill)"/>
+    <path class="left-contour" d="M76,313 C80,282 110,264 152,273 C194,282 214,308 206,340 C196,368 158,382 118,372 C84,364 70,338 76,313Z"/>
+    <path class="left-contour" opacity=".53" d="M90,314 C92,290 116,278 148,284 C178,292 196,312 188,336 C180,358 152,368 126,360 C102,354 86,336 90,314Z"/>
+    <path class="left-contour" opacity=".46" d="M104,316 C106,298 124,290 146,294 C164,300 178,314 172,330 C166,346 146,354 130,348 C114,344 100,332 104,316Z"/>
+
+    <!-- previous capabilities (shifted left for closer packing) -->
+    <path d="M200,272 C204,220 248,196 304,210 C356,222 384,262 368,306 C352,348 304,366 252,350 C210,338 192,306 200,272Z" fill="url(#left-hill)"/>
+    <path class="left-contour" d="M212,274 C216,238 252,220 298,230 C344,240 366,270 354,304 C342,338 302,352 258,341 C222,332 204,300 212,274Z"/>
+    <path class="left-contour" opacity=".53" d="M226,276 C228,250 258,236 296,244 C332,252 352,278 342,302 C332,326 300,338 268,331 C242,324 222,298 226,276Z"/>
+    <path class="left-contour" opacity=".46" d="M240,278 C242,260 266,250 292,256 C318,262 334,280 326,298 C318,316 294,324 272,319 C254,314 236,296 240,278Z"/>
+  </g>
+
+  <text x="148" y="183" text-anchor="middle" class="small-label">General Code</text>
+  <text x="148" y="197" text-anchor="middle" class="small-label">Ability</text>
+
+  <text x="292" y="128" text-anchor="middle" class="small-label">Existing Reasoning</text>
+  <text x="292" y="142" text-anchor="middle" class="small-label">Behavior</text>
+
+  <text x="148" y="316" text-anchor="middle" class="small-label">Syntax/Formatting</text>
+  <text x="148" y="330" text-anchor="middle" class="small-label">Habits</text>
+
+  <text x="290" y="274" text-anchor="middle" class="small-label">Previous</text>
+  <text x="290" y="288" text-anchor="middle" class="small-label">Capabilities</text>
+
+  <text x="32" y="417" class="axis-label">P(x) Under θ₀</text>
+
+  <!-- RIGHT DISTRIBUTION: expanded enclosing isoline -->
+  <path d="M654,262
+           C636,198 684,140 752,126
+           C812,112 854,80 922,76
+           C974,72 998,114 984,164
+           C970,214 1002,256 966,322
+           C928,392 848,416 776,400
+           C724,386 674,414 638,362
+           C612,320 620,278 654,262Z"
+        fill="none" stroke="#b7d7d2" stroke-width=".9" opacity=".60" filter="url(#soften)"/>
+
+  <!-- RIGHT HILLS: organic irregular isolines, no overlap -->
+  <g opacity=".94">
+    <!-- main distribution (center of panel) -->
+    <path d="M700,194 C704,130 756,98 824,106 C886,116 924,162 914,224 C904,282 846,312 780,302 C716,292 692,248 700,194Z"
+          fill="url(#right-main)"/>
+    <path class="right-contour" d="M714,196 C718,150 762,124 818,132 C872,140 904,174 896,224 C888,272 842,298 786,288 C730,278 706,240 714,196Z"/>
+    <path class="right-contour" opacity=".53" d="M730,198 C734,162 770,142 812,150 C852,158 882,184 874,222 C866,260 830,280 786,272 C742,264 722,232 730,198Z"/>
+    <path class="right-contour" opacity=".46" d="M748,202 C750,176 776,164 808,168 C838,174 858,196 852,222 C846,248 820,262 790,256 C762,250 742,228 748,202Z"/>
+
+    <!-- style tokens (bottom-left corner, well away from main) -->
+    <path d="M644,340 C648,304 676,286 714,298 C746,308 762,338 748,364 C734,390 698,396 666,382 C644,370 638,354 644,340Z" fill="url(#right-main)"/>
+    <path class="right-contour" d="M654,339 C658,314 680,300 710,310 C738,320 750,342 738,362 C726,382 696,386 672,376 C652,366 648,352 654,339Z"/>
+    <path class="right-contour" opacity=".46" d="M664,339 C668,322 684,312 706,320 C724,326 734,342 726,356 C718,372 698,376 680,368 C664,360 660,350 664,339Z"/>
+
+    <!-- incidental phrasing (right side, shifted in from edge, no overlap with main) -->
+    <path d="M856,286 C862,242 894,222 934,232 C968,240 986,272 976,310 C966,346 932,362 896,352 C864,342 848,316 856,286Z" fill="url(#right-main)"/>
+    <path class="right-contour" d="M866,287 C872,254 898,240 928,248 C958,256 972,280 964,308 C956,338 928,350 898,340 C870,330 858,312 866,287Z"/>
+    <path class="right-contour" opacity=".46" d="M878,289 C882,264 904,254 926,260 C948,266 958,284 952,304 C946,324 924,332 904,326 C886,320 874,306 878,289Z"/>
+
+    <!-- non-critical tokens (moved further left/down) -->
+    <path d="M884,120 C888,88 914,72 946,78 C976,86 990,112 982,140 C974,168 946,178 918,170 C892,162 878,142 884,120Z" fill="url(#right-main)"/>
+    <path class="right-contour" d="M894,122 C898,100 918,88 944,94 C966,100 978,120 970,140 C962,160 940,170 918,162 C898,156 888,138 894,122Z"/>
+    <path class="right-contour" opacity=".46" d="M906,124 C908,108 924,102 940,106 C956,110 964,124 958,138 C952,152 936,158 922,154 C910,150 902,138 906,124Z"/>
+
+    <!-- dataset-specific habits (moved further up) -->
+    <path d="M734,344 C738,304 776,284 820,294 C860,304 882,336 870,370 C858,402 818,416 776,406 C740,396 726,372 734,344Z" fill="url(#right-main)"/>
+    <path class="right-contour" d="M744,345 C750,316 780,302 814,310 C846,318 866,344 856,370 C846,396 812,406 778,398 C748,390 736,368 744,345Z"/>
+    <path class="right-contour" opacity=".46" d="M758,347 C762,326 786,316 812,322 C836,328 850,348 842,368 C834,388 810,394 786,390 C768,384 754,366 758,347Z"/>
+  </g>
+
+  <text x="802" y="205" text-anchor="middle" class="small-label">New Task Behavior</text>
+
+  <text x="702" y="334" text-anchor="middle" class="small-label">Style</text>
+  <text x="702" y="348" text-anchor="middle" class="small-label">Tokens</text>
+
+  <text x="920" y="285" text-anchor="middle" class="small-label">Incidental</text>
+  <text x="920" y="299" text-anchor="middle" class="small-label">Phrasing</text>
+
+  <text x="936" y="118" text-anchor="middle" class="small-label">Non-Critical</text>
+  <text x="936" y="132" text-anchor="middle" class="small-label">Tokens</text>
+
+  <text x="808" y="343" text-anchor="middle" class="small-label">Dataset-Specific</text>
+  <text x="808" y="357" text-anchor="middle" class="small-label">Habits</text>
+
+  <text x="635" y="417" class="axis-label">P(x) In Dataset D</text>
+
+  <!-- Arrows: all begin/end inside the distributions, not at box edges. -->
+  <g fill="none" stroke-linecap="butt" stroke-linejoin="round">
+    <!-- gray dense SFT pressure, dashed, within-distribution endpoints -->
+    <path d="M352,83  C486,66 640,74 848,90"  stroke="#9b9791" stroke-width="1.35" stroke-dasharray="5 5" opacity=".78" marker-end="url(#arrow-gray)"/>
+    <path d="M355,123 C478,115 610,116 752,130" stroke="#9b9791" stroke-width="1.35" stroke-dasharray="5 5" opacity=".78" marker-end="url(#arrow-gray)"/>
+
+    <!-- This is the broken gray arrow, leaving a clean gap around the Dense SFT label -->
+    <path d="M344,175 C400,176 438,177 468,180" stroke="#9b9791" stroke-width="1.35" stroke-dasharray="5 5" opacity=".72"/>
+    <path d="M552,187 C594,189 638,192 684,191" stroke="#9b9791" stroke-width="1.35" stroke-dasharray="5 5" opacity=".72" marker-end="url(#arrow-gray)"/>
+
+    <path d="M349,229 C472,236 588,240 678,248" stroke="#9b9791" stroke-width="1.35" stroke-dasharray="5 5" opacity=".72" marker-end="url(#arrow-gray)"/>
+    <path d="M356,270 C474,281 587,282 664,279" stroke="#9b9791" stroke-width="1.35" stroke-dasharray="5 5" opacity=".70" marker-end="url(#arrow-gray)"/>
+    <path d="M350,322 C473,338 587,339 681,325" stroke="#9b9791" stroke-width="1.35" stroke-dasharray="5 5" opacity=".67" marker-end="url(#arrow-gray)"/>
+
+    <!-- useful teal update arrows -->
+    <path d="M342,139 C467,142 600,151 735,178" stroke="#0f7d74" stroke-width="2.2" opacity=".94" marker-end="url(#arrow-cool)"/>
+
+    <!-- green arrow restored as one continuous curve; it loops under the label -->
+    <path d="M183,198 C320,198 415,211 489,216 C570,222 652,216 733,220" stroke="#0f7d74" stroke-width="2.2" opacity=".94" marker-end="url(#arrow-cool)"/>
+
+    <!-- collateral rust update arrows -->
+    <path d="M347,298 C510,302 676,304 855,300" stroke="#c45f23" stroke-width="2.1" opacity=".95" marker-end="url(#arrow-warm)"/>
+    <path d="M184,342 C358,386 554,401 737,374" stroke="#c45f23" stroke-width="2.1" opacity=".95" marker-end="url(#arrow-warm)"/>
+  </g>
+
+  <!-- central label: no box -->
+  <text x="510" y="184" text-anchor="middle" font-size="12" font-weight="500" fill="#4d4944">Dense SFT</text>
+  <text x="510" y="199" text-anchor="middle" font-size="12" font-weight="500" fill="#4d4944">Update Pressure</text>
+
+  <!-- Legend -->
+  <rect x="20" y="451" width="985" height="56" rx="10" fill="#f8f6f3" stroke="#ded8cf"/>
+
+  <line x1="40" y1="479" x2="72" y2="479" stroke="#0f7d74" stroke-width="2.4" marker-end="url(#arrow-cool)"/>
+  <text x="84" y="475" class="legend-title">Useful Update</text>
+  <text x="84" y="489" class="legend-sub">Toward New Capability</text>
+
+  <line x1="260" y1="479" x2="292" y2="479" stroke="#c45f23" stroke-width="2.4" marker-end="url(#arrow-warm)"/>
+  <text x="305" y="475" class="legend-title">Collateral Update</text>
+  <text x="305" y="489" class="legend-sub">Pressure On Existing Capabilities</text>
+
+  <line x1="505" y1="479" x2="537" y2="479" stroke="#9b9791" stroke-width="1.8" stroke-dasharray="5 5" marker-end="url(#arrow-gray)"/>
+  <text x="550" y="475" class="legend-title">Dense SFT Update Pressure</text>
+  <text x="550" y="489" class="legend-sub">Uniform Across All Dataset Tokens</text>
+
+  <g transform="translate(795 462)">
+    <path d="M-2,17 C1,6 14,-1 28,2 C40,5 47,15 42,26 C36,37 22,40 10,34 C-1,30 -6,24 -2,17Z" fill="none" stroke="#cfc9c0" stroke-width=".9"/>
+    <path d="M6,17 C9,10 17,7 26,9 C33,11 37,17 33,24 C30,30 20,32 12,29 C7,27 4,23 6,17Z" fill="none" stroke="#cfc9c0" stroke-width=".85"/>
+    <path d="M13,17 C15,14 20,12 25,13 C29,14 31,18 29,21 C27,25 21,26 16,24 C13,23 12,21 13,17Z" fill="none" stroke="#cfc9c0" stroke-width=".8"/>
+  </g>
+  <text x="858" y="475" class="legend-sub">Contours = Probability</text>
+  <text x="858" y="489" class="legend-sub">Density Isolines</text>
+</svg>

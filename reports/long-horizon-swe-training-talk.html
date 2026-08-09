@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>训练模型的长程软件工程能力</title>
+  <style>
+    :root {
+      --paper: oklch(0.965 0.016 85);
+      --ink: oklch(0.205 0.025 53);
+      --muted: oklch(0.46 0.03 62);
+      --rule: oklch(0.78 0.035 76);
+      --red: oklch(0.52 0.17 31);
+      --orange: oklch(0.72 0.16 63);
+      --yellow: oklch(0.88 0.13 92);
+      --green: oklch(0.45 0.10 151);
+      --blue: oklch(0.47 0.10 244);
+      --night: oklch(0.19 0.028 53);
+      --serif: "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", "STSong", serif;
+      --sans: "Aptos", "Source Han Sans SC", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { background: var(--paper); }
+    body { margin: 0; color: var(--ink); background: var(--paper); font-family: var(--sans); }
+    button { font: inherit; }
+    .app { min-height: 100vh; }
+
+    .rail {
+      position: fixed; inset: 0 auto 0 0; z-index: 4; width: 86px;
+      background: var(--night); color: var(--paper); display: flex; flex-direction: column;
+      align-items: center; justify-content: space-between; padding: 24px 0 18px;
+    }
+    .mark { color: var(--orange); font-weight: 800; font-size: 17px; letter-spacing: -.08em; writing-mode: vertical-rl; }
+    .rail-count { font-size: 12px; font-variant-numeric: tabular-nums; letter-spacing: .08em; color: oklch(0.78 0.03 73); writing-mode: vertical-rl; }
+    .dotnav { display: grid; gap: 10px; }
+    .dotnav button { width: 18px; height: 18px; padding: 0; border: 0; background: transparent; cursor: pointer; position: relative; }
+    .dotnav button::after { content: ""; position: absolute; inset: 5px; border-radius: 50%; background: oklch(0.58 0.028 56); transition: .2s ease; }
+    .dotnav button:hover::after, .dotnav button[aria-current="true"]::after { inset: 2px; background: var(--orange); }
+
+    .deck { min-width: 0; margin-left: 86px; }
+    .slide { min-height: 100vh; padding: clamp(32px, 5vw, 76px) clamp(26px, 6vw, 112px) 52px; display: none; position: relative; overflow: hidden; }
+    .slide.active { display: flex; flex-direction: column; animation: enter .42s cubic-bezier(.16, 1, .3, 1) both; }
+    @keyframes enter { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+    .slide::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 7px; background: var(--accent, var(--orange)); }
+    .slide > * { position: relative; z-index: 1; }
+    .slide-no { color: var(--accent, var(--red)); font-size: 13px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; margin-bottom: clamp(22px, 4vh, 52px); }
+    .kicker { display: flex; gap: 10px; align-items: center; color: var(--muted); font-size: 14px; letter-spacing: .08em; }
+    .kicker::before { content: ""; width: 36px; height: 2px; background: var(--accent, var(--red)); }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { width: 100%; font-family: var(--serif); font-weight: 700; font-size: clamp(46px, 6.4vw, 104px); letter-spacing: -.07em; line-height: .98; max-width: 1140px; margin: 14px 0 25px; }
+    h2 { width: 100%; font-family: var(--serif); font-weight: 700; font-size: clamp(36px, 4.8vw, 73px); letter-spacing: -.065em; line-height: 1.06; margin: 12px 0 22px; max-width: 1100px; }
+    h3 { font-size: clamp(18px, 1.8vw, 25px); line-height: 1.25; margin-bottom: 10px; }
+    .lede { width: 100%; max-width: 910px; font-size: clamp(20px, 2.1vw, 30px); line-height: 1.5; color: var(--muted); }
+    .strong { color: var(--ink); font-weight: 800; }
+    .bottom { margin-top: auto; display: flex; align-items: flex-end; justify-content: space-between; gap: 30px; padding-top: 28px; color: var(--muted); font-size: 12px; }
+    .source { max-width: 740px; line-height: 1.5; }
+    .hint { white-space: nowrap; color: var(--ink); }
+
+    .title-slide { --accent: var(--red); background: linear-gradient(126deg, transparent 65%, color-mix(in oklch, var(--yellow) 65%, transparent) 65%); }
+    .title-slide .thesis-line { margin-top: auto; padding-top: clamp(30px, 8vh, 110px); font-family: var(--serif); font-size: clamp(25px, 3.05vw, 46px); line-height: 1.22; max-width: 1090px; }
+    .title-slide .meta { display: flex; gap: 24px; margin-top: 30px; color: var(--muted); font-size: 14px; }
+
+    .three { --accent: var(--green); }
+    .triptych { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 2px solid var(--ink); margin-top: clamp(12px, 3vw, 36px); }
+    .triptych article { padding: 24px 24px 22px 0; border-bottom: 1px solid var(--rule); }
+    .triptych article + article { padding-left: 24px; border-left: 1px solid var(--rule); }
+    .triptych .label { display: block; color: var(--accent); font-weight: 800; font-size: 14px; letter-spacing: .08em; margin-bottom: 46px; }
+    .triptych .question { font-family: var(--serif); font-size: clamp(25px, 2.7vw, 42px); line-height: 1.12; letter-spacing: -.05em; margin: 0 0 18px; }
+    .triptych p { margin: 0; color: var(--muted); font-size: 16px; line-height: 1.55; }
+
+    .map-slide { --accent: var(--blue); }
+    .flow { margin-top: auto; margin-bottom: auto; display: grid; grid-template-columns: 1fr 58px 1fr 58px 1fr; align-items: stretch; max-width: 1240px; }
+    .flow-card { min-height: 270px; padding: 26px; border: 1px solid var(--ink); background: color-mix(in oklch, var(--paper) 80%, var(--yellow)); }
+    .flow-card:nth-child(3) { background: color-mix(in oklch, var(--paper) 84%, var(--orange)); }
+    .flow-card:nth-child(5) { background: color-mix(in oklch, var(--paper) 85%, var(--green)); }
+    .flow-card small { display: block; font-weight: 800; letter-spacing: .1em; color: var(--muted); }
+    .flow-card h3 { font-family: var(--serif); font-size: clamp(25px, 2.5vw, 39px); letter-spacing: -.05em; margin: 22px 0 14px; }
+    .flow-card p { color: var(--muted); margin: 0; font-size: 16px; }
+    .arrow { display: grid; place-items: center; font-size: 34px; color: var(--accent); }
+
+    .case-slide { --accent: var(--red); }
+    .case-header { display: grid; grid-template-columns: minmax(0, 1fr) minmax(220px, .32fr); gap: 28px; align-items: end; }
+    .task-tag { color: var(--accent); font-weight: 900; letter-spacing: .12em; font-size: 13px; }
+    .task-aside { border-left: 2px solid var(--accent); padding: 9px 0 9px 16px; color: var(--muted); line-height: 1.5; }
+    .task-grid { margin-top: 30px; display: grid; grid-template-columns: 1.18fr .82fr; gap: 0; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
+    .task-main { padding: 30px 36px 28px 0; }
+    .task-main p { font-size: clamp(18px, 1.8vw, 25px); line-height: 1.48; margin-bottom: 0; }
+    .task-side { padding: 30px 0 28px 36px; border-left: 1px solid var(--rule); }
+    .task-side ul { padding-left: 20px; margin: 0; color: var(--muted); line-height: 1.7; }
+    .task-side strong { color: var(--ink); }
+    .case-list { margin-top: 28px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .case-list div { border-top: 4px solid var(--accent); padding-top: 11px; }
+    .case-list b { display: block; font-size: 15px; margin-bottom: 6px; }
+    .case-list span { display: block; color: var(--muted); font-size: 14px; line-height: 1.5; }
+
+    .frontier { --accent: var(--blue); }
+    .together { --accent: var(--green); }
+    .score-rail { display: grid; grid-template-columns: 1.1fr 60px .8fr; gap: 0; align-items: stretch; margin-top: 26px; max-width: 1200px; }
+    .gate, .reward { padding: 26px; border: 1px solid var(--ink); }
+    .gate { background: color-mix(in oklch, var(--paper) 86%, var(--red)); }
+    .reward { background: color-mix(in oklch, var(--paper) 84%, var(--yellow)); }
+    .gate b, .reward b { display: block; font-family: var(--serif); font-size: clamp(26px, 3vw, 42px); letter-spacing: -.045em; margin-bottom: 12px; }
+    .gate p, .reward p { color: var(--muted); margin: 0; line-height: 1.55; }
+    .score-arrow { display: grid; place-items: center; color: var(--accent); font-size: 34px; }
+    .callout { margin-top: 30px; max-width: 1040px; font-family: var(--serif); font-size: clamp(24px, 2.8vw, 43px); line-height: 1.25; letter-spacing: -.04em; }
+    .callout em { font-style: normal; color: var(--accent); }
+
+    .construction { --accent: var(--orange); }
+    .asset-stack { margin-top: 24px; max-width: 1150px; display: grid; grid-template-columns: 150px 1fr; border-top: 2px solid var(--ink); }
+    .asset-stack div { display: contents; }
+    .asset-stack dt, .asset-stack dd { margin: 0; border-bottom: 1px solid var(--rule); padding: 15px 0; }
+    .asset-stack dt { color: var(--accent); font-weight: 900; letter-spacing: .08em; font-size: 13px; }
+    .asset-stack dd { font-size: clamp(16px, 1.55vw, 21px); line-height: 1.38; }
+    .construction .takeaway { margin-top: 28px; padding: 18px 22px; background: var(--night); color: var(--paper); width: fit-content; font-size: clamp(17px, 1.75vw, 23px); }
+
+    .trace { --accent: var(--green); }
+    .trace-code { margin-top: 22px; max-width: 1200px; display: grid; grid-template-columns: 190px 1fr; background: var(--night); color: oklch(0.91 0.022 86); border-left: 7px solid var(--accent); }
+    .trace-code .line-no { padding: 22px; border-right: 1px solid oklch(0.33 0.028 56); color: oklch(0.7 0.04 84); font-family: Consolas, monospace; font-size: 14px; line-height: 1.8; }
+    .trace-code pre { margin: 0; padding: 22px 26px; overflow: auto; font-family: Consolas, "Cascadia Mono", monospace; font-size: clamp(13px, 1.3vw, 17px); line-height: 1.8; white-space: pre-wrap; }
+    .tok-key { color: oklch(0.77 0.11 35); } .tok-str { color: oklch(0.83 0.11 91); } .tok-num { color: oklch(0.73 0.11 152); }
+
+    .distill { --accent: var(--red); }
+    .matrix { margin-top: 18px; max-width: 1200px; border-collapse: collapse; width: 100%; }
+    .matrix th, .matrix td { text-align: left; padding: 16px 18px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+    .matrix th { width: 27%; color: var(--accent); font-size: 14px; letter-spacing: .08em; }
+    .matrix td { font-size: clamp(16px, 1.55vw, 20px); line-height: 1.4; }
+    .matrix td strong { display: block; margin-bottom: 4px; }
+
+    .harness { --accent: var(--blue); background: linear-gradient(145deg, transparent 54%, color-mix(in oklch, var(--yellow) 55%, transparent) 54%); }
+    .harness-grid { display: grid; grid-template-columns: minmax(0, 1.02fr) minmax(280px, .98fr); gap: clamp(30px, 5vw, 78px); margin-top: auto; margin-bottom: auto; }
+    .ledger { padding: 24px; background: var(--night); color: var(--paper); border-top: 5px solid var(--accent); }
+    .ledger .mini-title { color: var(--orange); font-weight: 900; font-size: 13px; letter-spacing: .1em; }
+    .ledger ul { margin: 17px 0 0; padding-left: 20px; line-height: 1.75; color: oklch(0.82 0.025 85); }
+    .harness-copy p { font-size: clamp(18px, 1.9vw, 26px); line-height: 1.48; }
+    .harness-copy p + p { color: var(--muted); font-size: 17px; }
+
+    .roadmap { --accent: var(--orange); }
+    .roadmap-grid { margin-top: 12px; display: grid; grid-template-columns: repeat(4, 1fr); border-top: 2px solid var(--ink); }
+    .roadmap-grid article { padding: 20px 18px 0 0; min-height: 235px; border-bottom: 1px solid var(--rule); }
+    .roadmap-grid article + article { padding-left: 18px; border-left: 1px solid var(--rule); }
+    .roadmap-grid small { color: var(--accent); display: block; font-weight: 900; letter-spacing: .1em; }
+    .roadmap-grid h3 { font-family: var(--serif); font-size: clamp(21px, 2.05vw, 31px); letter-spacing: -.045em; margin: 32px 0 10px; }
+    .roadmap-grid p { margin: 0; font-size: 15px; line-height: 1.5; color: var(--muted); }
+    .finish { --accent: var(--red); background: var(--night); color: var(--paper); }
+    .finish h2 { color: var(--paper); max-width: 1180px; }
+    .finish .lede { color: oklch(0.76 0.026 82); max-width: 1000px; }
+    .finish .equation { margin-top: auto; font-family: var(--serif); font-size: clamp(27px, 3.5vw, 53px); line-height: 1.22; color: var(--yellow); letter-spacing: -.05em; }
+    .finish .bottom, .finish .hint { color: oklch(0.66 0.025 80); }
+
+    .controls { position: fixed; z-index: 7; right: 22px; bottom: 20px; display: flex; gap: 7px; }
+    .controls button { min-width: 42px; height: 38px; padding: 0 11px; cursor: pointer; color: var(--ink); border: 1px solid var(--rule); background: color-mix(in oklch, var(--paper) 86%, transparent); backdrop-filter: blur(10px); border-radius: 2px; font-weight: 800; }
+    .controls button:hover { background: var(--yellow); border-color: var(--ink); }
+    .notes-toggle { position: fixed; z-index: 7; right: 22px; top: 20px; border: 0; background: var(--night); color: var(--paper); padding: 9px 12px; cursor: pointer; font-size: 12px; letter-spacing: .04em; }
+    .notes { display: none; position: fixed; z-index: 6; right: 22px; top: 62px; width: min(410px, calc(100vw - 125px)); max-height: 48vh; overflow: auto; padding: 17px 19px; background: color-mix(in oklch, var(--paper) 96%, var(--yellow)); border: 1px solid var(--ink); box-shadow: 8px 8px 0 color-mix(in oklch, var(--red) 32%, transparent); font-size: 14px; line-height: 1.65; }
+    .notes.open { display: block; }
+    .notes b { color: var(--red); }
+    .speaker-note { display: none; }
+
+    @media (max-width: 760px) {
+      .app { display: block; }.rail { width: 100%; height: 48px; inset: auto 0 0; flex-direction: row; padding: 0 16px; }.mark, .rail-count { writing-mode: horizontal-tb; }.dotnav { display: none; }.deck { margin: 0; padding-bottom: 48px; }.slide { min-height: calc(100vh - 48px); padding: 37px 26px 58px; }.triptych, .flow, .task-grid, .harness-grid { grid-template-columns: 1fr; }.triptych article + article, .task-side { padding-left: 0; border-left: 0; }.triptych .label { margin-bottom: 18px; }.flow { gap: 0; }.arrow { height: 40px; transform: rotate(90deg); }.flow-card { min-height: auto; }.case-header, .case-list, .score-rail, .roadmap-grid { grid-template-columns: 1fr; }.task-main, .task-side { padding: 22px 0; }.case-list { gap: 12px; }.score-arrow { height: 48px; transform: rotate(90deg); }.roadmap-grid article + article { padding-left: 0; border-left: 0; }.roadmap-grid article { min-height: 0; padding: 16px 0; }.asset-stack { grid-template-columns: 96px 1fr; }.trace-code { grid-template-columns: 74px 1fr; }.trace-code .line-no { padding: 18px 8px; }.trace-code pre { padding: 18px 15px; }.bottom .source { max-width: 75%; }.controls { right: 12px; bottom: 61px; }.notes-toggle { right: 12px; }.notes { right: 12px; width: calc(100vw - 24px); }.hint { display: none; }
+    }
+    @media (prefers-reduced-motion: reduce) { .slide.active { animation: none; } }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="rail" aria-label="演示导航">
+      <div class="mark">LONG-HORIZON / SWE</div>
+      <nav class="dotnav" id="dotnav" aria-label="页码"></nav>
+      <div class="rail-count"><span id="now">01</span> / <span id="total">12</span></div>
+    </aside>
+
+    <main class="deck" id="deck">
+      <section class="slide title-slide active" data-title="封面">
+        <div class="slide-no">组会串讲 · 2026.07</div>
+        <div class="kicker">SWE-MARATHON × FRONTIERSWE × SWE-TOGETHER</div>
+        <h1>训练模型的<br>长程软件工程能力</h1>
+        <p class="lede">从完整项目施工、专家级连续指标，到真实用户的多轮纠偏。</p>
+        <p class="thesis-line">长程能力不是更长的 prompt，<br>而是在可执行环境里持续维护<span style="color:var(--red)">目标、状态、证据与风险</span>的能力。</p>
+        <div class="meta"><span>数据集构造</span><span>trajectory 蒸馏</span><span>harness 接入</span></div>
+        <div class="bottom"><span class="source">目标：给出一套可实践的长程 agent 训练与评测闭环。</span><span class="hint">→ / ← 切换　N 讲者备注　F 全屏</span></div>
+        <aside class="speaker-note"><b>开场：</b>今天不是逐篇读论文，而是把三件事拼成一个训练问题：任务怎么做、轨迹怎么留、训练后怎么放回现有 agent 系统。</aside>
+      </section>
+
+      <section class="slide three" data-title="问题意识">
+        <div class="slide-no">01 / 为什么现在需要它</div>
+        <h2>旧 benchmark 主要问：<br>“能不能修好一个 patch？”</h2>
+        <div class="triptych">
+          <article><span class="label">SWE-BENCH</span><p class="question">真实 issue<br>→ 可评分 patch</p><p>把真实仓库、issue 与测试绑定起来，奠定了 coding agent 的基本评测范式。</p></article>
+          <article><span class="label">缺口</span><p class="question">数小时的工程<br>如何不失控？</p><p>真实任务要读系统、搭骨架、实验、回滚、验证；成本大量花在维持工作状态。</p></article>
+          <article><span class="label">新问题</span><p class="question">在过程里<br>可靠地推进</p><p>不仅要会改代码，还要听用户纠偏、守住约束、保存最好版本、知道何时停。</p></article>
+        </div>
+        <div class="bottom"><span class="source">核心区别：long-horizon ≠ long context；瓶颈是工作循环质量。</span><span class="hint">02</span></div>
+        <aside class="speaker-note"><b>讲法：</b>SWE-bench 没有过时，它解决的是“真实 patch”。新工作不是替代它，而是把任务范围从一个 patch 扩展到一段完整、可验证的工程过程。</aside>
+      </section>
+
+      <section class="slide map-slide" data-title="三组工作">
+        <div class="slide-no">02 / 三个互补的切面</div>
+        <h2>它们不是同一类题，<br>而是同一个闭环的三块拼图。</h2>
+        <div class="flow">
+          <article class="flow-card"><small>SWE-MARATHON</small><h3>完整项目</h3><p>产品克隆、库重写、ML 训练、系统优化。关注长时间施工与最终验收。</p></article>
+          <div class="arrow">→</div>
+          <article class="flow-card"><small>FRONTIERSWE</small><h3>专家级进展</h3><p>系统兼容、性能工程、研究任务。关注正确性门槛之后的连续收益。</p></article>
+          <div class="arrow">→</div>
+          <article class="flow-card"><small>SWE-TOGETHER</small><h3>用户在环</h3><p>真实多轮需求、解释、纠偏和追加约束。关注意图如何随时间更新。</p></article>
+        </div>
+        <p class="callout">共同答案：<em>可执行环境 + 分阶段反馈 + 可归因轨迹。</em></p>
+        <div class="bottom"><span class="source">注意版本漂移：训练样本应记录 task version、repo commit、image digest、verifier 与 harness hash。</span><span class="hint">03</span></div>
+        <aside class="speaker-note"><b>过渡：</b>接下来不用 abstract，而直接看三个任务。这是判断 benchmark 是否真能产出训练数据的最好方法。</aside>
+      </section>
+
+      <section class="slide case-slide" data-title="Marathon 案例">
+        <div class="slide-no">03 / 任务案例一 · SWE-Marathon</div>
+        <div class="case-header"><div><div class="task-tag">SLACK-CLONE · 约 60 小时专家工作量</div><h2>“做个聊天应用”<br>为什么是一道长程题？</h2></div><p class="task-aside">3 个 HTTP 节点 + IRC gateway；浏览器 UI；Docker/Harbor 环境；hidden verifier 最终判定。</p></div>
+        <div class="task-grid"><div class="task-main"><p>它要求 workspace、频道、DM、thread、reaction、search、file、slash command… 但真正的难点是：<span class="strong">节点切换后的 WebSocket replay、跨节点 dense sequence，以及广播组件失效后 5 秒内 SQLite fallback 仍保持 fan-out。</span></p></div><div class="task-side"><ul><li><strong>产品面</strong>：API + UI + IRC</li><li><strong>分布式面</strong>：多节点、故障、顺序</li><li><strong>验收面</strong>：API / chaos / Playwright / UI rubric</li></ul></div></div>
+        <div class="case-list"><div><b>先可启动</b><span>先打通最小 skeleton，不让局部功能吞噬全局进度。</span></div><div><b>分层推进</b><span>API、持久化、实时、UI 分层，持续跑小验证。</span></div><div><b>故障即需求</b><span>不能只通过可见 browser test；hidden 更可能打在 failover。</span></div></div>
+        <div class="bottom"><span class="source">任务来源：SWE-Marathon tasks/slack-clone 的 instruction、task.toml 与 verifier 约束。</span><span class="hint">04</span></div>
+        <aside class="speaker-note"><b>补充两个任务类型：</b>biofabric-rust-rewrite 是 Java → Rust 的语义迁移，要求 API 和 byte-level parity；parameter-golf 则要求在资源与 checkpoint 契约下完成 ML 训练。它们把“长程”覆盖到迁移与研究工程。</aside>
+      </section>
+
+      <section class="slide case-slide frontier" data-title="Frontier 案例">
+        <div class="slide-no">04 / 任务案例二 · FrontierSWE</div>
+        <div class="case-header"><div><div class="task-tag">REVIDEO-PERF-OPT · 正确性约束下的性能优化</div><h2>性能不能只问：<br>“有没有变快？”</h2></div><p class="task-aside">TypeScript 视频渲染链路：Puppeteer、Vite、Canvas、WebSocket、FFmpeg。</p></div>
+        <div class="score-rail"><div class="gate"><b>Correctness gate</b><p>候选版本必须在 hidden scenes 上保持视觉与行为正确；不能跳帧、降质、改 API。</p></div><div class="score-arrow">→</div><div class="reward"><b>Continuous reward</b><p>只有 gate 全过，才按各场景几何平均 speedup 计分。错了就是 0。</p></div></div>
+        <p class="callout">这迫使 agent 学会：<em>先建 baseline → 做假设 → profile → 小实验 → 守住质量 gate → 保存 best-so-far。</em></p>
+        <div class="bottom"><span class="source">同族例子：postgres-sqlite-wire-adapter（协议兼容面）；pcqm4mv2-autoresearch（hidden held-out + 最终 artifact contract）。</span><span class="hint">05</span></div>
+        <aside class="speaker-note"><b>重点：</b>这张页是连续 reward 的意义。对性能任务，若先奖励速度、再检查正确性，模型会自然学出“快但错”；评分顺序本身就是训练信号。</aside>
+      </section>
+
+      <section class="slide case-slide together" data-title="Together 案例">
+        <div class="slide-no">05 / 任务案例三 · SWE-Together</div>
+        <div class="case-header"><div><div class="task-tag">PI-MONO-PARALLEL-TOOL-STALL · 用户意图会变</div><h2>最终 patch 一样，<br>对话行为可能完全不一样。</h2></div><p class="task-aside">任务最初只要调查 memo，真实会话随后追加：failing test、不要 interactive metadata、改为 sequential、测试走真实路径。</p></div>
+        <div class="task-grid"><div class="task-main"><p>如果只保存 turn 0，后面的实现会被错误判为 scope creep；如果只看最终 diff，又会漏掉用户对“不要 mock”“两个 submission 都尝试”的持续纠偏。<span class="strong">SWE-Together 把用户消息本身变成 trajectory 的状态转移。</span></p></div><div class="task-side"><ul><li><strong>初始目标</strong>：调查，不实现</li><li><strong>中途更新</strong>：先写 failing test</li><li><strong>质量约束</strong>：真实 wiring，不要重造 mock</li><li><strong>最终实现</strong>：session 设置 sequential</li></ul></div></div>
+        <p class="callout">训练对象从 “prompt → patch” 变成 <em>“intent(t) → action(t) → observation(t) → intent(t+1)”</em>。</p>
+        <div class="bottom"><span class="source">另见 comfyui-triton-windows-amd-fix 的 scope 纠偏、qwen3-moe-gguf-dequant 的多轮实现与性能追问。</span><span class="hint">06</span></div>
+        <aside class="speaker-note"><b>讲法：</b>这其实是最容易被忽视的部分。一个成熟的 agent 不只是解决初始问题，它还要在用户改变约束后，承认前面的假设不再成立并调整轨迹。</aside>
+      </section>
+
+      <section class="slide construction" data-title="如何造题">
+        <div class="slide-no">06 / 如果我们自己做：先做可靠任务，再做训练数据</div>
+        <h2>一个长程任务不是 prompt，<br>而是一套可执行资产。</h2>
+        <dl class="asset-stack"><div><dt>OBJECTIVE</dt><dd>目标、约束、接口、可见反馈；只写 outcome，不泄漏 hidden verifier。</dd></div><div><dt>ENVIRONMENT</dt><dd>固定 repo commit、Docker/image digest、数据与工具链、网络政策和资源上限。</dd></div><div><dt>VERIFIER</dt><dd>先写 oracle，再跑 NOP；产品任务测 API+UI+resilience，性能先 correctness gate，研究任务看 held-out。</dd></div><div><dt>ANTI-CHEAT</dt><dd>hidden asset 隔离、source/dependency/hash scan、读写与网络策略、reward-hack threat model。</dd></div><div><dt>PILOT</dt><dd>用多个 agent 试跑并人工读失败日志：区分任务歧义、环境问题与模型能力边界。</dd></div><div><dt>FREEZE</dt><dd>冻结 task_hash + verifier_hash + harness_hash；之后的每条 rollout 都必须可追溯。</dd></div></dl>
+        <div class="takeaway">一句工程原则：oracle 稳定过、NOP 明显低分，任务才配成为训练数据。</div>
+        <div class="bottom"><span class="source">SWE-Marathon 的贡献流程、FrontierSWE 的 task-specific reward、SWE-Together 的 frozen goal/user simulator 都体现此结构。</span><span class="hint">07</span></div>
+        <aside class="speaker-note"><b>实践建议：</b>先从内部 backlog 或真实 debug 会话中选 5–10 题，不要先“编题”。评测可靠性是训练价值的前提。</aside>
+      </section>
+
+      <section class="slide trace" data-title="留什么轨迹">
+        <div class="slide-no">07 / Trajectory：保存状态转移，不是保存聊天记录</div>
+        <h2>真正可学习的单位，<br>是一个有证据的决策 episode。</h2>
+        <div class="trace-code"><div class="line-no">task identity<br>durable state<br>action<br>observation<br>decision label</div><pre>{
+  <span class="tok-key">"task_version"</span>: <span class="tok-str">"revideo-perf-opt@..."</span>,
+  <span class="tok-key">"state"</span>: { <span class="tok-key">"best_score"</span>: <span class="tok-num">1.42</span>, <span class="tok-key">"known_risk"</span>: <span class="tok-str">"hidden correctness unknown"</span> },
+  <span class="tok-key">"action"</span>: { <span class="tok-key">"kind"</span>: <span class="tok-str">"run_benchmark"</span>, <span class="tok-key">"hypothesis"</span>: <span class="tok-str">"remove browser-node round trip"</span> },
+  <span class="tok-key">"observation"</span>: { <span class="tok-key">"public_parity"</span>: <span class="tok-str">"pass"</span>, <span class="tok-key">"speedup"</span>: <span class="tok-num">1.18</span> },
+  <span class="tok-key">"label"</span>: <span class="tok-str">"keep_experiment; run hidden-like checks next"</span>
+}</pre></div>
+        <div class="bottom"><span class="source">同时保存：任务/环境/harness 身份、用户消息、tool stdout/stderr 与 diff、subscore/hard fail、token/cost/wall time。</span><span class="hint">08</span></div>
+        <aside class="speaker-note"><b>强调：</b>成功 trial 也含有大量不该模仿的重复、误读和 harness 自动动作；失败 trial 也可能有高质量诊断。不要把整条 trajectory 当一个正样本。</aside>
+      </section>
+
+      <section class="slide distill" data-title="如何蒸馏">
+        <div class="slide-no">08 / 蒸馏：切 episode，不是整条吞</div>
+        <h2>把一条长轨迹拆成四类训练信号。</h2>
+        <table class="matrix"><tbody>
+          <tr><th>ACTION SFT</th><td><strong>下一步做什么</strong>输入任务 + durable state + observation，学小步、有信息增益的行动，而不是整段 bash 模仿。</td></tr>
+          <tr><th>STATE COMPRESSION</th><td><strong>现在到底进展到哪</strong>把几小时历史压为 goal / working / failing / changed files / next；解决上下文污染与记忆漂移。</td></tr>
+          <tr><th>VERIFIER CRITIC</th><td><strong>为什么这次“看似进步”仍不可接受</strong>例如 speedup 上升但 SSIM fail，必须判为失败；把 subscore 与 hard-fail 变成过程反馈。</td></tr>
+          <tr><th>STOP / CONTINUE</th><td><strong>何时回滚、何时提交</strong>偏好稳定 full gate、best checkpoint、明确回滚；惩罚未验证提交与失败实验上的补丁堆叠。</td></tr>
+        </tbody></table>
+        <p class="callout">训练配方：<em>局部好 episode 做 SFT；同状态好坏分支做 preference；verifier 做 critic；新 rollout 做 online RL。</em></p>
+        <div class="bottom"><span class="source">需过滤 oracle/solve.sh、verifier tampering、环境异常、harness 自动补跑；公开 benchmark 的轨迹不可再用于无污染原 benchmark 报分。</span><span class="hint">09</span></div>
+        <aside class="speaker-note"><b>落到工程：</b>如果现在没有 RL 基础设施，先做 state compression + action SFT + verifier critic，通常已经能显著提升“有条理地做事”的表现。</aside>
+      </section>
+
+      <section class="slide harness" data-title="接入 harness">
+        <div class="slide-no">09 / 怎么 hack 进 Claude Code 一类 harness</div>
+        <div class="harness-grid"><div class="harness-copy"><h2>先增强系统，<br>再考虑换模型。</h2><p>最稳的路径不是立刻重训 foundation model，而是把从 trajectory 蒸馏出的<strong>长程工作纪律</strong>写进 CLAUDE.md、skill、MCP 或 wrapper。</p><p>这样能立刻收集更干净的 on-policy 数据；同时标明“模型决策”与“harness 自动行为”的边界。</p></div><div class="ledger"><div class="mini-title">ACCEPTANCE LEDGER</div><ul><li>目标、约束、visible tests、hidden-like risks</li><li>重要编辑前保存 checkpoint</li><li>实验记录：假设 / 命令 / 结果 / 是否保留</li><li>自动维护 best-so-far，不默认提交 current workspace</li><li>final checklist；剩余预算低时禁止大重构</li><li>重复失败时切换诊断路径</li></ul></div></div>
+        <div class="bottom"><span class="source">若替换 Claude Code 后端，网关需要真兼容 Anthropic Messages、streaming、tool use 与长 session；仅有 OpenAI chat-completions 通常不足。</span><span class="hint">10</span></div>
+        <aside class="speaker-note"><b>两条路：</b>1) 不换模型，增强 harness；2) 用 Anthropic-compatible gateway 接入 student model，保留 stream-json/session JSONL 并转 ATIF。严肃 on-policy RL 时，更干净的是自定义 Harbor agent，直接保留 token ids/logprobs。</aside>
+      </section>
+
+      <section class="slide roadmap" data-title="实践路线">
+        <div class="slide-no">10 / 一个可执行的最小实践路线</div>
+        <h2>从 5–10 道内部真题开始，<br>用两轮迭代闭环。</h2>
+        <div class="roadmap-grid"><article><small>WEEK 1</small><h3>选真题</h3><p>内部 backlog、性能瓶颈、迁移、真实用户 debug。按 repo family 做 train/eval 隔离。</p></article><article><small>WEEK 2</small><h3>任务资产</h3><p>Docker + visible smoke + hidden verifier + oracle/NOP + anti-cheat threat model。</p></article><article><small>WEEK 3–4</small><h3>收轨迹</h3><p>接入 ledger；多 agent 多预算 pilot；人工标注失败类型和高价值 episode。</p></article><article><small>WEEK 5–6</small><h3>蒸馏与回测</h3><p>先 SFT/critic/harness policy；在未见任务上测完成率、验证纪律、恢复率与成本。</p></article></div>
+        <p class="callout">评测指标别只看 pass@1：还要看 <em>verification coverage、best-checkpoint recovery、user-correction compliance、cost-to-resolution</em>。</p>
+        <div class="bottom"><span class="source">产出不只是一个 leaderboard，而是一套可复用任务资产、可审计轨迹与可以不断再训练的系统闭环。</span><span class="hint">11</span></div>
+        <aside class="speaker-note"><b>收束到团队行动：</b>先把这套工程制度跑通，再谈大规模训练。要先知道“一个好 episode 是什么”，才有资格多采几十万条。</aside>
+      </section>
+
+      <section class="slide finish" data-title="结论">
+        <div class="slide-no">11 / TAKEAWAY</div>
+        <h2>长程软件工程能力，<br>训练的是一种工程过程。</h2>
+        <p class="lede">模型当然要会写代码；更重要的是，它要能在一个尚未结束的现实里维护状态、相信证据、接受纠偏，并把系统带到可验证的终点。</p>
+        <div class="equation">可执行任务 + 分阶段反馈 + 用户纠偏<br>+ 状态快照 + verifier = 可训练的长程能力</div>
+        <div class="bottom"><span class="source">参考：SWE-Marathon (arXiv:2606.07682)、FrontierSWE / Proximal Labs、SWE-Together (arXiv:2606.29957)，以及各仓库的 task/verifier 文件。</span><span class="hint">Q &amp; A</span></div>
+        <aside class="speaker-note"><b>最后一句：</b>未来最有价值的 agent 数据，不是“prompt 到 patch”，而是“可运行世界里的可靠工作过程”。</aside>
+      </section>
+    </main>
+  </div>
+
+  <button class="notes-toggle" id="notesToggle" type="button">讲者备注 N</button>
+  <aside class="notes" id="notes" aria-live="polite"></aside>
+  <div class="controls" aria-label="翻页控件"><button id="prev" type="button" aria-label="上一页">←</button><button id="fullscreen" type="button" aria-label="全屏">⛶</button><button id="next" type="button" aria-label="下一页">→</button></div>
+
+  <script>
+    (() => {
+      const slides = [...document.querySelectorAll('.slide')];
+      const now = document.querySelector('#now'); const total = document.querySelector('#total');
+      const nav = document.querySelector('#dotnav'); const notes = document.querySelector('#notes');
+      let current = 0; total.textContent = String(slides.length).padStart(2, '0');
+      slides.forEach((slide, i) => { const b = document.createElement('button'); b.title = `${i + 1}. ${slide.dataset.title}`; b.setAttribute('aria-label', b.title); b.addEventListener('click', () => show(i)); nav.appendChild(b); });
+      function show(index) { current = Math.max(0, Math.min(slides.length - 1, index)); slides.forEach((s, i) => s.classList.toggle('active', i === current)); [...nav.children].forEach((b, i) => b.setAttribute('aria-current', i === current ? 'true' : 'false')); now.textContent = String(current + 1).padStart(2, '0'); const note = slides[current].querySelector('.speaker-note'); notes.innerHTML = note ? note.innerHTML : ''; history.replaceState(null, '', `#${current + 1}`); }
+      document.querySelector('#prev').addEventListener('click', () => show(current - 1));
+      document.querySelector('#next').addEventListener('click', () => show(current + 1));
+      document.querySelector('#fullscreen').addEventListener('click', () => document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen());
+      document.querySelector('#notesToggle').addEventListener('click', () => notes.classList.toggle('open'));
+      document.addEventListener('keydown', (e) => { if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return; if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); show(current + 1); } if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); show(current - 1); } if (e.key.toLowerCase() === 'n') notes.classList.toggle('open'); if (e.key.toLowerCase() === 'f') document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen(); if (e.key === 'Home') show(0); if (e.key === 'End') show(slides.length - 1); });
+      const hash = Number(location.hash.slice(1)); show(Number.isInteger(hash) && hash > 0 ? hash - 1 : 0);
+    })();
+  </script>
+</body>
+</html>

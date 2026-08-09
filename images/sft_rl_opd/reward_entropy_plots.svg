@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 968 493" width="968" height="493" role="img" aria-labelledby="title desc">
+  <title id="title">Reward and entropy training curves</title>
+  <desc id="desc">Two line charts comparing RL teacher, OPD with RL teacher, and OPD with SFT teacher over timesteps.</desc>
+  <rect width="100%" height="100%" fill="#F7F5F2"/>
+
+  <g transform="translate(40,82)">
+    <rect width="420" height="300" fill="#F7F5F2"/>
+    <line x1="52" y1="16" x2="404" y2="16" stroke="rgba(0,0,0,0.09)" stroke-width="1"/>
+    <line x1="52" y1="68.308" x2="404" y2="68.308" stroke="rgba(0,0,0,0.09)" stroke-width="1"/>
+    <line x1="52" y1="120.615" x2="404" y2="120.615" stroke="rgba(0,0,0,0.09)" stroke-width="1"/>
+    <line x1="52" y1="172.923" x2="404" y2="172.923" stroke="rgba(0,0,0,0.09)" stroke-width="1"/>
+    <line x1="52" y1="235.692" x2="404" y2="235.692" stroke="rgba(0,0,0,0.09)" stroke-width="1"/>
+    <line x1="52" y1="288" x2="404" y2="288" stroke="rgba(0,0,0,0.09)" stroke-width="1"/>
+    <text x="46" y="16" text-anchor="end" dominant-baseline="middle" fill="#6B6B6B" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="500">0.01</text>
+    <text x="46" y="68.308" text-anchor="end" dominant-baseline="middle" fill="#6B6B6B" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="500">-0.04</text>
+    <text x="46" y="120.615" text-anchor="end" dominant-baseline="middle" fill="#6B6B6B" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="500">-0.09</text>
+    <text x="46" y="172.923" text-anchor="end" dominant-baseline="middle" fill="#6B6B6B" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="500">-0.14</text>
+    <text x="46" y="235.692" text-anchor="end" dominant-baseline="middle" fill="#6B6B6B" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="500">-0.20</text>
+    <text x="46" y="288" text-anchor="end" dominant-baseline="middle" fill="#6B6B6B" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="500">-0.25</text>
+    <path d="M 52 16 L 52 288 L 404 288" fill="none" stroke="#C8C2BA" stroke-width="1"/>
+    <path d="M52.000 204.203 L59.184 253.582 L66.367 234.646 L73.551 270.948 L80.735 226.905 L87.918 199.809 L95.102 198.972 L102.286 253.791 L109.469 233.182 L116.653 236.634 L123.837 222.302 L131.020 193.009 L138.204 215.188 L145.388 168.738 L152.571 163.403 L159.755 178.991 L166.939 161.520 L174.122 169.157 L181.306 153.674 L188.490 114.862 L195.673 194.892 L202.857 135.262 L210.041 85.674 L217.224 146.874 L224.408 147.188 L231.592 58.474 L238.776 96.240 L245.959 166.228 L253.143 155.348 L260.327 135.471 L267.510 133.588 L274.694 98.855 L281.878 136.622 L289.061 130.658 L296.245 167.588 L303.429 187.465 L310.612 112.978 L317.796 137.668 L324.980 74.062 L332.163 135.471 L339.347 124.800 L346.531 118.209 L353.714 30.542 L360.898 47.071 L368.082 78.455 L375.265 138.714 L382.449 32.634 L389.633 119.778 L396.816 50.209 L404.000 30.542" fill="none" stroke="#C4622D" stroke-width="1.8" stroke-linejoin="round"/>
+    <path d="M52.000 247.723 L59.184 235.378 L66.367 211.317 L73.551 227.428 L80.735 234.018 L87.918 214.455 L95.102 176.585 L102.286 124.800 L109.469 66.948 L116.653 101.680 L123.837 122.708 L131.020 218.326 L138.204 191.335 L145.388 100.425 L152.571 76.468 L159.755 131.495 L166.939 91.114 L174.122 103.249 L181.306 141.329 L188.490 62.345 L195.673 63.077 L202.857 110.886 L210.041 157.963 L217.224 114.548 L224.408 116.012 L231.592 96.658 L238.776 57.846 L245.959 79.502 L253.143 92.578 L260.327 206.191 L267.510 132.751 L274.694 85.674 L281.878 104.086 L289.061 96.868 L296.245 84.418 L303.429 123.858 L310.612 108.585 L317.796 124.695 L324.980 112.037 L332.163 108.166 L339.347 112.351 L346.531 87.662 L353.714 93.206 L360.898 80.443 L368.082 148.548 L375.265 138.400 L382.449 122.080 L389.633 49.372 L396.816 124.486 L404.000 98.228" fill="none" stroke="#2E7D6B" stroke-width="1.8" stroke-linejoin="round"/>
+    <path d="M52.000 250.652 L59.184 230.357 L66.367 211.631 L73.551 236.738 L80.735 223.348 L87.918 127.311 L95.102 98.437 L102.286 106.178 L109.469 134.634 L116.653 116.117 L123.837 81.071 L131.020 96.135 L138.204 163.194 L145.388 127.625 L152.571 129.612 L159.755 82.431 L166.939 65.483 L174.122 48.117 L181.306 135.889 L188.490 83.372 L195.673 84.628 L202.857 106.074 L210.041 100.738 L217.224 79.711 L224.408 100.843 L231.592 74.166 L238.776 48.954 L245.959 74.271 L253.143 99.169 L260.327 99.169 L267.510 91.114 L274.694 103.458 L281.878 81.071 L289.061 68.935 L296.245 36.400 L303.429 53.034 L310.612 51.674 L317.796 82.535 L324.980 99.378 L332.163 108.166 L339.347 151.058 L346.531 72.806 L353.714 51.360 L360.898 59.415 L368.082 31.169 L375.265 82.326 L382.449 74.271 L389.633 49.268 L396.816 77.095 L404.000 134.111" fill="none" stroke="#B8962E" stroke-width="1.8" stroke-linejoin="round"/>
+  </g>
+  <text x="250" y="70" text-anchor="middle" fill="#2B2B2B" font-family="Lora, Georgia, serif" font-size="22" font-weight="500" letter-spacing="0.01em">Reward</text>
+  <text x="250" y="403" text-anchor="middle" fill="#6B6B6B" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="500" letter-spacing="0.1em">TIMESTEP</text>
+
+  <g transform="translate(508,82)">
+    <rect width="420" height="300" fill="#F7F5F2"/>
+    <line x1="52" y1="16" x2="404" y2="16" stroke="rgba(0,0,0,0.09)" stroke-width="1"/>
+    <line x1="52" y1="70.4" x2="404" y2="70.4" stroke="rgba(0,0,0,0.09)" stroke-width="1"/>
+    <line x1="52" y1="124.8" x2="404" y2="124.8" stroke="rgba(0,0,0,0.09)" stroke-width="1"/>
+    <line x1="52" y1="179.2" x2="404" y2="179.2" stroke="rgba(0,0,0,0.09)" stroke-width="1"/>
+    <line x1="52" y1="233.6" x2="404" y2="233.6" stroke="rgba(0,0,0,0.09)" stroke-width="1"/>
+    <line x1="52" y1="288" x2="404" y2="288" stroke="rgba(0,0,0,0.09)" stroke-width="1"/>
+    <text x="46" y="16" text-anchor="end" dominant-baseline="middle" fill="#6B6B6B" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="500">0.47</text>
+    <text x="46" y="70.4" text-anchor="end" dominant-baseline="middle" fill="#6B6B6B" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="500">0.37</text>
+    <text x="46" y="124.8" text-anchor="end" dominant-baseline="middle" fill="#6B6B6B" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="500">0.27</text>
+    <text x="46" y="179.2" text-anchor="end" dominant-baseline="middle" fill="#6B6B6B" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="500">0.17</text>
+    <text x="46" y="233.6" text-anchor="end" dominant-baseline="middle" fill="#6B6B6B" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="500">0.07</text>
+    <text x="46" y="288" text-anchor="end" dominant-baseline="middle" fill="#6B6B6B" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="500">-0.03</text>
+    <path d="M 52 16 L 52 288 L 404 288" fill="none" stroke="#C8C2BA" stroke-width="1"/>
+    <path d="M52.000 204.387 L59.184 47.606 L66.367 54.080 L73.551 103.910 L80.735 48.259 L87.918 56.528 L95.102 30.525 L102.286 55.222 L109.469 49.728 L116.653 34.822 L123.837 90.800 L131.020 76.330 L138.204 54.842 L145.388 119.306 L152.571 65.885 L159.755 93.248 L166.939 128.336 L174.122 171.910 L181.306 102.115 L188.490 247.853 L195.673 88.733 L202.857 200.307 L210.041 156.352 L217.224 138.128 L224.408 194.704 L231.592 215.757 L238.776 251.334 L245.959 254.653 L253.143 270.592 L260.327 270.810 L267.510 270.320 L274.694 269.722 L281.878 268.253 L289.061 271.245 L296.245 271.082 L303.429 269.830 L310.612 270.538 L317.796 266.675 L324.980 264.662 L332.163 270.592 L339.347 270.048 L346.531 269.450 L353.714 270.266 L360.898 269.939 L368.082 269.722 L375.265 265.315 L382.449 267.546 L389.633 266.077 L396.816 255.578 L404.000 212.493" fill="none" stroke="#C4622D" stroke-width="1.8" stroke-linejoin="round"/>
+    <path d="M52.000 42.874 L59.184 94.336 L66.367 67.027 L73.551 47.824 L80.735 52.502 L87.918 100.810 L95.102 70.019 L102.286 98.253 L109.469 84.054 L116.653 91.779 L123.837 112.179 L131.020 267.872 L138.204 253.075 L145.388 262.269 L152.571 270.701 L159.755 270.810 L166.939 269.613 L174.122 269.395 L181.306 270.918 L188.490 268.253 L195.673 269.341 L202.857 269.341 L210.041 268.470 L217.224 265.152 L224.408 267.056 L231.592 263.139 L238.776 266.730 L245.959 251.987 L253.143 267.709 L260.327 267.056 L267.510 268.307 L274.694 257.101 L281.878 266.838 L289.061 263.738 L296.245 266.458 L303.429 265.370 L310.612 267.654 L317.796 267.872 L324.980 264.390 L332.163 268.416 L339.347 268.851 L346.531 260.691 L353.714 250.845 L360.898 258.678 L368.082 269.014 L375.265 252.042 L382.449 194.432 L389.633 235.939 L396.816 264.771 L404.000 224.570" fill="none" stroke="#2E7D6B" stroke-width="1.8" stroke-linejoin="round"/>
+    <path d="M52.000 44.778 L59.184 79.866 L66.367 71.434 L73.551 50.816 L80.735 55.386 L87.918 129.261 L95.102 61.206 L102.286 57.997 L109.469 185.728 L116.653 116.042 L123.837 94.934 L131.020 142.045 L138.204 269.232 L145.388 269.178 L152.571 270.973 L159.755 270.320 L166.939 270.211 L174.122 270.810 L181.306 270.320 L188.490 270.592 L195.673 268.416 L202.857 269.069 L210.041 269.830 L217.224 269.069 L224.408 266.621 L231.592 267.056 L238.776 267.491 L245.959 263.846 L253.143 266.838 L260.327 265.370 L267.510 267.382 L274.694 260.419 L281.878 263.738 L289.061 258.733 L296.245 268.742 L303.429 255.958 L310.612 266.838 L317.796 265.859 L324.980 258.406 L332.163 267.491 L339.347 268.634 L346.531 267.763 L353.714 263.738 L360.898 263.411 L368.082 263.139 L375.265 265.152 L382.449 261.344 L389.633 266.458 L396.816 189.590 L404.000 263.520" fill="none" stroke="#B8962E" stroke-width="1.8" stroke-linejoin="round"/>
+  </g>
+  <text x="718" y="70" text-anchor="middle" fill="#2B2B2B" font-family="Lora, Georgia, serif" font-size="22" font-weight="500" letter-spacing="0.01em">Entropy</text>
+  <text x="718" y="403" text-anchor="middle" fill="#6B6B6B" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="500" letter-spacing="0.1em">TIMESTEP</text>
+
+  <g font-family="Inter, system-ui, sans-serif" transform="translate(224,435)">
+    <rect y="1" width="32" height="2.5" rx="2" fill="#C4622D"/>
+    <text x="40" y="2.25" dominant-baseline="middle" fill="#2B2B2B" font-size="13">RL Teacher</text>
+  </g>
+  <g font-family="Inter, system-ui, sans-serif" transform="translate(366,435)">
+    <rect y="1" width="32" height="2.5" rx="2" fill="#2E7D6B"/>
+    <text x="40" y="2.25" dominant-baseline="middle" fill="#2B2B2B" font-size="13">OPD w/ RL Teacher</text>
+  </g>
+  <g font-family="Inter, system-ui, sans-serif" transform="translate(566,435)">
+    <rect y="1" width="32" height="2.5" rx="2" fill="#B8962E"/>
+    <text x="40" y="2.25" dominant-baseline="middle" fill="#2B2B2B" font-size="13">OPD w/ SFT Teacher</text>
+  </g>
+</svg>

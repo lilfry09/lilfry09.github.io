@@ -1,0 +1,313 @@
+<svg viewBox="0 35 820 650" width="820" height="650" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="820" height="700" fill="#F7F5F2"/>
+
+  <defs>
+    <!-- Arrow markers -->
+    <marker id="arrow-gray" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0.5 L0,5.5 L7,3 z" fill="#9B9490"/>
+    </marker>
+
+    <marker id="arrow-reward" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0.5 L0,5.5 L7,3 z" fill="#B8962E"/>
+    </marker>
+
+    <!-- Radial gradients -->
+    <radialGradient id="hill-main" cx="50%" cy="50%" r="68%">
+      <stop offset="0%" stop-color="#2E7D6B" stop-opacity=".32"/>
+      <stop offset="52%" stop-color="#7FB8B0" stop-opacity=".20"/>
+      <stop offset="100%" stop-color="#C8DDD8" stop-opacity=".015"/>
+    </radialGradient>
+
+    <radialGradient id="hill-medium" cx="50%" cy="50%" r="62%">
+      <stop offset="0%" stop-color="#A09080" stop-opacity=".42"/>
+      <stop offset="55%" stop-color="#D2C9BD" stop-opacity=".25"/>
+      <stop offset="100%" stop-color="#EDE9E3" stop-opacity=".01"/>
+    </radialGradient>
+
+    <radialGradient id="hill-low" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#B0A898" stop-opacity=".20"/>
+      <stop offset="55%" stop-color="#DDD8D0" stop-opacity=".10"/>
+      <stop offset="100%" stop-color="#EDE9E3" stop-opacity=".01"/>
+    </radialGradient>
+
+    <filter id="soft-blur">
+      <feGaussianBlur stdDeviation="16"/>
+    </filter>
+
+    <!-- Hide the after-update contour wherever it would overlap the original/current core -->
+    <mask id="hide-current-core-overlap">
+      <rect x="0" y="0" width="820" height="700" fill="white"/>
+      <ellipse cx="320" cy="284" rx="75" ry="72" fill="black"/>
+    </mask>
+  </defs>
+
+  <!-- OUTER POLICY DISTRIBUTION -->
+  <ellipse
+    cx="410"
+    cy="300"
+    rx="345"
+    ry="245"
+    fill="#EDE9E3"
+    fill-opacity=".45"
+    stroke="#C8C0B4"
+    stroke-width="1.7"
+    stroke-dasharray="7 5"
+  />
+
+  <!-- Very faint broad contour behind main high-probability region -->
+  <ellipse
+    cx="330"
+    cy="274"
+    rx="150"
+    ry="148"
+    fill="none"
+    stroke="#D8D0C6"
+    stroke-width="0.8"
+    opacity=".45"
+  />
+
+  <!-- PERIPHERAL REGIONS -->
+  <g opacity=".72">
+    <path d="M586,208
+             C590,180 608,166 632,170
+             C650,172 660,158 678,168
+             C698,180 706,198 700,220
+             C694,246 670,252 646,246
+             C628,242 618,254 602,242
+             C588,232 584,222 586,208Z" fill="url(#hill-low)"/>
+    <path d="M600,208
+             C604,190 618,180 636,182
+             C650,184 658,176 672,182
+             C686,190 692,202 688,218
+             C684,238 666,242 648,238
+             C634,236 626,244 614,236
+             C604,228 598,220 600,208Z" fill="none" stroke="#DDD8D0" stroke-width=".75"/>
+    <path d="M614,208
+             C616,196 626,190 638,192
+             C648,194 654,188 664,192
+             C674,198 678,204 676,216
+             C672,230 660,232 648,230
+             C638,228 632,234 624,228
+             C616,222 612,218 614,208Z" fill="none" stroke="#DDD8D0" stroke-width=".65" opacity=".75"/>
+    <text x="640" y="205" text-anchor="middle" font-family="Inter" font-size="9" font-weight="500" fill="#6C635B">Unlikely</text>
+    <text x="640" y="218" text-anchor="middle" font-family="Inter" font-size="9" font-weight="500" fill="#6C635B">Alternatives</text>
+  </g>
+
+  <g opacity=".72">
+    <path d="M480,332
+             C484,300 502,274 530,266
+             C552,260 558,244 582,250
+             C614,258 650,288 644,328
+             C640,354 656,372 636,392
+             C612,416 582,412 550,406
+             C522,400 500,416 486,392
+             C470,364 474,350 480,332Z" fill="url(#hill-medium)"/>
+    <path d="M496,334
+             C500,310 516,292 538,286
+             C556,282 562,270 582,274
+             C608,280 632,304 628,334
+             C624,354 636,366 622,380
+             C604,398 580,394 556,390
+             C534,386 518,398 508,382
+             C496,364 492,352 496,334Z" fill="none" stroke="#D2C9BD" stroke-width=".75"/>
+    <path d="M512,336
+             C514,318 526,304 544,300
+             C558,296 562,288 580,290
+             C600,294 616,312 614,336
+             C612,352 620,362 610,372
+             C596,384 578,382 560,378
+             C544,374 532,384 526,372
+             C516,356 510,350 512,336Z" fill="none" stroke="#D2C9BD" stroke-width=".65" opacity=".78"/>
+    <path d="M528,338
+             C530,326 538,316 550,314
+             C560,312 564,306 576,308
+             C590,310 602,322 600,338
+             C598,350 604,358 596,364
+             C586,372 574,370 562,368
+             C552,366 544,372 540,364
+             C532,352 526,348 528,338Z" fill="none" stroke="#D2C9BD" stroke-width=".6" opacity=".62"/>
+    <text x="558" y="335" text-anchor="middle" font-family="Inter" font-size="9.5" font-weight="500" fill="#5A5048">Reasonable but</text>
+    <text x="558" y="349" text-anchor="middle" font-family="Inter" font-size="9.5" font-weight="500" fill="#5A5048">Imperfect Solutions</text>
+  </g>
+
+  <g opacity=".68">
+    <path d="M190,468
+             C192,442 210,426 234,432
+             C252,438 262,424 278,438
+             C294,452 298,468 292,486
+             C284,510 262,514 240,508
+             C224,504 214,514 202,504
+             C192,496 188,486 190,468Z" fill="url(#hill-low)"/>
+    <path d="M202,468
+             C204,450 218,440 234,444
+             C248,448 256,438 268,448
+             C280,458 284,470 280,484
+             C274,500 258,504 242,500
+             C230,496 222,504 212,496
+             C204,490 200,482 202,468Z" fill="none" stroke="#DDD8D0" stroke-width=".72"/>
+    <path d="M216,468
+             C218,456 226,450 236,452
+             C244,454 250,448 258,454
+             C266,460 268,470 266,480
+             C262,492 252,494 242,492
+             C234,490 228,494 222,490
+             C218,486 214,480 216,468Z" fill="none" stroke="#DDD8D0" stroke-width=".62" opacity=".7"/>
+    <text x="235" y="465" text-anchor="middle" font-family="Inter" font-size="8.8" font-weight="500" fill="#7A7169">Stylistic</text>
+    <text x="235" y="477" text-anchor="middle" font-family="Inter" font-size="8.8" font-weight="500" fill="#7A7169">Variants</text>
+  </g>
+
+  <g opacity=".68">
+    <path d="M442,486
+             C444,456 466,438 494,444
+             C516,448 526,434 548,446
+             C568,458 578,476 572,496
+             C564,524 536,532 508,526
+             C486,522 476,534 458,520
+             C444,510 440,502 442,486Z" fill="url(#hill-low)"/>
+    <path d="M456,486
+             C458,464 476,452 496,456
+             C512,458 520,450 536,458
+             C552,466 560,480 556,496
+             C550,516 530,522 510,518
+             C494,514 486,524 472,514
+             C460,506 454,500 456,486Z" fill="none" stroke="#DDD8D0" stroke-width=".72"/>
+    <path d="M472,486
+             C474,472 486,464 498,466
+             C510,468 516,462 526,468
+             C538,474 542,484 540,496
+             C536,510 522,514 508,512
+             C498,510 492,516 484,510
+             C476,504 470,500 472,486Z" fill="none" stroke="#DDD8D0" stroke-width=".62" opacity=".7"/>
+    <text x="500" y="482" text-anchor="middle" font-family="Inter" font-size="8.8" font-weight="500" fill="#7A7169">Low-Probability</text>
+    <text x="500" y="494" text-anchor="middle" font-family="Inter" font-size="8.8" font-weight="500" fill="#7A7169">Alternatives</text>
+  </g>
+
+  <!-- HIGH-PROBABILITY ON-POLICY REGION -->
+  <ellipse cx="320" cy="284" rx="120" ry="118" fill="url(#hill-main)" filter="url(#soft-blur)" opacity=".72"/>
+
+  <!-- After-update policy: clean shifted contour, hidden behind current core -->
+  <ellipse
+    cx="355"
+    cy="287"
+    rx="88"
+    ry="92"
+    fill="none"
+    stroke="#0F7D74"
+    stroke-width="2.4"
+    stroke-dasharray="7 6"
+    opacity=".95"
+    mask="url(#hide-current-core-overlap)"
+  />
+
+  <!-- Current high-probability core -->
+  <ellipse
+    cx="320"
+    cy="284"
+    rx="75"
+    ry="72"
+    fill="url(#hill-main)"
+    stroke="#2E7D6B"
+    stroke-width="1.4"
+    opacity=".98"
+  />
+
+  <!-- Green samples -->
+  <circle cx="288" cy="241" r="4.5" fill="#2E7D6B" opacity=".93"/>
+  <circle cx="334" cy="242" r="4.3" fill="#2E7D6B" opacity=".90"/>
+  <circle cx="304" cy="272" r="4.4" fill="#2E7D6B" opacity=".92"/>
+  <circle cx="268" cy="282" r="4.4" fill="#2E7D6B" opacity=".90"/>
+  <circle cx="330" cy="286" r="4.3" fill="#2E7D6B" opacity=".88"/>
+  <circle cx="285" cy="316" r="4.2" fill="#2E7D6B" opacity=".86"/>
+  <circle cx="318" cy="342" r="4.2" fill="#2E7D6B" opacity=".84"/>
+  <circle cx="348" cy="330" r="4.1" fill="#2E7D6B" opacity=".82"/>
+
+  <!-- Rewarded samples -->
+  <g>
+    <circle cx="378" cy="248" r="4.2" fill="#2E7D6B" opacity=".94"/>
+    <circle cx="378" cy="248" r="8.2" fill="none" stroke="#B35F2A" stroke-width="2"/>
+
+    <circle cx="368" cy="278" r="4.2" fill="#2E7D6B" opacity=".94"/>
+    <circle cx="368" cy="278" r="8.2" fill="none" stroke="#B35F2A" stroke-width="2"/>
+
+    <circle cx="388" cy="300" r="4.2" fill="#2E7D6B" opacity=".94"/>
+    <circle cx="388" cy="300" r="8.2" fill="none" stroke="#B35F2A" stroke-width="2"/>
+
+    <circle cx="368" cy="326" r="4.2" fill="#2E7D6B" opacity=".94"/>
+    <circle cx="368" cy="326" r="8.2" fill="none" stroke="#B35F2A" stroke-width="2"/>
+  </g>
+
+  <!-- High-probability label: reduced font size and tightened block -->
+  <line x1="276" y1="326" x2="202" y2="366" stroke="#2E7D6B" stroke-width="1.2" opacity=".82"/>
+  <text x="112" y="378" text-anchor="start" font-family="Inter" font-size="10.2" font-weight="700" fill="#1E6A60" letter-spacing=".02em">HIGH PROBABILITY</text>
+  <text x="112" y="391" text-anchor="start" font-family="Inter" font-size="10.2" font-weight="700" fill="#1E6A60" letter-spacing=".02em">ON-POLICY SAMPLES</text>
+  <text x="112" y="405" text-anchor="start" font-family="Inter" font-size="8.8" font-weight="400" fill="#2E7D6B">Current-policy samples</text>
+  <text x="112" y="418" text-anchor="start" font-family="Inter" font-size="8.8" font-weight="400" fill="#2E7D6B">concentrated in a rewarding region</text>
+
+  <!-- After update label -->
+  <line x1="386" y1="202" x2="414" y2="152" stroke="#2E7D6B" stroke-width="1.1" opacity=".85"/>
+  <line x1="414" y1="152" x2="432" y2="152" stroke="#2E7D6B" stroke-width="1.1" opacity=".85"/>
+  <text x="438" y="151" text-anchor="start" font-family="Inter" font-size="11.5" font-weight="700" fill="#1E6A60">Updated Policy</text>
+  <text x="438" y="168" text-anchor="start" font-family="Inter" font-size="9.8" font-weight="400" fill="#2E7D6B">more concentrated</text>
+  <text x="438" y="182" text-anchor="start" font-family="Inter" font-size="9.8" font-weight="400" fill="#2E7D6B">toward rewarding region</text>
+
+  <!-- Reward signal: label moved left to avoid outer edge overlap -->
+  <line
+    x1="444"
+    y1="268"
+    x2="606"
+    y2="268"
+    stroke="#B8962E"
+    stroke-width="1.6"
+    stroke-dasharray="6 5"
+    marker-end="url(#arrow-reward)"
+    opacity=".95"
+  />
+  <text x="618" y="271" text-anchor="start" font-family="Inter" font-size="11.2" font-weight="700" fill="#9A761C" letter-spacing=".03em">REWARD SIGNAL</text>
+  <text x="618" y="287" text-anchor="start" font-family="Inter" font-size="9" font-weight="400" fill="#A08020">Scores sampled behavior</text>
+
+  <!-- CURRENT POLICY LABEL -->
+  <text x="58" y="88" text-anchor="start" font-family="Inter" font-size="10.5" font-weight="700" fill="#5F5954" letter-spacing="0.04em">CURRENT POLICY</text>
+  <text x="58" y="104" text-anchor="start" font-family="Inter" font-size="11" font-weight="400" fill="#5F5954" font-style="italic">
+    π<tspan font-size="8" baseline-shift="sub">θ</tspan>(y | x)
+  </text>
+  <line x1="118" y1="99" x2="168" y2="143" stroke="#9B9490" stroke-width="1.1" opacity=".65" marker-end="url(#arrow-gray)"/>
+
+  <!-- LEGEND -->
+  <rect x="30" y="582" width="760" height="82" rx="10" fill="#F8F6F3" stroke="#DED8CF"/>
+
+  <!-- Row 1 -->
+  <rect x="48" y="598" width="14" height="13" rx="2" fill="#2E9A85"/>
+  <text x="78" y="606" font-family="Inter" font-size="10.5" font-weight="500" fill="#5A5048">High-Probability Core</text>
+  <text x="78" y="618" font-family="Inter" font-size="9.3" font-weight="400" fill="#7E766E">Rewarding behavior region</text>
+
+  <rect x="232" y="598" width="20" height="20" rx="4" fill="none" stroke="#0F7D74" stroke-width="1.4" stroke-dasharray="4 3"/>
+  <text x="270" y="606" font-family="Inter" font-size="10.5" font-weight="500" fill="#5A5048">After Update Policy (new)</text>
+  <text x="270" y="618" font-family="Inter" font-size="9.3" font-weight="400" fill="#7E766E">More concentrated distribution</text>
+
+  <rect x="428" y="598" width="14" height="13" rx="2" fill="#D2C9BD"/>
+  <text x="462" y="606" font-family="Inter" font-size="10.5" font-weight="500" fill="#5A5048">Medium Probability</text>
+  <text x="462" y="618" font-family="Inter" font-size="9.3" font-weight="400" fill="#7E766E">Reasonable but imperfect</text>
+
+  <rect x="618" y="598" width="14" height="13" rx="2" fill="#DDD8D0"/>
+  <text x="650" y="606" font-family="Inter" font-size="10.5" font-weight="500" fill="#5A5048">Low Probability</text>
+  <text x="650" y="618" font-family="Inter" font-size="9.3" font-weight="400" fill="#7E766E">Peripheral alternatives</text>
+
+  <!-- Row 2 -->
+  <circle cx="53" cy="641" r="5.5" fill="#2E9A85"/>
+  <text x="78" y="638" font-family="Inter" font-size="10.5" font-weight="500" fill="#5A5048">On-Policy Samples</text>
+  <text x="78" y="650" font-family="Inter" font-size="9.3" font-weight="400" fill="#7E766E">Green = sampled behaviors</text>
+
+  <circle cx="240" cy="641" r="5.2" fill="#2E9A85"/>
+  <circle cx="240" cy="641" r="9.2" fill="none" stroke="#B35F2A" stroke-width="2"/>
+  <text x="270" y="638" font-family="Inter" font-size="10.5" font-weight="500" fill="#5A5048">Good Sample (Target)</text>
+  <text x="270" y="650" font-family="Inter" font-size="9.3" font-weight="400" fill="#7E766E">Higher score among samples</text>
+
+  <!-- Contours legend -->
+  <g transform="translate(435 641)">
+    <ellipse cx="0" cy="0" rx="13" ry="10" fill="none" stroke="#CFC9C0" stroke-width=".9"/>
+    <ellipse cx="0" cy="0" rx="8.5" ry="6.3" fill="none" stroke="#CFC9C0" stroke-width=".85"/>
+    <ellipse cx="0" cy="0" rx="4.3" ry="3.2" fill="none" stroke="#CFC9C0" stroke-width=".8"/>
+  </g>
+  <text x="462" y="638" font-family="Inter" font-size="10.5" font-weight="500" fill="#5A5048">Contours</text>
+  <text x="462" y="650" font-family="Inter" font-size="9.3" font-weight="400" fill="#7E766E">Probability density isolines</text>
+</svg>

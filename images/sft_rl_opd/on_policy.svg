@@ -1,0 +1,167 @@
+<svg viewBox="60 90 900 570" width="900" height="570" xmlns="http://www.w3.org/2000/svg" aria-label="On-policy sampling and optimization in policy space">
+  <defs>
+    <style type="text/css"><![CDATA[
+      .lbl { font-family: Inter, "Helvetica Neue", Arial, sans-serif; }
+      .serif { font-family: Lora, Georgia, serif; }
+      .legend-title {
+        font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+        font-size: 11.5px;
+        font-weight: 600;
+        fill: #24211f;
+      }
+      .legend-sub {
+        font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+        font-size: 10px;
+        fill: #5f5a54;
+      }
+    ]]></style>
+
+    <pattern id="feasible-pattern" patternUnits="userSpaceOnUse" width="7" height="7">
+      <rect width="7" height="7" fill="#D4F0F1"/>
+      <circle cx="3.5" cy="3.5" r="0.7" fill="#9ED6DA" opacity="0.45"/>
+    </pattern>
+
+    <pattern id="optimal-pattern" patternUnits="userSpaceOnUse" width="7" height="7">
+      <rect width="7" height="7" fill="#DBF0D8"/>
+      <circle cx="3.5" cy="3.5" r="0.7" fill="#ADD7AA" opacity="0.45"/>
+    </pattern>
+
+    <marker id="arr-sampling" markerWidth="13" markerHeight="13" refX="11" refY="6.5" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L12,6.5 L0,13" fill="none" stroke="#BA9A3B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+
+    <marker id="arr-optimization" markerWidth="13" markerHeight="13" refX="11" refY="6.5" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L12,6.5 L0,13" fill="none" stroke="#1F1F1F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="960" height="700" fill="#F7F5F2"/>
+
+  <path
+    d="M 222 151
+       C 259 114, 326 116, 376 139
+       C 420 159, 471 145, 517 172
+       C 563 199, 586 251, 565 304
+       C 549 344, 574 369, 552 420
+       C 522 491, 437 528, 349 510
+       C 264 493, 182 463, 123 395
+       C 72 336, 95 263, 165 229
+       C 211 207, 190 183, 222 151 Z"
+    fill="url(#feasible-pattern)"
+    stroke="#58C3CA"
+    stroke-width="2.2"
+    stroke-linejoin="round"
+  />
+
+  <text x="150" y="318" class="lbl" font-size="19" font-weight="700" fill="#087B84">
+    Feasible Policies
+  </text>
+  <text x="225" y="345" class="serif" font-size="24" font-weight="500" fill="#087B84" font-style="italic" text-anchor="middle">
+    &#928;
+  </text>
+
+  <path
+    d="M 711 115
+       C 775 88, 864 112, 905 171
+       C 944 227, 920 273, 918 333
+       C 916 383, 953 421, 916 478
+       C 872 545, 772 546, 710 499
+       C 665 465, 650 420, 657 371
+       C 663 330, 681 312, 667 265
+       C 651 210, 657 139, 711 115 Z"
+    fill="url(#optimal-pattern)"
+    stroke="#62BE6B"
+    stroke-width="2.2"
+    stroke-linejoin="round"
+  />
+
+  <text x="802" y="309" class="lbl" font-size="20" font-weight="700" fill="#1E7F32" text-anchor="middle">
+    Optimal Policies
+  </text>
+  <text x="802" y="337" class="serif" font-size="26" font-weight="500" fill="#1E7F32" text-anchor="middle" font-style="italic">
+    P*
+  </text>
+
+  <circle cx="323" cy="193" r="10" fill="#28748F" stroke="#F7F5F2" stroke-width="3"/>
+  <text x="282" y="179" class="serif" font-size="24" fill="#1F1F1F" text-anchor="middle" font-style="italic">
+    &#960;<tspan font-size="14" baseline-shift="sub" dy="-2">0</tspan>
+  </text>
+  <text x="269" y="200" class="lbl" font-size="13" fill="#4F4F4F" text-anchor="middle">
+    initial policy
+  </text>
+
+  <circle cx="558" cy="281" r="10" fill="#28748F" stroke="#F7F5F2" stroke-width="3"/>
+  <circle cx="535" cy="383" r="10" fill="#28748F" stroke="#F7F5F2" stroke-width="3"/>
+
+  <circle cx="668" cy="195" r="10" fill="#2DA447" stroke="#F7F5F2" stroke-width="3"/>
+  <circle cx="674" cy="295" r="10" fill="#2DA447" stroke="#F7F5F2" stroke-width="3"/>
+  <circle cx="662" cy="394" r="10" fill="#2DA447" stroke="#F7F5F2" stroke-width="3"/>
+
+  <text x="730" y="420" class="serif" font-size="24" fill="#1F1F1F" font-style="italic" text-anchor="middle">
+    &#960;*
+  </text>
+  <text x="684" y="442" class="lbl" font-size="13" fill="#4F4F4F">
+    nearest optimal
+  </text>
+
+  <path d="M 335 193 L 654 195"
+        fill="none"
+        stroke="#BA9A3B"
+        stroke-width="2.2"
+        stroke-linecap="round"
+        marker-end="url(#arr-sampling)"/>
+
+  <path d="M 570 283 L 661 294"
+        fill="none"
+        stroke="#BA9A3B"
+        stroke-width="2.2"
+        stroke-linecap="round"
+        marker-end="url(#arr-sampling)"/>
+
+  <path d="M 547 385 L 649 394"
+        fill="none"
+        stroke="#BA9A3B"
+        stroke-width="2.2"
+        stroke-linecap="round"
+        marker-end="url(#arr-sampling)"/>
+
+  <path d="M 662 205 L 566 276"
+        fill="none"
+        stroke="#1F1F1F"
+        stroke-width="2.2"
+        stroke-linecap="round"
+        marker-end="url(#arr-optimization)"/>
+
+  <path d="M 666 304 L 544 378"
+        fill="none"
+        stroke="#1F1F1F"
+        stroke-width="2.2"
+        stroke-linecap="round"
+        marker-end="url(#arr-optimization)"/>
+
+  <rect x="100" y="588" width="820" height="52" rx="10" fill="#F8F6F3" stroke="#DED8CF"/>
+
+  <g transform="translate(120 610)">
+    <rect x="0" y="-9" width="22" height="12" rx="2" fill="#D4F0F1" stroke="#58C3CA" stroke-width="1.6"/>
+    <text x="34" y="-1" class="legend-title">Feasible Policies &#928;</text>
+    <text x="34" y="13" class="legend-sub">Policy set under constraints</text>
+  </g>
+
+  <g transform="translate(330 610)">
+    <rect x="0" y="-9" width="22" height="12" rx="2" fill="#DBF0D8" stroke="#62BE6B" stroke-width="1.6"/>
+    <text x="34" y="-1" class="legend-title">Optimal Policies P*</text>
+    <text x="34" y="13" class="legend-sub">Target objective optimum set</text>
+  </g>
+
+  <g transform="translate(520 610)">
+    <path d="M2 0 H30 M24 -6 L30 0 L24 6" fill="none" stroke="#BA9A3B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="40" y="-1" class="legend-title">On-policy sampling</text>
+    <text x="40" y="13" class="legend-sub">Collect rollouts from current policy</text>
+  </g>
+
+  <g transform="translate(746 610)">
+    <path d="M2 0 H30 M24 -6 L30 0 L24 6" fill="none" stroke="#1F1F1F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="40" y="-1" class="legend-title">Optimization step</text>
+    <text x="40" y="13" class="legend-sub">Update policy with objective</text>
+  </g>
+</svg>

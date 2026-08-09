@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>训练模型的长程软件工程能力｜组会材料</title>
+  <style>
+    :root {
+      --paper: oklch(0.986 0.006 86);
+      --sheet: oklch(0.998 0.002 85);
+      --ink: oklch(0.225 0.018 253);
+      --soft: oklch(0.49 0.024 253);
+      --line: oklch(0.89 0.012 251);
+      --nav: oklch(0.965 0.012 248);
+      --blue: oklch(0.55 0.14 251);
+      --blue-soft: oklch(0.95 0.035 251);
+      --mint: oklch(0.95 0.035 160);
+      --yellow: oklch(0.96 0.045 91);
+      --red: oklch(0.56 0.16 28);
+      --serif: "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", "STSong", serif;
+      --sans: "Aptos", "Source Han Sans SC", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; background: var(--paper); }
+    body { margin: 0; color: var(--ink); font-family: var(--sans); background: var(--paper); line-height: 1.78; }
+    a { color: var(--blue); text-decoration: none; }
+    a:hover { text-decoration: underline; text-underline-offset: 3px; }
+    .app { display: grid; grid-template-columns: 68px 258px minmax(0, 1fr); min-height: 100vh; }
+    .toolstrip { position: sticky; top: 0; height: 100vh; border-right: 1px solid var(--line); background: var(--sheet); padding: 17px 0; display: flex; flex-direction: column; align-items: center; gap: 18px; }
+    .doc-mark { width: 32px; height: 36px; display: grid; place-items: center; color: white; background: var(--blue); border-radius: 7px 7px 7px 2px; font-weight: 800; }
+    .toolstrip button { width: 34px; height: 34px; padding: 0; border: 0; background: transparent; color: var(--soft); font-size: 17px; cursor: pointer; border-radius: 6px; }
+    .toolstrip button:hover { background: var(--blue-soft); color: var(--blue); }
+    .tool-spacer { flex: 1; }
+    .avatar { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: var(--yellow); color: oklch(0.37 0.08 78); font-size: 12px; font-weight: 900; }
+    .outline { position: sticky; top: 0; height: 100vh; overflow: auto; padding: 26px 19px 36px; border-right: 1px solid var(--line); background: var(--nav); }
+    .crumb { color: var(--soft); font-size: 12px; margin-bottom: 30px; }
+    .outline h2 { margin: 0 0 11px; font-size: 13px; letter-spacing: .03em; }
+    .outline nav { display: grid; gap: 2px; }
+    .outline a { color: var(--soft); padding: 7px 9px; display: block; border-radius: 5px; font-size: 13px; line-height: 1.4; }
+    .outline a:hover, .outline a:focus { background: var(--blue-soft); color: var(--blue); text-decoration: none; }
+    .outline .sub { padding-left: 20px; font-size: 12px; }
+    .outline .reading { margin-top: 34px; border-top: 1px solid var(--line); padding-top: 20px; font-size: 12px; color: var(--soft); }
+    .reading b { display: block; color: var(--ink); font-size: 17px; margin-top: 4px; }
+    .main { min-width: 0; padding: clamp(36px, 6vw, 82px) clamp(24px, 7vw, 124px) 110px; }
+    article { width: min(100%, 940px); margin: 0 auto; }
+    .doc-top { display: flex; align-items: center; justify-content: space-between; gap: 20px; color: var(--soft); font-size: 13px; }
+    .doc-top .status { color: var(--blue); background: var(--blue-soft); padding: 3px 8px; border-radius: 4px; }
+    .doc-top .actions { display: flex; gap: 12px; align-items: center; }
+    .doc-top button { border: 1px solid var(--line); background: var(--sheet); color: var(--soft); padding: 5px 9px; border-radius: 5px; cursor: pointer; }
+    .hero { margin: 53px 0 48px; }
+    .hero .label { color: var(--blue); font-size: 13px; font-weight: 800; letter-spacing: .08em; }
+    h1 { margin: 14px 0 18px; font-family: var(--serif); font-size: clamp(39px, 5.4vw, 67px); line-height: 1.14; letter-spacing: -.065em; }
+    .subtitle { max-width: 820px; color: var(--soft); font-size: clamp(18px, 2vw, 24px); line-height: 1.6; }
+    .authorline { display: flex; gap: 12px; align-items: center; margin-top: 25px; color: var(--soft); font-size: 13px; }
+    .authorline .mini-avatar { width: 24px; height: 24px; display: grid; place-items: center; border-radius: 50%; background: var(--mint); color: var(--blue); font-size: 11px; font-weight: 900; }
+    .cover-note { border-left: 4px solid var(--blue); background: var(--blue-soft); padding: 19px 21px; font-size: 18px; line-height: 1.7; margin: 34px 0 62px; }
+    .cover-note strong { color: var(--blue); }
+    h2.section { font-family: var(--serif); font-size: clamp(29px, 3.4vw, 43px); line-height: 1.25; letter-spacing: -.055em; padding-top: 58px; margin: 0 0 14px; scroll-margin-top: 32px; }
+    h2.section .num { display: inline-block; font-family: var(--sans); font-size: 13px; font-weight: 900; color: var(--blue); letter-spacing: .09em; vertical-align: middle; margin-right: 8px; }
+    h3 { font-size: 21px; line-height: 1.45; margin: 36px 0 10px; }
+    h4 { font-size: 17px; margin: 26px 0 6px; }
+    p { margin: 12px 0; font-size: 16px; }
+    .lead { color: var(--soft); font-size: 18px; }
+    .doc-table-wrap { overflow: auto; border: 1px solid var(--line); border-radius: 6px; margin: 22px 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; text-align: left; }
+    th { background: var(--nav); color: var(--soft); font-size: 12px; letter-spacing: .04em; white-space: nowrap; }
+    th, td { padding: 13px 14px; border-bottom: 1px solid var(--line); vertical-align: top; line-height: 1.58; }
+    tr:last-child td { border-bottom: 0; }
+    td strong { color: var(--ink); }
+    .insight { margin: 26px 0; padding: 16px 19px; background: var(--yellow); border-radius: 6px; font-size: 16px; }
+    .insight .tag { display: block; color: var(--red); font-size: 12px; font-weight: 900; letter-spacing: .08em; margin-bottom: 4px; }
+    .diagram { display: flex; flex-wrap: wrap; align-items: stretch; margin: 28px 0; border: 1px solid var(--line); border-radius: 7px; overflow: hidden; }
+    .diagram div { flex: 1 1 190px; padding: 18px; border-right: 1px solid var(--line); }
+    .diagram div:last-child { border-right: 0; }
+    .diagram small { color: var(--blue); display: block; font-size: 11px; font-weight: 900; letter-spacing: .08em; }
+    .diagram b { display: block; font-size: 18px; margin: 8px 0 6px; }
+    .diagram span { color: var(--soft); display: block; font-size: 13px; line-height: 1.55; }
+    .task { margin: 28px 0 0; padding: 0 0 25px; border-bottom: 1px solid var(--line); }
+    .task .task-id { color: var(--blue); font-weight: 800; font-size: 13px; letter-spacing: .06em; }
+    .task h3 { font-family: var(--serif); font-size: 26px; letter-spacing: -.04em; margin: 7px 0; }
+    .task-grid { display: grid; grid-template-columns: 135px 1fr; gap: 3px 20px; margin-top: 14px; font-size: 15px; }
+    .task-grid dt { color: var(--soft); font-size: 13px; }
+    .task-grid dd { margin: 0; }
+    .task-grid ul { margin: 2px 0; padding-left: 18px; }
+    .speaker { margin: 18px 0 3px; padding: 10px 14px; border-radius: 5px; background: var(--mint); color: oklch(0.31 0.065 154); font-size: 14px; line-height: 1.6; }
+    .speaker b { font-size: 12px; letter-spacing: .08em; }
+    blockquote { margin: 28px 0; padding: 4px 0 4px 22px; border-left: 3px solid var(--blue); font-family: var(--serif); font-size: 23px; line-height: 1.55; letter-spacing: -.035em; }
+    ol, ul { padding-left: 22px; }
+    li { margin: 7px 0; font-size: 16px; }
+    code, pre { font-family: "Cascadia Mono", Consolas, monospace; }
+    pre { overflow: auto; margin: 18px 0; padding: 18px 20px; background: oklch(0.205 0.019 253); color: oklch(0.92 0.016 250); border-radius: 6px; font-size: 13px; line-height: 1.7; }
+    .k { color: oklch(0.76 0.11 253); } .s { color: oklch(0.83 0.11 91); } .n { color: oklch(0.75 0.1 159); }
+    .checklist { list-style: none; padding: 0; margin: 18px 0; }
+    .checklist li { padding: 11px 0 11px 32px; position: relative; border-bottom: 1px solid var(--line); }
+    .checklist li::before { content: "✓"; position: absolute; left: 3px; top: 10px; color: var(--blue); font-weight: 900; }
+    .warning { color: var(--red); font-weight: 750; }
+    details { margin: 22px 0; border: 1px solid var(--line); border-radius: 6px; background: var(--sheet); }
+    summary { cursor: pointer; padding: 13px 15px; font-size: 14px; font-weight: 750; }
+    details div { padding: 0 15px 14px; color: var(--soft); font-size: 14px; }
+    .reference { margin-top: 20px; padding-top: 12px; border-top: 1px solid var(--line); color: var(--soft); font-size: 13px; }
+    .reference a { margin-right: 13px; }
+    .footer { margin-top: 74px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--soft); font-size: 13px; }
+    .toast { position: fixed; left: 50%; bottom: 25px; transform: translate(-50%, 18px); opacity: 0; pointer-events: none; padding: 9px 13px; border-radius: 6px; background: var(--ink); color: var(--sheet); font-size: 13px; transition: .22s ease; }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+    @media (max-width: 1060px) { .app { grid-template-columns: 56px minmax(0, 1fr); }.outline { display: none; }.main { padding-left: clamp(23px, 7vw, 78px); padding-right: clamp(23px, 7vw, 78px); } }
+    @media (max-width: 620px) { .app { display: block; }.toolstrip { position: fixed; z-index: 3; bottom: 0; top: auto; width: 100%; height: 52px; flex-direction: row; justify-content: center; padding: 0; border-top: 1px solid var(--line); }.toolstrip .tool-spacer, .toolstrip .avatar { display: none; }.main { padding: 34px 20px 80px; }.doc-top .actions { display: none; }.hero { margin-top: 37px; }.task-grid { grid-template-columns: 1fr; gap: 3px; }.task-grid dt { margin-top: 9px; }.diagram div { border-right: 0; border-bottom: 1px solid var(--line); }.diagram div:last-child { border-bottom: 0; } }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="toolstrip" aria-label="文档工具栏">
+      <div class="doc-mark">文</div>
+      <button title="文档">▤</button><button title="评论">◌</button><button title="收藏">☆</button>
+      <div class="tool-spacer"></div><button title="更多">···</button><div class="avatar">FRY</div>
+    </aside>
+    <aside class="outline" aria-label="文档大纲">
+      <div class="crumb">组会材料 / AI Agent</div>
+      <h2>文档大纲</h2>
+      <nav>
+        <a href="#summary">摘要：先说结论</a><a href="#three-questions">六个 benchmark 测什么</a><a href="#data-card">规模、token 与耗时</a><a href="#marathon-paper">SWE-Marathon</a><a href="#frontier-paper">FrontierSWE</a><a href="#together-paper">SWE-Together</a><a href="#atlas-paper">SWE Atlas</a><a href="#program-paper">ProgramBench</a><a href="#explore-paper">SWE-Explore</a><a href="#takeaway">横向比较与结论</a><a href="#sources">来源</a>
+      </nav>
+      <div class="reading">预计讲解时长<b>35–45 分钟</b>六组工作按统一口径比较；缺失的 token/时长数字会明确标为“未报告”。</div>
+    </aside>
+    <main class="main">
+      <article>
+        <header class="doc-top"><span>📄 组会材料 · 长程 Agent</span><div class="actions"><a href="long-horizon-swe-three-papers-script.html">配套讲稿</a><span class="status">已整理</span><button id="copyLink">复制文档路径</button></div></header>
+        <section class="hero" id="summary">
+          <div class="label">SIX BENCHMARKS · FROM EXPLORATION TO ULTRA-LONG PROJECTS</div>
+          <h1>Coding Agent 的六类工程能力</h1>
+          <p class="subtitle">统一比较任务规模、token 消耗、long-horizon 程度、完整测评时间，以及 task、query 与 trajectory 的构造方式。</p>
+          <div class="authorline"><span class="mini-avatar">F</span><span>fry · 2026-07-21 · 组会讲稿版</span></div>
+        </section>
+        <div class="cover-note"><strong>一句话结论：</strong>六个 benchmark 不在同一时间尺度：SWE-Explore 只测“能否找到代码”，SWE Atlas 测非修复型工程工作，SWE-Together 测用户在环，ProgramBench 测从零重建，FrontierSWE 与 SWE-Marathon 则把单任务推到 20 小时或数千万累计 token。</div>
+
+        <h2 class="section" id="three-questions"><span class="num">01</span>六个 benchmark 到底分别在问什么？</h2>
+        <p class="lead">它们不是六个相似榜单，而是从仓库探索到完整项目的六个不同切面。</p>
+        <div class="diagram"><div><small>SWE-MARATHON</small><b>能不能把项目做完？</b><span>任务对象是完整软件项目；重点是长时间施工、跨模块推进和最终验收。</span></div><div><small>FRONTIERSWE</small><b>能不能取得专家级进展？</b><span>任务对象是协议兼容、性能工程、研究实验；重点是正确性之后还有多少连续收益。</span></div><div><small>SWE-TOGETHER</small><b>用户改口后还能不能做对？</b><span>任务对象是多轮真实会话；重点是意图更新、scope 纠偏和交互成本。</span></div></div>
+        <div class="diagram"><div><small>SWE ATLAS</small><b>不修 issue，还会什么？</b><span>Codebase Q&A、写测试、重构，强调工程质量而不只是功能修复。</span></div><div><small>PROGRAMBENCH</small><b>能否从零重建程序？</b><span>只给可执行文件与文档，让 Agent 自主设计并复现外部行为。</span></div><div><small>SWE-EXPLORE</small><b>能否先找到正确上下文？</b><span>给 issue 与仓库，在固定行预算内返回最相关的文件和行区间。</span></div></div>
+        <p>它们共同反对一个过于简单的评测方式：给模型一句 instruction，最后只看 patch 是否通过。但要注意，SWE-Explore 本身不是 end-to-end 长程任务；它把长程修复中的“探索”阶段单独抽出来测。</p>
+        <div class="speaker"><b>讲解提示</b><br>可以把六者排成一条能力链：找到代码 → 理解/测试/重构 → 跟用户协作 → 从零造程序 → 在专家任务上推进 → 完成超长项目。</div>
+
+        <h2 class="section" id="marathon-paper"><span class="num">02</span>SWE-Marathon：把评测单位从 patch 拉到完整项目</h2>
+        <p class="lead"><strong>身份：</strong>arXiv:2606.07682 对应的论文与开源 benchmark。论文初版报告 20 个超长程任务，运行在 Harbor/Docker 环境中。</p>
+        <h3>作者为什么要做它？</h3>
+        <p>SWE-bench 已经把真实 GitHub issue 变成了可执行评测，但大量题目仍然是相对局部的 bug fix：找到位置、改 patch、跑测试。作者认为，这无法代表真实工程中“先理解一个系统，再连续数小时推进多个依赖环节”的工作。</p>
+        <p>SWE-Marathon 因而故意选择人类专家需要几十小时的项目：产品克隆、跨语言重写、机器学习训练、系统优化。它关心的不是模型某一次修改够不够聪明，而是模型能不能在长时间内维持目标、建立可运行 baseline、处理失败并最终交付。</p>
+        <h3>任务是怎么构造的？</h3>
+        <div class="doc-table-wrap"><table><thead><tr><th>组成</th><th>作用</th></tr></thead><tbody><tr><td><strong>instruction.md</strong></td><td>给出最终目标、外部接口和约束，但不暴露隐藏测试的具体断言。</td></tr><tr><td><strong>task.toml</strong></td><td>固定时间、CPU/GPU、内存、网络、镜像等运行条件。</td></tr><tr><td><strong>Docker 环境</strong></td><td>冻结代码、依赖和工具链，让不同 Agent 在同一个“世界”里工作。</td></tr><tr><td><strong>visible checks</strong></td><td>提供基本反馈，让 Agent 知道环境是否能启动、方向是否完全错误。</td></tr><tr><td><strong>hidden verifier</strong></td><td>最终验收功能、鲁棒性、性能或产物契约，避免只针对可见测试写答案。</td></tr><tr><td><strong>oracle / NOP</strong></td><td>参考解必须稳定通过；什么都不做必须低分，用来证明任务和评分器健康。</td></tr></tbody></table></div>
+        <h3>三个任务能说明什么？</h3>
+        <div class="task"><div class="task-id">TASK · slack-clone</div><h3>看起来是聊天应用，实质是分布式产品验收</h3><p>Agent 要实现注册、workspace、频道、DM、thread、reaction、file、search 等完整功能，同时运行三个 HTTP 节点和一个 IRC gateway。隐藏测试还会断开节点、切换 WebSocket、杀掉广播组件，检查消息能否 replay、频道序号是否连续，以及 SQLite fallback 是否在故障后继续工作。</p><p><strong>它在测：</strong>Agent 会不会先搭可启动骨架，把 API、持久化、实时推送和 UI 分层推进，并把故障恢复当成需求而不是最后的意外。</p></div>
+        <div class="task"><div class="task-id">TASK · biofabric-rust-rewrite</div><h3>Java → Rust：重写不是“翻译语法”，而是恢复行为</h3><p>初始 Rust skeleton 可以编译，但大量函数是 <code>todo!()</code>。Agent 需要参考 Java BioFabric 和 Network Alignment plugin，实现 Rust library 与 CLI，并在 layout、analysis、alignment 等输出上通过接近 byte-level 的 parity test。</p><p><strong>它在测：</strong>Agent 能否找到参考实现的行为真相、锁定公共 API、逐模块对齐语义，而不是一次性重写后靠猜测修测试。</p></div>
+        <div class="task"><div class="task-id">TASK · parameter-golf</div><h3>ML 任务：实验结果和最终提交契约同样重要</h3><p>Agent 要在指定数据与算力预算下训练语言模型，提交训练脚本和不超过 32MB 的 checkpoint，并让 hidden held-out 指标达到门槛。一个模型即使训练指标很好，只要 checkpoint 放错、推理入口不完整或依赖散落，最终仍然失败。</p><p><strong>它在测：</strong>实验设计、资源预算、checkpoint 管理和最终 artifact contract 能否形成闭环。</p></div>
+        <h3>这篇工作真正告诉我们什么？</h3>
+        <p>它最重要的贡献不是“题目更大”，而是把完整工程任务做成了可重复运行、可最终验收的环境。论文观察到，长 rollout 的大量 token 消耗在历史工具输出、上下文回放与维持工作状态，而不只是生成新代码。这说明长程瓶颈不能简单归因于模型不会写某个函数。</p>
+        <p class="insight"><span class="tag">读完应记住</span>SWE-Marathon 测的是<strong>项目级持续执行</strong>：能不能把几十个互相依赖的小闭环组织成一个最终可验收的大闭环。</p>
+        <details><summary>局限：它没有证明什么？</summary><div>任务数量较少且人工构造成本高；不同项目的 verifier 和难度并不完全同质；最终 resolved 也无法自动说明中间过程是否高效、是否靠 harness 托举。不同版本的官网、仓库与数据快照还可能发生任务数量或实现细节漂移。</div></details>
+
+        <h2 class="section" id="frontier-paper"><span class="num">03</span>FrontierSWE：不只问“做没做成”，还要问“推进了多少”</h2>
+        <p class="lead"><strong>身份说明：</strong>FrontierSWE 当前更准确地说是 Proximal Labs 发布的 benchmark、官方技术博客和开源任务仓库；它不像另外两项那样对应同形态的 arXiv 论文。首发公开 17 个高难任务。</p>
+        <h3>作者为什么要做它？</h3>
+        <p>当 coding agent 已经开始挑战大型重构、协议实现、性能优化与研究实验时，短任务加二值 resolved 很难区分 frontier model：两个模型都可能“没完全做完”，但一个已经打通核心协议，另一个连程序都无法启动；它们不应该得到完全相同的信息。</p>
+        <p>FrontierSWE 因而把任务做得更少、更贵、更接近专家边界，并给不同任务族设计不同的连续评分。核心问题从“有没有交卷”变成“在正确性约束下，取得了多少可测进展”。</p>
+        <h3>三类任务怎样评分？</h3>
+        <div class="doc-table-wrap"><table><thead><tr><th>任务族</th><th>典型评分</th><th>为什么不能统一为 pass/fail</th></tr></thead><tbody><tr><td><strong>Implementation</strong></td><td>编译、协议兼容、回归测试、TAP/功能测试的通过率。</td><td>即使没有全部完成，覆盖多少公共行为仍然是有意义的能力差异。</td></tr><tr><td><strong>Performance</strong></td><td>先过 correctness gate，再按 hidden workloads 上的 speedup 等连续指标计分。</td><td>否则 Agent 会通过跳帧、降质、删功能等方式刷速度。</td></tr><tr><td><strong>ML Research</strong></td><td>held-out metric、参数/资源限制和最终 inference contract。</td><td>研究进展天然是连续的，同时必须防止偷看数据或提交不可复现产物。</td></tr></tbody></table></div>
+        <h3>三个任务能说明什么？</h3>
+        <div class="task"><div class="task-id">TASK · postgres-sqlite-wire-adapter</div><h3>用 SQLite 做底层，却让 PostgreSQL 客户端相信它连上了 PostgreSQL</h3><p>Agent 要写 Zig 单二进制，按 <code>argv[0]</code> 扮演 <code>postgres</code>、<code>initdb</code>、<code>pg_ctl</code>。隐藏 verifier 会跑 startup/auth、simple query、prepared statement、transaction、catalog、Unix socket、CLI 和 cluster lifecycle，甚至接入 PostgreSQL regression/TAP 测试。</p><p><strong>它在测：</strong>Agent 是否理解“兼容面”的优先级：先打通 <code>psql select 1</code> 和进程生命周期，再逐步扩大协议与 catalog 覆盖。</p></div>
+        <div class="task"><div class="task-id">TASK · revideo-perf-opt</div><h3>性能优化：更快之前必须先证明仍然正确</h3><p>Agent 可以优化 Canvas、browser-node 传输、WebSocket 或 FFmpeg 路径，但不能跳帧、降画质或改变 API。Verifier 先用 hidden scenes 比较视觉和行为正确性，只有全部过关才计算几何平均 speedup。</p><p><strong>它在测：</strong>baseline、profile、局部实验、correctness gate 与 best-so-far 管理，而不是一次性写出“看起来更快”的 patch。</p></div>
+        <div class="task"><div class="task-id">TASK · pcqm4mv2-autoresearch</div><h3>研究任务：分数、资源和可执行提交缺一不可</h3><p>Agent 要在 closed-data、2D-only、参数上限等约束下做 molecular graph regression，并提交能够独立加载 checkpoint、读取 hidden input、输出预测的最小 inference package。</p><p><strong>它在测：</strong>能否把读数据、设计模型、跑实验、保留最佳 checkpoint 和封装最终提交组织成可执行研究，而不是只提出一个模型点子。</p></div>
+        <h3>这组工作真正告诉我们什么？</h3>
+        <p>FrontierSWE 的核心创新在评分思想：对于专家任务，progress 本身应被测量，但连续 reward 必须被正确性和反作弊约束。它把 verifier 从“最后判卷”提升为任务定义的一部分。</p>
+        <p class="insight"><span class="tag">读完应记住</span>FrontierSWE 测的是<strong>正确性约束下的专家级进展</strong>：不是做了多少动作，而是把真实指标推进了多少。</p>
+        <details><summary>局限：它没有证明什么？</summary><div>任务少且高度异质，单一总分很难解释；不同任务的 reward 标度并不天然可比较；任务成本和硬件需求高；当前主要证据来自官方项目材料和仓库，而不是一篇结构完整、经过同样评审流程的论文。</div></details>
+
+        <h2 class="section" id="together-paper"><span class="num">04</span>SWE-Together：把真实用户重新放回 Agent 循环</h2>
+        <p class="lead"><strong>身份：</strong>arXiv:2606.29957 对应的论文、开源任务与 Hugging Face 数据集。论文公开 109 个以真实 user-agent session 为核心的任务。</p>
+        <h3>作者为什么要做它？</h3>
+        <p>传统 benchmark 通常把用户需求压成一条静态 instruction。但现实中用户会追问“为什么这样改”、限制“不要动外部依赖”、指出“你的测试 mock 太多”、或者在看过调查结果后要求继续实现。任务目标不是在第一轮就完全固定的。</p>
+        <p>如果评测只保存初始 prompt 和最终 patch，就会漏掉 Agent 是否听懂纠偏、是否解释关键修改、是否遵守新的 scope；甚至会把遵循后续要求的正确实现误判为偏离初始指令。</p>
+        <h3>数据和任务是怎么组织的？</h3>
+        <div class="doc-table-wrap"><table><thead><tr><th>资产</th><th>包含什么</th></tr></thead><tbody><tr><td><strong>初始 instruction</strong></td><td>Agent 在 turn 0 得到的任务，不提前泄漏所有后续用户要求。</td></tr><tr><td><strong>Repo + base commit</strong></td><td>固定真实代码库的初始状态。</td></tr><tr><td><strong>User simulation prompt</strong></td><td>根据原始会话中的触发条件，在合适时机追问、纠偏、追加要求或保持沉默。</td></tr><tr><td><strong>Frozen goals / scoring targets</strong></td><td>把功能目标、scope、解释义务和用户意图覆盖写成可复核的评分标准。</td></tr><tr><td><strong>Verifier + reference patch</strong></td><td>同时检查代码结果和关键目标是否满足，而不是只比较文本。</td></tr></tbody></table></div>
+        <p>它的关键机制是 progressive reveal：Agent 先得到第一轮需求，后续用户消息只在相应条件出现后发送。这样评测的是“收到新证据后是否调整”，而不是要求模型从一开始就猜中完整剧本。</p>
+        <h3>三个任务能说明什么？</h3>
+        <div class="task"><div class="task-id">TASK · comfyui-triton-windows-amd-fix</div><h3>Patch 只有两行，但 scope 和解释同样是目标</h3><p>问题是 Windows + AMD GPU 下的 Triton 编译错误。Reference patch 只需要稳定 base pointer 的 indexed load，并删除循环中的指针自增。但用户会追问为什么要这样改；如果 Agent 跑去修改 Triton 外部依赖，又会明确要求在当前 repo 内解决。</p><p><strong>它在测：</strong>小 patch 不代表小任务；Agent 还要解释原因、服从 scope，并在错误方向上及时收缩。</p></div>
+        <div class="task"><div class="task-id">TASK · qwen3-moe-gguf-dequant</div><h3>需求逐步扩展，测试协议和性能解释不断被校正</h3><p>会话从修一个 IQ3_XXS dequant 开始，随后扩展到多种 IQ layout；用户会提醒直接使用当前目录测试、不要用不符合要求的 <code>F.embedding</code>，并追问性能瓶颈究竟在 dequant 还是 test-side quantization。</p><p><strong>它在测：</strong>Agent 能否在相似但不同的实现间持续保持细节正确，并根据用户反馈修正测试和性能判断。</p></div>
+        <div class="task"><div class="task-id">TASK · pi-mono-parallel-tool-stall</div><h3>初始“只调查”可以被后续用户要求合法地改写</h3><p>会话最初要求调查并写 memo，随后用户要求先加 failing test、不要 interactive metadata、让工具 sequential、测试走真实 session wiring。最终 reference patch 确实包含实现与测试。</p><p><strong>它在测：</strong>用户消息是目标函数的更新；Agent 不能只忠于 turn 0，而要忠于当前最新且完整的用户意图。</p></div>
+        <h3>这篇工作真正告诉我们什么？</h3>
+        <p>SWE-Together 把软件工程 Agent 从“独自解题者”改成“协作参与者”。代码是否正确仍然重要，但能否解释、遵守 scope、响应用户纠偏，也是完成任务的一部分。</p>
+        <p class="insight"><span class="tag">读完应记住</span>SWE-Together 测的是<strong>随时间更新的用户意图</strong>：同一个动作在 turn 0 可能越界，在用户明确追加要求后却可能变成正确行为。</p>
+        <details><summary>局限：它没有证明什么？</summary><div>User simulator 仍是对真实会话的模型化，可能无法复现所有人类表达；任务评分需要把代码正确性与交互目标结合，主观性高于纯测试；如果 simulation prompt 泄漏 reference fix 的变量名或代码形状，也会降低评测可信度。</div></details>
+
+        <h2 class="section" id="takeaway"><span class="num">05</span>横向比较：三组工作拼出怎样的长程 SWE 图景？</h2>
+        <div class="doc-table-wrap"><table><thead><tr><th>维度</th><th>SWE-Marathon</th><th>FrontierSWE</th><th>SWE-Together</th></tr></thead><tbody><tr><td><strong>核心问题</strong></td><td>完整项目能否完成</td><td>专家任务推进多少</td><td>多轮用户意图能否跟随</td></tr><tr><td><strong>时间尺度</strong></td><td>小时级项目施工</td><td>高成本系统/性能/研究实验</td><td>多轮会话中的目标演化</td></tr><tr><td><strong>反馈</strong></td><td>visible checks + hidden final verifier</td><td>correctness-gated continuous reward</td><td>用户消息 + frozen goals + verifier</td></tr><tr><td><strong>典型失败</strong></td><td>项目分解失控、过早结束、故障路径遗漏</td><td>快但错、研究产物不可执行、只实现局部兼容</td><td>忽视纠偏、scope 越界、只完成初始指令</td></tr><tr><td><strong>最重要贡献</strong></td><td>把完整项目做成可执行评测</td><td>把专家级 progress 做成受约束连续指标</td><td>把用户意图更新做成 benchmark 事件</td></tr></tbody></table></div>
+        <blockquote>三者共同推动了一个变化：评测对象从“最终 patch”变成“Agent 在可执行世界中持续推进任务的能力”。</blockquote>
+        <p>如果组会上只需要带走三句话：SWE-Marathon 关心<strong>能不能做完</strong>；FrontierSWE 关心<strong>在保证正确的前提下能推进多少</strong>；SWE-Together 关心<strong>用户改变要求以后还能不能继续做对</strong>。</p>
+
+        <h2 class="section" id="sources"><span class="num">来源</span>原始材料</h2>
+        <p class="reference"><a href="https://arxiv.org/abs/2606.07682">SWE-Marathon paper</a><a href="https://github.com/abundant-ai/swe-marathon">SWE-Marathon GitHub</a><a href="https://www.swe-marathon.org/">SWE-Marathon website</a><a href="https://www.frontierswe.com/blog">FrontierSWE official blog</a><a href="https://github.com/Proximal-Labs/frontier-swe">FrontierSWE GitHub</a><a href="https://arxiv.org/abs/2606.29957">SWE-Together paper</a><a href="https://github.com/Togetherbench/SWE-Together">SWE-Together GitHub</a><a href="https://huggingface.co/datasets/yfwu/SWE-Together">SWE-Together dataset</a></p>
+
+        <template id="archived-old-content">
+
+        <h2 class="section" id="comparison"><span class="num">01</span>先把三组工作放在同一张图里</h2>
+        <p class="lead">三者都叫 SWE，但各自补的是不同缺口。把它们串起来，才能得到完整的长程训练闭环。</p>
+        <div class="doc-table-wrap"><table><thead><tr><th>工作</th><th>主要问题</th><th>任务形态</th><th>训练上最重要的信号</th></tr></thead><tbody>
+          <tr><td><strong>SWE-Marathon</strong></td><td>agent 能否完成一个完整、超长的软件工程任务？</td><td>产品克隆、库重写、ML 训练、系统优化；Docker/Harbor 中最终验收。</td><td>项目分解、长时间验证、失败恢复、final resolved。</td></tr>
+          <tr><td><strong>FrontierSWE</strong></td><td>agent 在专家级系统/性能/研究挑战中，能走到人类边界的多远？</td><td>高成本少量任务；implementation、performance、ML research。</td><td>correctness gate、连续指标、best-so-far 与实验纪律。</td></tr>
+          <tr><td><strong>SWE-Together</strong></td><td>真实用户改变意图、追问、纠偏时，agent 能否继续把事情做对？</td><td>真实多轮用户会话 + frozen goals + user simulator。</td><td>intent update、沟通质量、scope compliance、交互成本。</td></tr>
+        </tbody></table></div>
+        <div class="diagram"><div><small>STEP 1</small><b>完整施工</b><span>先让 agent 在一个活的工程环境里持续做事。</span></div><div><small>STEP 2</small><b>专家级反馈</b><span>把“是否正确”之后的性能、指标、资源约束做成 reward。</span></div><div><small>STEP 3</small><b>用户在环</b><span>把用户的新消息当作状态更新，而不是噪声。</span></div></div>
+        <p class="insight"><span class="tag">关键提醒</span>不要把这三者当成榜单上的三个相近数据集。它们分别定义了：<strong>工作对象</strong>、<strong>进展如何计分</strong>与<strong>谁有权改变目标</strong>。</p>
+
+        <h3 id="why">为什么 SWE-bench 不够，但仍然重要</h3>
+        <p>SWE-bench 的贡献是把真实 GitHub issue、仓库状态和测试绑定为可评分 patch。它回答的是“模型能否修一个相对局部的问题”，这仍是长程能力的必要底座。问题在于，现实工程很少在拿到 issue 后立刻进入“定位 bug → 写 patch → 跑 test”的单线流程。</p>
+        <p>在一个 10–80 小时的人类任务里，agent 往往需要先读系统、启动环境、补最小骨架、做若干有风险的实验、在性能与正确性之间权衡、保存可回退版本、等待或响应用户的新要求，最后才知道是否该提交。SWE-Marathon 的长 rollout 还说明：成本的大头常常不是模型新生成了多少 token，而是系统提示、历史工具输出和上下文回放。<strong>所以长程的瓶颈是工作循环质量，而不是一句话推理能有多长。</strong></p>
+        <div class="speaker"><b>讲解提示</b><br>可以用一句话把此处讲清：SWE-bench 训练的是“会修”，长程 benchmark 训练的是“会把一个尚未结束的现实推进到可验收的终点”。</div>
+
+        <h2 class="section" id="examples"><span class="num">02</span>任务类型与真实案例：不要只读 abstract</h2>
+        <p class="lead">以下任务来自各 benchmark 的 instruction、task metadata、verifier 或 reference patch。它们比任务标题更能说明模型到底要学什么。</p>
+
+        <section id="marathon">
+          <h3>SWE-Marathon：完整项目级施工</h3>
+          <div class="task"><div class="task-id">CASE 01 · slack-clone</div><h3>一个聊天应用，实际是一道分布式系统与产品验收题</h3>
+            <dl class="task-grid"><dt>任务目标</dt><dd>在 <code>/app</code> 实现 Slack-like team chat：注册、workspace、public/private channel、DM、message/thread/reaction/pin/file/search/user group/slash command/mention/read state/settings。</dd><dt>环境与约束</dt><dd>三个 HTTP 节点监听 <code>127.0.0.1:8000/8001/8002</code>，另有 IRC gateway <code>:6667</code>；前端要通过浏览器 UI rubric。</dd><dt>真正难点</dt><dd><ul><li>所有节点和 IRC gateway 共享 per-channel dense sequence；</li><li>WebSocket reconnect 到另一节点后必须 replay；</li><li>杀掉一个 HTTP node 后系统继续读写与推送；</li><li>杀掉 cross-node broadcast 后 5 秒内要用 SQLite fallback 保住 fan-out 和 dense seq。</li></ul></dd><dt>训练到的能力</dt><dd>先搭可运行 skeleton；把 API、持久化、实时推送、IRC、UI 分层；把 chaos test 看成需求的一部分，而不是最后的意外。</dd></dl>
+            <div class="speaker"><b>讲解提示</b><br>它不是“写个聊天页面”，而是在有限 agent 预算里把功能面、分布式一致性与最终 UI 验收组织成一个持续可验证的项目。只过 visible browser test 并不等于完成。</div>
+          </div>
+          <div class="task"><div class="task-id">CASE 02 · biofabric-rust-rewrite</div><h3>Java 参考实现 → Rust：迁移任务的长程本质是语义对齐</h3>
+            <dl class="task-grid"><dt>任务目标</dt><dd>把 Java BioFabric 和 Network Alignment plugin 重写为 Rust library + CLI；初始 skeleton 能编译，但大量函数是 <code>todo!()</code>。</dd><dt>验收方式</dt><dd>public API 不可随意改变；visible/hidden parity tests 比较 BIF/NOA/EDA、layout、analysis、alignment 等输出，接近 byte-level parity。</dd><dt>训练到的能力</dt><dd>先找参考实现的行为真相，再锁定 API，再逐模块实现；用小 parity 反馈逐步缩小语义差异，而不是一次性重写全局。</dd></dl>
+          </div>
+          <div class="task"><div class="task-id">CASE 03 · parameter-golf</div><h3>ML engineering：最终 artifact contract 也是任务的一部分</h3>
+            <dl class="task-grid"><dt>任务目标</dt><dd>在 WikiText BPE-8K 上训练语言模型，提交 <code>/workspace/train_gpt.py</code> 和压缩 checkpoint；checkpoint 上限 32MB，hidden held-out <code>val_bpb &lt; 0.983</code> 才通过。</dd><dt>训练到的能力</dt><dd>实验设计、资源预算、训练 schedule、模型压缩、checkpoint 管理，以及对最终提交物的严格遵守。</dd><dt>常见失败</dt><dd>模型结构并非唯一风险：checkpoint 放错、推理入口依赖散落、隐藏输入假设错误，都可能让一个“训练很好”的方案最终归零。</dd></dl>
+          </div>
+        </section>
+
+        <section id="frontier">
+          <h3>FrontierSWE：专家级系统、性能与研究挑战</h3>
+          <div class="task"><div class="task-id">CASE 04 · postgres-sqlite-wire-adapter</div><h3>用 SQLite 做后端，却让 PostgreSQL 客户端以为自己连上了 PostgreSQL</h3>
+            <dl class="task-grid"><dt>任务目标</dt><dd>写 Zig 单二进制，按 <code>argv[0]</code> 扮演 <code>postgres</code>、<code>initdb</code>、<code>pg_ctl</code>；底层是 SQLite，上层是 PostgreSQL 18.3 兼容 server。</dd><dt>hidden 负载</dt><dd>官方 regression suite 与 TAP tests；startup packet、auth、simple query、prepared statement、transaction、catalog/introspection、Unix socket、CLI 与 cluster lifecycle。</dd><dt>评分形态</dt><dd>source scan / Zig project / dependency / build / binary / hidden harness 任一硬失败就置零；启动成功后按 regression、TAP、compatibility 的通过率给连续分。</dd><dt>训练到的能力</dt><dd>先让 <code>psql select 1</code> 与 <code>pg_ctl start/stop</code> 打通，再扩协议面；优先维护 public compatibility surface，而非沉迷某一个 SQL feature。</dd></dl>
+          </div>
+          <div class="task"><div class="task-id">CASE 05 · revideo-perf-opt</div><h3>性能任务必须把“快”锁在正确性之后</h3>
+            <dl class="task-grid"><dt>任务目标</dt><dd>优化 TypeScript 视频生成框架 Revideo，可能瓶颈包括 <code>canvas.toBlob()</code>、browser-node round trip、FFmpeg WebSocket bridge、decode/encode 路径。</dd><dt>明确禁止</dt><dd>不能改变视觉输出、跳帧、降质或改 API；可改任意 package，可使用 WebCodecs/WASM/muxer。</dd><dt>verifier</dt><dd>先在 hidden scenes 上比较 SSIM/时长等 correctness；只有全部正确才计算几何平均 speedup。</dd><dt>训练到的能力</dt><dd>建立 baseline → 假设 → profile → 小实验 → correctness gate → 更新 best checkpoint。这是比“一次改到快”更有价值的过程能力。</dd></dl>
+            <blockquote>如果 speedup 上升但 SSIM fail，训练标签不应该是“部分成功”，而应该是“这个方向不可保留”。</blockquote>
+          </div>
+          <div class="task"><div class="task-id">CASE 06 · pcqm4mv2-autoresearch</div><h3>闭环研究任务：模型分数、资源约束与提交接口缺一不可</h3>
+            <dl class="task-grid"><dt>任务目标</dt><dd>closed-data、2D-only、no conformer、no external checkpoint 的 molecular graph regression；参数不超过 50M。</dd><dt>最终契约</dt><dd>仅允许 <code>/app/submission/</code> 与 <code>/app/checkpoint/</code> 参与 verifier-time inference；<code>predict.py</code> 需支持 count-params/input-path/output-path。</dd><dt>训练到的能力</dt><dd>读 schema、做实验、看 dev MAE、保留最好 checkpoint、控制参数量、让最终提交最小且可加载。它训练的是可执行研究，而非论文摘要生成。</dd></dl>
+          </div>
+        </section>
+
+        <section id="together">
+          <h3>SWE-Together：用户会改变任务，而不是只验收任务</h3>
+          <div class="task"><div class="task-id">CASE 07 · comfyui-triton-windows-amd-fix</div><h3>两行 patch 的关键不在于代码，而在于没有跑偏</h3>
+            <dl class="task-grid"><dt>初始问题</dt><dd>Windows + AMD GPU 下 Triton 编译报错，指向 ComfyUI-WanVideoWrapper 中的 attention kernel。</dd><dt>reference patch</dt><dd>循环内把 <code>tl.load(K_scale_ptr)</code> 改为基于稳定 base pointer 的 indexed load，并删除 <code>K_scale_ptr += 1</code>。</dd><dt>多轮互动</dt><dd>用户会追问“Why is this modification needed?”；如果 agent 跑去改 Triton C++，又追问“如何在这个 repo 里修，而不是改 Triton kernel？”</dd><dt>训练到的能力</dt><dd>解释编辑、服从 scope、识别“修依赖”与“在当前 repo 修”的区别。patch LOC 很小，交互行为却很长程。</dd></dl>
+          </div>
+          <div class="task"><div class="task-id">CASE 08 · qwen3-moe-gguf-dequant</div><h3>相似算子连续实现：会测、会解释、会找真实瓶颈</h3>
+            <dl class="task-grid"><dt>初始目标</dt><dd>修 <code>dequantize_blocks_IQ3_XXS</code>，参考 llama.cpp 的 <code>gguf-py/gguf/quants.py</code>。</dd><dt>后续扩展</dt><dd>逐步要求 IQ3_S、IQ1_S、IQ2_S、IQ2_XXS、IQ1_M 等多种 IQ dequant，并要求使用 elemental PyTorch operations。</dd><dt>用户纠偏</dt><dd>过度折腾 PYTHONPATH 时提醒直接跑当前目录测试；仍使用 <code>F.embedding</code> 时要求换 elemental ops；IQ1_S 慢时要求解释瓶颈是否其实在 test-side quantization。</dd></dl>
+          </div>
+          <div class="task"><div class="task-id">CASE 09 · pi-mono-parallel-tool-stall</div><h3>任务目标会被用户重写：harness 不能只记 turn 0</h3>
+            <dl class="task-grid"><dt>会话演化</dt><dd>先要求“调查并写 memo，不实现”；后来改为“先加 failing test”“不要 interactive metadata”“不要 throw，让工具 sequential”“走真实代码路径，不要重造 mock”“两条 submission 都要尝试”。</dd><dt>reference 结果</dt><dd>SDK 创建 session 时设置 <code>toolExecution: 'sequential'</code>，再加真实 session wiring 的 Vitest。</dd><dt>训练到的能力</dt><dd>用户消息不是静态前缀，而是目标函数的更新；如果只保存初始指令，后来的正确实现甚至会被错误标成 scope creep。</dd></dl>
+          </div>
+        </section>
+        <div class="reference">案例来源：各项目仓库中的 <code>tasks/&lt;task_id&gt;/instruction.md</code>、<code>task.toml</code>、Docker/verifier、user simulation prompt 与 reference patch；详细链接见附录。</div>
+
+        <h2 class="section" id="construction"><span class="num">03</span>如果我们自己做：任务是如何构造的</h2>
+        <p class="lead">不要先写一条很长的 instruction，再期待模型自动产生长程行为。任务的关键是把“现实工程”变成可控、可验收、不可轻易刷分的环境。</p>
+        <div class="diagram"><div><small>1 · OBJECTIVE</small><b>写 outcome</b><span>目标、约束、接口与 visible feedback；不要泄漏 hidden verifier 的具体断言。</span></div><div><small>2 · ENVIRONMENT</small><b>冻结世界</b><span>repo commit、Docker/image digest、数据版本、工具链、资源与网络策略。</span></div><div><small>3 · VERIFIER</small><b>把验收写成代码</b><span>API/UI/resilience、correctness-gated speedup、held-out metric；不要统一偷懒为 pass/fail。</span></div><div><small>4 · ATTACK</small><b>先想作弊</b><span>source/dependency/hash/network scan，hidden asset 隔离，记录 file read traces。</span></div></div>
+        <h3>推荐的任务开发流程</h3>
+        <ol><li><strong>从真实工作中挑题。</strong>内部 backlog、迁移需求、性能瓶颈、真实用户 debug 会话、研究实验目标都比“编一道 benchmark 题”更可靠。</li><li><strong>固定可复现环境。</strong>除了 task id，还要保存 task version、repo commit、image digest、verifier hash 和 harness hash。</li><li><strong>先写 oracle/reference solution。</strong>它必须稳定通过；同时运行 NOP baseline，它必须明显低分。否则任务还没有成为可靠评测。</li><li><strong>提供最小 visible smoke。</strong>让 agent 能知道方向，但绝不让 visible test 等价于最终 hidden set。</li><li><strong>做 task-specific reward。</strong>性能任务正确性先行，研究任务 held-out 先行，产品任务 API + UI + chaos/resilience 共同验收。</li><li><strong>用 3–5 个 agent pilot。</strong>人工读日志，分清“任务歧义/环境故障”与真实能力失败，随后再冻结版本和规模化收集。</li></ol>
+        <p class="insight"><span class="tag">工程原则</span><strong>先让任务成为可信评测，再让它成为训练数据。</strong>oracle 跑不通、NOP 也高分、或隐藏测试不稳定时，采到再多 trajectory 都只会把噪声规模化。</p>
+
+        <h2 class="section" id="trajectory"><span class="num">04</span>Trajectory 到底应该保存什么</h2>
+        <p class="lead">长程 trajectory 不是 assistant text 加若干 shell command 的拼接。真正应被训练的是可复盘的状态转移。</p>
+        <pre>{
+  <span class="k">"identity"</span>: { <span class="k">"task_id"</span>: <span class="s">"revideo-perf-opt"</span>, <span class="k">"task_version"</span>: <span class="s">"..."</span>, <span class="k">"verifier_hash"</span>: <span class="s">"..."</span> },
+  <span class="k">"state"</span>: {
+    <span class="k">"changed_files"</span>: [<span class="s">"packages/core/src/exporter/..."</span>],
+    <span class="k">"best_score_so_far"</span>: <span class="n">1.42</span>,
+    <span class="k">"known_failures"</span>: [<span class="s">"hidden correctness unknown"</span>],
+    <span class="k">"remaining_budget_sec"</span>: <span class="n">18300</span>
+  },
+  <span class="k">"action"</span>: { <span class="k">"kind"</span>: <span class="s">"run_benchmark"</span>, <span class="k">"hypothesis"</span>: <span class="s">"remove browser-node round trip"</span> },
+  <span class="k">"observation"</span>: { <span class="k">"public_parity"</span>: <span class="s">"pass"</span>, <span class="k">"speedup"</span>: <span class="n">1.18</span> },
+  <span class="k">"decision_label"</span>: <span class="s">"keep experiment; run hidden-like checks next"</span>
+}</pre>
+        <div class="doc-table-wrap"><table><thead><tr><th>字段组</th><th>至少保存什么</th><th>为什么</th></tr></thead><tbody><tr><td>任务身份</td><td>benchmark、task version、repo commit、image digest、verifier hash</td><td>防止同 task id 实际评分逻辑变化后混入同一训练桶。</td></tr><tr><td>harness 身份</td><td>system prompt、tools、skills/MCP、permission mode、harness commit</td><td>区分模型能力和脚手架托举，确保迁移时不会丢失假设。</td></tr><tr><td>交互与工具</td><td>用户消息、assistant 行动、tool args、stdout/stderr、exit code、timeout、diff</td><td>恢复“模型看到什么、为什么做下一步”。</td></tr><tr><td>状态与验证</td><td>best checkpoint、open blockers、subscores、hard fail reason、anti-cheat、cost</td><td>提供 critic、回滚和 stop/continue policy 所需标签。</td></tr></tbody></table></div>
+        <p>有价值的事件最好额外标准化为 <code>checkpoint_saved</code>、<code>best_checkpoint_updated</code>、<code>experiment_regressed</code>、<code>rollback_performed</code>、<code>verification_skipped</code>、<code>user_correction_received</code>、<code>scope_violation_detected</code>、<code>harness_auto_retry</code> 与 <code>final_submit</code>。它们才是长程训练的骨架，而不仅是一大坨 bash。</p>
+
+        <template id="removed-sections">
+        <h2 class="section" id="distill"><span class="num">05</span>怎么蒸馏：把三小时工作录像，剪成一道道训练题</h2>
+        <div class="insight"><span class="tag">先用人话解释</span><strong>Trajectory</strong> 像 Agent 三小时的完整屏幕录像；<strong>episode</strong> 是从录像里剪出的一个有起因、有行动、有结果的小片段；<strong>蒸馏</strong>就是把这些片段整理成干净训练题，用强 Agent 的昂贵经验训练更便宜的 student model。</div>
+        <p class="lead">“切 episode，不是整条吞”的意思是：不要要求 student 原样模仿一整条杂乱轨迹，而要让它学习一个个因果清楚的工程决策。</p>
+        <h3>为什么最终成功，整条 trajectory 仍不能都算正样本？</h3>
+        <p>假设 Claude Code 最后把任务做对了，但中间可能经历：20 步正确定位、15 步错误重构、发现改坏、回滚、再换方案。整条作为正样本，会把正确诊断、无效重复、错误重构和有价值的回滚一起教给模型；其中还有一些 checkpoint、重试可能是 harness 自动执行的，根本不是模型的决定。</p>
+        <p>因此需要把轨迹切成局部 episode。每段只回答四个问题：<strong>当时是什么状态？模型做了什么？环境返回什么证据？这个行动应该保留、回滚还是继续验证？</strong></p>
+        <pre>{
+  <span class="k">"state"</span>: { <span class="k">"current_correct"</span>: <span class="n">true</span>, <span class="k">"best_speedup"</span>: <span class="n">1.18</span> },
+  <span class="k">"action"</span>: <span class="s">"修改图像传输路径并运行 benchmark"</span>,
+  <span class="k">"observation"</span>: { <span class="k">"speedup"</span>: <span class="n">1.42</span>, <span class="k">"ssim"</span>: <span class="s">"failed"</span> },
+  <span class="k">"decision"</span>: <span class="s">"rollback：速度变快，但视觉正确性被破坏"</span>
+}</pre>
+        <p>这个 episode 教的不是一段固定代码，而是一条可迁移的工程纪律：<strong>性能提高但 correctness gate 失败时，修改不可保留。</strong></p>
+        <div class="diagram"><div><small>RAW LOG</small><b>原始长轨迹</b><span>读文件、命令、diff、测试、失败、用户纠偏和自动重试。</span></div><div><small>SEGMENT</small><b>按事件切片</b><span>以测试、实验、回滚、checkpoint、用户消息为边界切 episode。</span></div><div><small>LABEL</small><b>补状态与好坏标签</b><span>恢复当时状态，用 verifier 判断 keep / rollback / continue / submit。</span></div><div><small>TRAIN</small><b>变成训练数据</b><span>SFT、偏好数据、critic 与停止策略各取所需。</span></div></div>
+        <h3>切完以后，具体可以训练什么？</h3>
+        <div class="doc-table-wrap"><table><thead><tr><th>训练数据</th><th>用人话说在教什么</th><th>样例</th></tr></thead><tbody>
+          <tr><td><strong>Action SFT</strong></td><td>在当前状态下，下一步最值得做什么。</td><td>功能正确但性能慢：先保存当前版本、profile 最慢路径、做小实验；不要直接全局重构。</td></tr>
+          <tr><td><strong>State compression</strong></td><td>把几小时历史写成一份可靠的工程交接笔记。</td><td>只保留 goal、已验证事实、失败方向、changed files、best checkpoint 和 next step。</td></tr>
+          <tr><td><strong>Verifier critic</strong></td><td>看懂测试结果，解释为什么“看似进步”仍不可接受。</td><td>Revideo speedup 上升但 SSIM fail：不是部分成功，而是必须回滚。</td></tr>
+          <tr><td><strong>Stop / continue policy</strong></td><td>判断应该继续实验、恢复最好版本，还是已经可以提交。</td><td>完整 gate 通过且 hidden-like smoke 稳定，才优于未经验证的“我已经完成”。</td></tr>
+        </tbody></table></div>
+        <h3>一套实际可开始的训练配方</h3>
+        <ul class="checklist"><li>成功轨迹中的高质量局部 episode → 做 SFT，让 student 模仿好行动。</li><li>同一状态下一个好分支、一个坏分支 → 做 DPO / preference，让模型学会选好弃坏。</li><li>verifier subscore 与 hard-fail reason → 训练 critic，让模型看懂失败证据。</li><li>新的内部 rollout → 做 online RL，让模型在真实环境中继续探索，而不只背静态轨迹。</li><li>失败轨迹 → 专门训练失败分类、回滚和 stop policy。</li></ul>
+        <p class="warning">必须隔离：oracle/solve.sh 不能作为普通解题数据；verifier tampering、环境异常、harness 自动补跑应剔除或单独标注；公开 benchmark 轨迹不能训练后再回到同一 benchmark 报“无污染”结果。</p>
+
+        <h2 class="section" id="harness"><span class="num">06</span>怎么放进 Claude Code：给模型配上可靠的工作流程</h2>
+        <div class="insight"><span class="tag">“Hack 进 harness”不是攻击系统</span>这里的 <strong>hack</strong> 只是工程口语：把刚才学到的 checkpoint、验证、回滚、状态压缩等策略，插入 Claude Code 的实际工作循环。<strong>Harness</strong> 是模型外面的执行外壳，包括 system prompt、读写文件与 shell 工具、权限、上下文管理、hooks、MCP、skills 和日志。</div>
+        <p class="lead">Claude Code ≠ 只有 Claude 模型。同一个模型放进不同 harness，就像同一个工程师拿到不同工具、检查表和实验制度，最终可靠性可能差很多。</p>
+        <div class="diagram"><div><small>MODEL</small><b>决定下一步</b><span>读状态、提出修改、解释测试、选择继续或回滚。</span></div><div><small>HARNESS</small><b>提供工作制度</b><span>工具、权限、ledger、checkpoint、预算与 final checklist。</span></div><div><small>VERIFIER</small><b>提供独立证据</b><span>测试、性能、held-out 指标与 hard failure；不相信模型自称完成。</span></div><div><small>USER</small><b>更新真实意图</b><span>追问、纠偏、追加约束，并决定最终需求是否满足。</span></div></div>
+        <h3>路径 A：先不训练模型，把长程纪律写进现有 Claude Code</h3>
+        <p>最简单的做法，是通过项目的 <code>CLAUDE.md</code>、skill、hook、MCP 或外部 wrapper，让每个任务一开始创建 <code>acceptance_ledger.md</code>。它相当于 Agent 的工程记事本：</p>
+        <pre>## 最终目标
+优化 Revideo，同时保持视觉结果一致
+
+## 当前最佳版本
+checkpoint_07 / correctness: pass / speedup: 1.18
+
+## 已失败实验
+- 降低画质：违反约束
+- 并行发送 frame：发生乱序
+
+## 下一步
+profile browser-node 传输路径</pre>
+        <p>随后把流程固定下来：重要实验前保存 checkpoint；测试后更新 ledger；指标回退时恢复 best checkpoint；连续同类失败时换诊断路径；提交前必须跑完整 final gate；预算不多时停止高风险大重构。</p>
+        <blockquote>这一条路暂时不改变模型的大脑，而是先给它一套不会轻易丢状态、忘验证、改坏最好版本的工程制度。</blockquote>
+        <h3>路径 B：把蒸馏后的 student model 接到 Claude Code</h3>
+        <p>另一条路线是保留 Claude Code 的文件、shell、界面和会话管理，但把“决定下一步”的模型换成自己训练的 student。调用链是：<strong>Claude Code → Anthropic-compatible gateway → student model</strong>。</p>
+        <p>这里不能只换一个 URL。网关必须真正兼容 Claude Code 所需的 Anthropic Messages、streaming、tool call/tool result、长 session 与错误处理语义。只提供 OpenAI <code>/chat/completions</code> 的 vLLM endpoint 通常不够，需要协议转换层。</p>
+        <h3>两条路线可以叠加，但必须区分功劳</h3>
+        <div class="doc-table-wrap"><table><thead><tr><th>层次</th><th>负责什么</th><th>采数据时怎样标记</th></tr></thead><tbody><tr><td>蒸馏后的模型</td><td>选择下一步、压缩状态、解释失败、主动决定回滚。</td><td><code>initiated_by: model</code></td></tr><tr><td>Harness</td><td>强制存 checkpoint、执行测试、维护 ledger、限制危险操作。</td><td><code>initiated_by: harness</code></td></tr><tr><td>Verifier</td><td>独立判断修改是否正确、性能是否有效、是否作弊。</td><td>保存 subscore 与 hard-fail reason</td></tr></tbody></table></div>
+        <p>如果 harness 自动回滚，却在训练数据里写成“模型主动回滚”，student 会学不到真正的判断过程。因此 attribution——到底是谁发起了动作——必须进入 trajectory schema。</p>
+        <details><summary>进阶：为什么严肃 online RL 最终更适合自定义 Harbor agent？</summary><div>Claude Code session history 很适合 bootstrap SFT / preference，但 policy-gradient 通常还需要准确的 token ids、mask、logprobs 与 on-policy 行为。自定义 Harbor agent 可以直接调用 student，暴露 read/edit/bash/test 工具，并输出 ATIF trajectory 与训练所需底层字段。</div></details>
+        <h3>最终形成的数据飞轮</h3>
+        <div class="diagram"><div><small>1</small><b>强 Agent 跑真任务</b><span>在可执行环境中产生包含失败与恢复的 trajectory。</span></div><div><small>2</small><b>切 episode 并蒸馏</b><span>整理为行动、状态压缩、critic 与停止策略数据。</span></div><div><small>3</small><b>接入模型或 harness</b><span>训练 student，或先把策略写入 Claude Code 工作循环。</span></div><div><small>4</small><b>再跑未见任务</b><span>收集新鲜 on-policy 数据，验证收益来源并继续迭代。</span></div></div>
+        <p class="insight"><span class="tag">把两节压缩成两句话</span><strong>切 episode</strong>解决“怎样把优秀 Agent 的工作过程制作成干净训练数据”；<strong>放进 harness</strong>解决“怎样让这些工作方法真正进入 Claude Code 的执行循环”。</p>
+
+        <h2 class="section" id="plan"><span class="num">07</span>一个可执行的最小实践路线</h2>
+        <p class="lead">先用 5–10 道内部真题跑通“任务—轨迹—蒸馏—回测”闭环，再决定是否扩大到大规模训练。</p>
+        <div class="doc-table-wrap"><table><thead><tr><th>阶段</th><th>时间</th><th>产出</th><th>验收问题</th></tr></thead><tbody><tr><td>选题与隔离</td><td>Week 1</td><td>5–10 个内部真实任务，按 repo/task family 切分 train/eval。</td><td>任务是否来自真实工程痛点，且不会因答案泄漏互相污染？</td></tr><tr><td>任务资产</td><td>Week 2</td><td>Docker、visible smoke、hidden verifier、oracle/NOP、anti-cheat plan。</td><td>oracle 是否稳定通过？NOP 是否低分？</td></tr><tr><td>pilot rollout</td><td>Week 3–4</td><td>多 agent/多预算轨迹、失败分类、人工 episode 标注。</td><td>失败是任务歧义、环境问题还是模型能力？</td></tr><tr><td>蒸馏与回测</td><td>Week 5–6</td><td>state compression + action SFT + critic / harness policy。</td><td>未见任务上，完成率、验证纪律、恢复率与 cost-to-resolution 是否一起改善？</td></tr></tbody></table></div>
+        <blockquote>不要只报 pass@1。长程 agent 更应报告 verification coverage、best-checkpoint recovery、user-correction compliance 与 cost-to-resolution。</blockquote>
+
+        <h2 class="section" id="appendix"><span class="num">附录</span>可用于讨论的两个问题</h2>
+        <ol><li><strong>训练对象究竟该是裸模型还是 agent system？</strong>长程收益往往来自 state ledger、checkpoint 与 verifier critic；应该分别报告 model-only 与 harness-assisted 的贡献。</li><li><strong>如何避免训练集变成答案库？</strong>必须按 repo/task family/verifier asset 做 train/eval 隔离；hidden tests 永不进 prompt、SFT target 或 retrieval memory，并记录数据许可证与 canary 扫描。</li></ol>
+        <h3>原始来源</h3>
+        <p class="reference"><a href="https://arxiv.org/abs/2606.07682">SWE-Marathon paper</a><a href="https://github.com/abundant-ai/swe-marathon">SWE-Marathon GitHub</a><a href="https://www.swe-marathon.org/">SWE-Marathon website</a><a href="https://www.frontierswe.com/blog">FrontierSWE official blog</a><a href="https://github.com/Proximal-Labs/frontier-swe">FrontierSWE GitHub</a><a href="https://arxiv.org/abs/2606.29957">SWE-Together paper</a><a href="https://github.com/Togetherbench/SWE-Together">SWE-Together GitHub</a><a href="https://huggingface.co/datasets/yfwu/SWE-Together">SWE-Together dataset</a><a href="https://github.com/harbor-framework/harbor/blob/main/rfcs/0001-trajectory-format.md">Harbor trajectory RFC</a></p>
+        </template>
+        </template>
+        <footer class="footer">本地飞书文档风格讲稿 · 聚焦 SWE-Marathon、FrontierSWE 与 SWE-Together 三组工作。</footer>
+      </article>
+    </main>
+  </div>
+  <div class="toast" id="toast">已复制文档路径</div>
+  <script>
+    document.querySelector('#copyLink').addEventListener('click', async () => {
+      const text = location.href;
+      try { await navigator.clipboard.writeText(text); } catch { /* file context may block clipboard */ }
+      const toast = document.querySelector('#toast'); toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 1600);
+    });
+  </script>
+</body>
+</html>
