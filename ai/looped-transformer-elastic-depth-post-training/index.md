@@ -37,7 +37,7 @@ LoopFormer 给出了全局预算和 trajectory consistency；LoopUS 展示了如
 
 ## 3. 先统一几个概念
 
-设一个模型包含 (k) 个物理 block，这组 block 被执行 (R) 轮。
+设一个模型包含 $k$ 个物理 block，这组 block 被执行 $R$ 轮。
 
 | 概念 | 含义 | 容易混淆的边界 |
 | --- | --- | --- |
@@ -51,11 +51,11 @@ LoopFormer 给出了全局预算和 trajectory consistency；LoopUS 展示了如
 
 一个最简单的 Looped Transformer 可以写成：
 
-\[
+$$
 h_{r+1}=F_\theta(h_r),\qquad r=0,1,\ldots,R-1.
-\]
+$$
 
-这里每轮都使用同一个 (F_\theta)。问题也正出在这里：如果函数看不到轮次，模型就必须用同一套行为同时承担浅层表征抽取、中层组合和深层决策。训练只见过固定 (R) 时，测试时改成另一个 (R) 也属于分布外执行。
+这里每轮都使用同一个 $F_\theta$。问题也正出在这里：如果函数看不到轮次，模型就必须用同一套行为同时承担浅层表征抽取、中层组合和深层决策。训练只见过固定 $R$ 时，测试时改成另一个 $R$ 也属于分布外执行。
 
 ## 4. 真正的问题：循环放在哪里、谁决定次数、状态如何稳定
 
@@ -95,7 +95,7 @@ F1 → F1 → F2 → F2 → F3 → F3
 
 ### 4.2 谁决定循环次数？
 
-LoopFormer 允许用户给整条 sequence 指定预算 (M)。它解决的是：同一模型如何在 1 到 (L) 次循环之间切换。
+LoopFormer 允许用户给整条 sequence 指定预算 $M$。它解决的是：同一模型如何在 1 到 $L$ 次循环之间切换。
 
 [Mixture-of-Recursions（MoR）](https://arxiv.org/abs/2507.10524v3) 更细。它用轻量 router 给不同 token 分配递归深度，只让仍活跃的 token 继续参与后续 attention 与 MLP，并为这些 token 选择性维护 KV cache。论文在 135M 到 1.7B 范围报告了质量、模型大小和吞吐之间的 Pareto 改善。
 
@@ -111,11 +111,11 @@ LoopFormer 允许用户给整条 sequence 指定预算 (M)。它解决的是：�
 
 假设直接重复一个普通 residual block：
 
-\[
+$$
 h_{r+1}=h_r+G_\theta(h_r).
-\]
+$$
 
-如果 (G_\theta) 在每轮持续产生同方向更新，状态范数可能增长；如果更新与当前任务无关，多轮以后可能漂离 pretrained representation；如果训练只监督最终一轮，中间状态也未必可读，更不能保证提前退出可用。
+如果 $G_\theta$ 在每轮持续产生同方向更新，状态范数可能增长；如果更新与当前任务无关，多轮以后可能漂离 pretrained representation；如果训练只监督最终一轮，中间状态也未必可读，更不能保证提前退出可用。
 
 近期方法大致使用四类稳定器：
 
@@ -132,24 +132,24 @@ h_{r+1}=h_r+G_\theta(h_r).
 
 LoopFormer 的核心变化可以用一行式子表示：
 
-\[
-h_i=\Phi_\theta\!\left(h_{i-1};t_{i-1},\Delta_i\right),
+$$
+h_i=\Phi_\theta\left(h_{i-1};t_{i-1},\Delta_i\right),
 \qquad
 \sum_{i=1}^{M}\Delta_i=1.
-\]
+$$
 
-(t_{i-1}) 是当前累计的归一化时间，(Delta_i=t_i-t_{i-1}) 是本步跨越的区间。完整的 (L)-step trajectory 使用较细步长；较短的 (M)-step trajectory 用更少、更大的步长走完同一个 (0\rightarrow1) 区间。
+$t_{i-1}$ 是当前累计的归一化时间，$\Delta_i=t_i-t_{i-1}$ 是本步跨越的区间。完整的 $L$-step trajectory 使用较细步长；较短的 $M$-step trajectory 用更少、更大的步长走完同一个 $0\rightarrow1$ 区间。
 
 ### 5.1 同一组参数为什么知道自己该做什么？
 
-论文分别对 (t) 与 (Delta) 做 embedding，再用 MLP 产生两组 RMSNorm scale 和两组 residual gate。抽象后，一个子层可以写成：
+论文分别对 $t$ 与 $\Delta$ 做 embedding，再用 MLP 产生两组 RMSNorm scale 和两组 residual gate。抽象后，一个子层可以写成：
 
-\[
+$$
 x' = x + \alpha(t,\Delta)\odot
-G_\theta\!\left(
+G_\theta\left(
 \operatorname{RMSNorm}(x)\odot(1+\gamma(t,\Delta))
 \right).
-\]
+$$
 
 这使得同一共享 block 不必在每一轮执行完全相同的更新。模型可以根据“当前位置”和“本次跨度”调整归一化后的通道尺度与残差更新强度。
 
@@ -159,21 +159,21 @@ G_\theta\!\left(
 
 训练时同时计算两条路径：
 
-- 完整路径 (m{\Delta}_L)；
-- 随机采样长度 (S<L) 的 shortcut path (m{\Delta}_S)。
+- 完整路径 $\mathbf{\Delta}_L$；
+- 随机采样长度 $S<L$ 的 shortcut path $\mathbf{\Delta}_S$。
 
 论文目标由完整路径 next-token loss、短路径 next-token loss和 consistency loss 组成：
 
-\[
+$$
 \mathcal L
 =\mathcal L_L
 +\lambda_1\mathcal L_S
 +\lambda_2\mathcal L_{\mathrm{cons}}.
-\]
+$$
 
 一致性项让短路径的表示接近 stop-gradient 的完整路径目标。直观地说，短轨迹不是简单少做几步，而是在学习用“大步”近似细轨迹。
 
-一个最小例子是：完整预算用 8 次 (1/8) 步长，预算减半后可以用 4 次 (1/4) 步长。两条路径最终都到达归一化时间 1；consistency training 要求后者在少一半循环时仍接近前者。
+一个最小例子是：完整预算用 8 次 $1/8$ 步长，预算减半后可以用 4 次 $1/4$ 步长。两条路径最终都到达归一化时间 1；consistency training 要求后者在少一半循环时仍接近前者。
 
 ### 5.3 它解决了什么，又没有解决什么？
 
@@ -201,7 +201,7 @@ G_\theta\!\left(
 W_r=W_{\text{shared}}+B_rA_r.
 \]
 
-大矩阵 (W_{\text{shared}}) 跨深度共享，每个递归位置只保留低秩增量。论文还用原模型权重均值初始化共享部分，并用截断 SVD 近似各深度与共享权重之间的残差。
+大矩阵 $W_{\text{shared}}$ 跨深度共享，每个递归位置只保留低秩增量。论文还用原模型权重均值初始化共享部分，并用截断 SVD 近似各深度与共享权重之间的残差。
 
 这是一种很实用的中间态：
 
@@ -234,7 +234,7 @@ Encoder → Looped Reasoning Block × R → Decoder
 | --- | --- | --- | --- | --- | --- |
 | Huginn | 中间 recurrent core | sequence / 固定或采样 recurrence | recurrent-depth training | 否，主要从头训练 | 超训练深度的收益不保证单调 |
 | Ouro | 整个模型栈 | learned depth allocation | 专门预训练目标 | 否，主要从头训练 | 大规模结果不能直接外推到 retrofit |
-| LoopFormer | 共享 block trajectory | sequence 级用户预算 | (t,\Delta t) conditioning + consistency | 论文未验证通用 retrofit | 不是 token-adaptive |
+| LoopFormer | 共享 block trajectory | sequence 级用户预算 | $t,\Delta t$ conditioning + consistency | 论文未验证通用 retrofit | 不是 token-adaptive |
 | MoR | 共享层栈递归 | token 级 | router + selective KV cache | 通常需系统性训练 | 动态调度复杂 |
 | Retrofitted Recurrence | pretrained model 中间部分 | curriculum 中的 recurrence | 逐步增加有效深度 | 是 | 未自动获得 elastic exit |
 | Relaxed Recursive Transformer | 多层压成共享 block | 固定深度，可结合 exit | depth-wise LoRA + SVD init | 是 | 吞吐提升仍以模拟为主 |
@@ -244,13 +244,13 @@ Encoder → Looped Reasoning Block × R → Decoder
 | DeepLoop | 物理 block 重复 | 固定或增加 loop | loop-aware residual scaling | 未证明通用 retrofit | 验证规模较小 |
 | DEQ | fixed-point operator | solver 自适应 | root finding + implicit differentiation | 工程改造困难 | solver 速度与稳定性是瓶颈 |
 
-[LOTUS](https://arxiv.org/abs/2606.31779v2) 还提供了另一种 latent reasoning 图景：创建 (K) 个 latent blocks，对应 gold CoT steps，并行执行 (R) 次循环。论文报告在 3B 规模弥合 latent CoT 与 explicit CoT 的差距，并在不同形式的数学推理中将 thought-phase latency 降低 2.5–6.9×。它依赖 gold CoT-step supervision，因此与“只用终局答案安装通用循环”并不是同一任务。
+[LOTUS](https://arxiv.org/abs/2606.31779v2) 还提供了另一种 latent reasoning 图景：创建 $K$ 个 latent blocks，对应 gold CoT steps，并行执行 $R$ 次循环。论文报告在 3B 规模弥合 latent CoT 与 explicit CoT 的差距，并在不同形式的数学推理中将 thought-phase latency 降低 2.5–6.9×。它依赖 gold CoT-step supervision，因此与“只用终局答案安装通用循环”并不是同一任务。
 
 [Deep Equilibrium Models](https://arxiv.org/abs/1909.01377) 则把 weight-tied depth 推到极端：不显式指定展开层数，而是求解
 
-\[
+$$
 h^\star=F_\theta(h^\star).
-\]
+$$
 
 通过 implicit differentiation，DEQ 的 activation memory 不随有效展开深度增长。但 root solver 的收敛、速度和数值稳定性，使它更像理论参照和独立工程路线，而不是给现有 LLM 增加几次循环的直接替代。
 
@@ -258,20 +258,20 @@ h^\star=F_\theta(h^\star).
 
 将 LoopFormer 与 LoopUS 的思想组合，可以得到：
 
-\[
+$$
 \tilde h_{r+1}=F_\theta(h_r;t_r,\Delta_r),
-\]
+$$
 
-\[
+$$
 h_{r+1}=(1-g_r)\odot h_r+g_r\odot\tilde h_{r+1},
-\]
+$$
 
-其中 (t_r,\Delta_r) 控制共享 block 在不同轨迹位置的行为，(g_r) 控制哪些通道或 token 接受本轮更新。confidence head 再估计继续循环的价值。
+其中 $t_r,\Delta_r$ 控制共享 block 在不同轨迹位置的行为，$g_r$ 控制哪些通道或 token 接受本轮更新。confidence head 再估计继续循环的价值。
 
 这套方案必须同时通过四项验收：
 
-1. **短路径可用：** (R=1) 不能因为训练了长路径而显著退化；
-2. **长路径增益：** 从 (R=1) 到训练最大深度，性能总体改善；
+1. **短路径可用：** $R=1$ 不能因为训练了长路径而显著退化；
+2. **长路径增益：** 从 $R=1$ 到训练最大深度，性能总体改善；
 3. **外推稳定：** 超过训练深度后至少不快速崩溃；
 4. **能力保留：** 改造不能只提升数学小集合，却显著破坏语言建模和通用任务。
 
@@ -285,10 +285,10 @@ h_{r+1}=(1-g_r)\odot h_r+g_r\odot\tilde h_{r+1},
 
 最小改造包括：
 
-- 给循环加入 (t,Delta t) conditioning；
+- 给循环加入 $t,\Delta t$ conditioning；
 - residual gate 使用近似 identity-preserving 的初始化；
 - 同时训练完整两遍和随机短轨迹；
-- 测试 (R=1,2,3,4)，但把 (R>2) 明确视为外推区间。
+- 测试 $R=1,2,3,4$，但把 $R>2$ 明确视为外推区间。
 
 这条路线复用现成 recurrent checkpoint，但需要自建 trajectory-conditioned block、双轨迹训练流程、跨深度评测和能力保持验证。现有 checkpoint 不是完整实验合同。
 
@@ -296,9 +296,9 @@ h_{r+1}=(1-g_r)\odot h_r+g_r\odot\tilde h_{r+1},
 
 从普通 Qwen checkpoint 出发，把连续若干中间层压成共享 recurrent block，并为每个递归深度保留独立 LoRA：
 
-\[
+$$
 F_{\theta+\Delta\theta_r}.
-\]
+$$
 
 建议至少做四组对照：
 
@@ -336,25 +336,25 @@ F_{\theta+\Delta\theta_r}.
 | --- | --- | --- | --- | --- |
 | A | 不共享 | 无 | 无 | 无 |
 | B | rigid tie | 无 | 无 | 无 |
-| C | rigid tie | (t,\Delta t) | 有 | 无 |
-| D | rigid tie | (t,\Delta t) | 有 | 有 |
-| E | depth-wise LoRA | (t,\Delta t) | 有 | 有 |
+| C | rigid tie | $t,\Delta t$ | 有 | 无 |
+| D | rigid tie | $t,\Delta t$ | 有 | 有 |
+| E | depth-wise LoRA | $t,\Delta t$ | 有 | 有 |
 
-先看 validation perplexity、通用任务保持率和 (R=1,2,3,4) 的完整曲线。只汇报最佳深度没有意义，因为 elastic model 的研究对象正是整条 compute–quality curve。
+先看 validation perplexity、通用任务保持率和 $R=1,2,3,4$ 的完整曲线。只汇报最佳深度没有意义，因为 elastic model 的研究对象正是整条 compute–quality curve。
 
 ### 阶段二：检查“更多计算”是否真的更好
 
 对每个样本记录：
 
-\[
+$$
 \Delta \ell_r=\ell(h_{r+1})-\ell(h_r),
-\]
+$$
 
 以及 hidden-state norm、相邻轮 cosine distance、logit entropy 与输出是否翻转。理想状态不是每个样本都严格单调，而是困难样本能从更多循环中获得更稳定的期望增益。
 
 若以下任一情况出现，就应该判定当前方案失败：
 
-- (R=1) 相对 base checkpoint 大幅退化；
+- $R=1$ 相对 base checkpoint 大幅退化；
 - 训练深度内性能没有随预算形成可辨认趋势；
 - gate 几乎恒为 0 或 1；
 - exit score 与“继续一轮后的真实收益”不相关；
