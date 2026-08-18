@@ -8,7 +8,11 @@
   var articleId = counter.dataset.articleId;
   var countElement = counter.querySelector("[data-view-count]");
   var article = document.querySelector("article.page.single:not(.special)");
-  if (!endpoint || !articleId || !countElement || !article) return;
+  if (!countElement || !article) return;
+  if (!endpoint || !articleId) {
+    counter.dataset.state = "unavailable";
+    return;
+  }
 
   function formatCount(value) {
     try {
@@ -40,7 +44,7 @@
       counter.setAttribute("aria-busy", "false");
     })
     .catch(function () {
-      counter.hidden = true;
+      countElement.textContent = "--";
       counter.dataset.state = "unavailable";
       counter.removeAttribute("aria-busy");
     });
