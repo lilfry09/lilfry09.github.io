@@ -1,7 +1,7 @@
 # Coding Agent 最新论文与工程调研
 
 
-这轮调研的核心问题是：**为什么 GPT/Codex、Claude Code 这类 coding agent 突然变得这么能干？**
+这轮调研的核心问题是：**GPT/Codex、Claude Code 这类 coding agent 的能力，究竟来自模型本身，还是来自训练数据、执行环境和反馈回路？**
 
 我的结论先放前面：它们不是单靠“模型会写代码”变强的，而是被一整套新的训练与工程范式推上去的：
 
@@ -114,7 +114,7 @@ OpenHands 的 critic model、SWE-Gym 的 verifier、Nebius 的 search、DeepSWE 
 
 用户特别提到 terminal 数据训练，这确实是 2026 年很关键的一条线。
 
-Terminal-Bench 2.0 把 agent 放进真实命令行环境，任务包括编译代码、训练模型、配置服务、调试系统问题等，每个任务有独立环境、人类解法和测试。CLI-Gym 更进一步：通过“环境反演”生成 1,655 个 environment-intensive 任务，并用成功轨迹微调 LiberCoder，在 Terminal-Bench 上大幅提升。Terminal-World 则把 skill、precondition、environment state、teacher trajectory 合成在一起，生产 5,723 个训练环境。
+Terminal-Bench 2.0 把 agent 放进真实命令行环境，任务包括编译代码、训练模型、配置服务、调试系统问题等，每个任务有独立环境、人类解法和测试。CLI-Gym 更进一步：通过“环境反演”生成 1,655 个 environment-intensive 任务，并报告用成功轨迹微调 LiberCoder 后在 Terminal-Bench 上的提升；具体幅度应连同 base model、训练步数和评测版本一起读。Terminal-World 则把 skill、precondition、environment state、teacher trajectory 合成在一起，生产 5,723 个训练环境。
 
 这说明 terminal 能力不是“让模型背一些 bash 命令”这么简单，而是要训练：
 
@@ -379,5 +379,5 @@ Anthropic 公开资料更偏工程方法论：
 7. **长上下文要靠工程，不只靠窗口**：repo map、摘要、记忆、压缩、工具发现、context budget 都要进入系统设计。
 8. **持续做失败模式分析**：前沿差距往往来自失败样本：定位失败、误读 issue、过拟合测试、环境错误、忘验证。
 
-最后一句话总结：**GPT/Codex 和 Claude Code 变强，靠的是“模型在真实软件工程环境里被训练成开发者”，而不是“聊天模型突然更会写代码”。** 这里的“开发者”不是人设，而是一组可训练、可验证、可回放的行为轨迹：读仓库、找上下文、跑命令、看日志、改 patch、跑测试、接受反馈、继续迭代。
+最后一句话总结：**现有公开证据更支持“模型、任务数据、执行环境和反馈回路共同决定 coding agent 表现”，而不是单独归因于模型变大或模型突然学会写代码。** 这里所谓“开发者行为”应落到可检查的轨迹：读仓库、找上下文、跑命令、看日志、改 patch、跑测试、接受反馈、继续迭代。公开资料没有给出完整训练配方，因此更稳妥的做法是把这些环节分别做 ablation，而不是把因果关系写死。
 

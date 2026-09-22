@@ -5,7 +5,7 @@
 
 在传统 LLM 训练中，一条样本往往只是一段静态文本。但在 Agentic RL 中，样本变成了一段持续交互的轨迹：Agent 要进入操作系统，读写文件，执行 shell 命令，安装依赖，运行测试，根据反馈继续决策。训练系统因此不仅要“喂数据”，还要为每条轨迹准备一个安全、可重现的运行世界。
 
-[AgentENV（AENV）](https://github.com/kvcache-ai/AgentENV) 是一个面向这类工作负载的分布式平台，官方定位是“Running agent environments at scale”，并已用于 Kimi K3 的 Agentic RL 训练。它的核心价值可以压缩成一句话：**把单个隔离环境的创建与恢复，扩展成跨机器、可持久化、可弹性调度的环境基础设施。**
+[AgentENV（AENV）](https://github.com/kvcache-ai/AgentENV) 是一个面向这类工作负载的分布式平台，官方定位是“Running agent environments at scale”。其 README 将 Kimi K3 的 Agentic RL 训练列为使用场景；这是项目方自述，不等于外部已经独立复现该训练结果。它的核心价值可以压缩成一句话：**把单个隔离环境的创建与恢复，扩展成跨机器、可持久化、可弹性调度的环境基础设施。**
 
 <!--more-->
 
@@ -151,7 +151,7 @@ AgentENV 不是一个新的 RL 算法，而是 Agentic RL 的环境层基础设�
 
 > **Firecracker 负责快速、强隔离地创建 microVM；OverlayBD 负责让镜像即用即取；快照、暂停与 Fork 负责保存并分叉 Agent 的交互状态；AgentENV 则把这些能力变成跨机器的统一服务。**
 
-当 Agent 训练从单轮问答走向长周期工具使用，环境就不再只是装代码的容器，而是 rollout 轨迹的一部分。谁能更便宜地创建、保存、恢复和分叉这些世界，谁才更有可能把 Agentic RL 真正扩展起来。
+当 Agent 训练从单轮问答走向长周期工具使用，环境就不再只是装代码的容器，而是 rollout 轨迹的一部分。评估这类系统时，至少应记录冷启动、暂停/恢复延迟、快照大小、Fork 扇出、并发环境数、失败恢复率，以及在相同 rollout 预算下的 GPU/CPU/存储成本。只有这些指标同时稳定，才有理由说环境层真的支撑了 Agentic RL 的规模化。
 
 ## 参考链接
 

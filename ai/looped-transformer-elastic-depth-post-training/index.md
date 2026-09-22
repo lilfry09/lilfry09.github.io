@@ -197,9 +197,9 @@ $$
 
 严格 weight tying 要求每个深度使用同一函数。Relaxed Recursive Transformers 引入 depth-wise LoRA：
 
-\[
+$$
 W_r=W_{\text{shared}}+B_rA_r.
-\]
+$$
 
 大矩阵 $W_{\text{shared}}$ 跨深度共享，每个递归位置只保留低秩增量。论文还用原模型权重均值初始化共享部分，并用截断 SVD 近似各深度与共享权重之间的残差。
 

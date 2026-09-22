@@ -353,7 +353,7 @@ DSpark 有意思的地方，是它没有把这些当成附录里的“小工程�
 
 这些东西读起来不如“新 loss”漂亮，但它们决定了方法能不能真的在生产里跑。
 
-论文在 DeepSeek-V4-Flash 和 DeepSeek-V4-Pro 的 live traffic 上报告了结果：在中等 SLA 下，DSpark 相比 MTP-1 baseline 提升约 51% / 52% 的 aggregate throughput；在 matched throughput 下，V4-Flash 的 per-user generation speed 提升 60% 到 85%，V4-Pro 提升 57% 到 78%。更重要的是，在更严格的 interactivity SLA 下，baseline 会掉进低并发低利用率区间，而 DSpark 还能维持可用吞吐，相当于把 serving Pareto frontier 往外推了一截。
+论文在 DeepSeek-V4-Flash 和 DeepSeek-V4-Pro 的 live-traffic 设置下报告了结果：在论文定义的中等 SLA 条件下，DSpark 相比 MTP-1 baseline 的 aggregate throughput 提升约 51% / 52%；在 matched-throughput 比较中，V4-Flash 的 per-user generation speed 提升 60% 到 85%，V4-Pro 提升 57% 到 78%。这些是特定模型、流量和 SLA 下的报告值，不应脱离 traffic mix、硬件和 batch 配置泛化为固定倍率。更严格的 interactivity SLA 下，论文还比较了 baseline 与 DSpark 的可用吞吐；复现时应画出完整的吞吐—延迟曲线，而不是只引用一个百分比。
 
 ## 两篇论文放在一起，差异在哪里
 
@@ -376,7 +376,7 @@ DSpark 有意思的地方，是它没有把这些当成附录里的“小工程�
 
 在 Bebop 里，接受率连接的是 `policy entropy -> draft-target overlap -> rollout latency -> RL 训练成本`。
 
-在 DSpark 里，接受率连接的是 `draft confidence -> verification budget -> batch capacity -> serving Pareto frontier`。
+在 DSpark 里，接受率连接的是 `draft confidence -> verification budget -> batch capacity -> serving throughput/latency trade-off`。
 
 同一个 accept length，到了训练系统里是 GPU 小时，到了 serving 系统里是用户感知延迟和并发吞吐。
 

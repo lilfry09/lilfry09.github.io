@@ -15,7 +15,7 @@ $$
 L_{sur}(\theta)=\sum_i c_i u_i(\theta)
 $$
 
-这个 surrogate loss 在当前参数点与原始 group loss 具有相同的一阶梯度，因此可以保持训练方向一致；同时由于反向传播变成逐样本形式，不需要保留整个 group 的联合计算图，从而显著降低 peak memory。
+这个 surrogate loss 在当前参数点与原始 group loss 具有相同的一阶梯度，因此可以保持训练方向一致；同时由于反向传播变成逐样本形式，不需要保留整个 group 的联合计算图，理论上有望降低 peak activation memory。实际收益仍取决于 group size、no-grad 预计算和实现中的缓存，不能只凭 surrogate 形式宣称显存一定下降。
 
 论文还强调 **positive-response NLL** 的重要性。GroupDPO 本身主要优化相对偏好，即让正样本得分高于负样本，但这可能导致正样本 log-prob 下降或训练不稳定。因此作者在正样本上加入 NLL 项，鼓励模型继续保持或提升生成好回答的概率。实验表明，NLL 对性能提升和训练稳定性都非常关键。
 
@@ -23,7 +23,7 @@ $$
 
 主要实验结论有三点。第一，<mark style="background: #FFB8EBA6;">使用多个 responses 的 group-wise training 通常优于普通 single-pair DPO 和 RFT，说明组级偏好监督能提供更丰富的学习信号</mark>。第二，不同 group-wise objective 之间差距相对较小，All-Pairs、Margin、MPO、Softmax 都能取得相近效果；相比纠结具体 objective，是否使用 group-wise 信息更重要。第三，加入 positive NLL 能明显提升稳定性，去掉 NLL 后训练更容易性能下降甚至 collapse。
 
-效率实验显示，朴素 GroupDPO 的显存会随 group size 增大而快速上升，而论文提出的 surrogate 实现可以让 peak activation memory 对 group size 不那么敏感，在只增加一次 no-grad 预计算带来少量延迟的情况下，显著降低显存占用并支持更大的 response group。
+效率实验显示，朴素 GroupDPO 的 activation memory 会随 group size 增大，而论文提出的 surrogate 实现试图让 peak activation memory 对 group size 不那么敏感，代价是一次 no-grad 预计算和额外的 step latency。复现时应同时报告 group size、peak 显存、每 step 时间、吞吐和 response 长度；只写“更省显存”无法判断它是否值得这笔计算开销。
 
 整体来看，这篇论文的关键价值在于：它证明了偏好优化中“多候选回答组”的监督信号值得利用，并提供了一个实际可扩展的省显存实现，使 GroupDPO 不只是一个更丰富的目标函数，也成为一种更可落地的大模型对齐训练方法。
 

@@ -1,7 +1,7 @@
 # 397B Agent RL 到底怎么跑：从 MCP trajectory、TITO token trace 到 Fully Async GRPO
 
 
-Mercor 的 headline 是：用 1,928 个专业知识工作任务做 RL 后，Qwen3.5-397B-A17B 在 APEX-Agents 上的 Pass@1 从 16.11% 提高到 27.29%。但如果只记住“397B、GRPO、提升 69%”，几乎学不到怎么实现。
+Mercor 的 headline 是：用 1,928 个专业知识工作任务做 RL 后，Qwen3.5-397B-A17B 在 APEX-Agents 上的 Pass@1 从 16.11% 提高到 27.29%，绝对提升 11.18 个百分点，相对提升约 69%。但如果只记住“397B、GRPO、提升 69%”，几乎学不到怎么实现。
 
 真正值得拆的是下面这条链：
 

@@ -66,17 +66,17 @@ flowchart LR
 
 同步系统的 iteration 时间接近最慢 request 的完成时间：
 
-{{< raw >}}
-\[ T_{\mathrm{sync}} \approx \max_i T_i + T_{\mathrm{train}} \]
-{{< /raw >}}
+$$
+T_{\mathrm{sync}} \approx \max_i T_i + T_{\mathrm{train}}
+$$
 
 如果 rollout 和 training 不能重叠，两段耗时还需要相加。
 
 异步系统进入稳态后，更接近一条 producer-consumer pipeline：
 
-{{< raw >}}
-\[ \mathrm{Throughput}_{\mathrm{async}} \approx \min \left( \mathrm{RolloutRate}, \mathrm{TrainConsumeRate} \right) \]
-{{< /raw >}}
+$$
+\mathrm{Throughput}_{\mathrm{async}} \approx \min \left( \mathrm{RolloutRate}, \mathrm{TrainConsumeRate} \right)
+$$
 
 只要 buffer 不空，trainer 就一直训练；只要 buffer 没满，rollout workers 就一直生成。长请求只会晚一点进入 buffer，不再挡住所有其他样本。GPU 终于不用集体陪最后一个长 CoT 发呆。
 
@@ -114,35 +114,35 @@ reward computation 可以在 response 完成后立即执行，或者一边 rollo
 
 假设一个 response 是旧 policy $\mu=\pi_{\theta_{100}}$ 生成的，但训练时最新 policy 已经是 $\pi_{\theta_{105}}$。Trainer 实际优化的是新 policy，却在使用旧 policy 采集的数据：
 
-{{< raw >}}
-\[ a_t \sim \mu(\cdot\mid s_t) \quad\text{而非}\quad a_t \sim \pi_\theta(\cdot\mid s_t) \]
-{{< /raw >}}
+$$
+a_t \sim \mu(\cdot\mid s_t) \quad\text{而非}\quad a_t \sim \pi_\theta(\cdot\mid s_t)
+$$
 
 两者相差越大，直接使用 policy-gradient estimator 的 bias 越严重。
 
 常见修正是 importance sampling：
 
-{{< raw >}}
-\[ r_t(\theta) = \frac{\pi_\theta(a_t\mid s_t)} {\mu(a_t\mid s_t)} \]
-{{< /raw >}}
+$$
+r_t(\theta) = \frac{\pi_\theta(a_t\mid s_t)} {\mu(a_t\mid s_t)}
+$$
 
 PPO 会对 ratio 做 clipping：
 
-{{< raw >}}
-\[ L^{\mathrm{clip}}(\theta) = \mathbb{E}_t \left[ \min \left( r_t(\theta)A_t,\, \operatorname{clip} \left(r_t(\theta),1-\epsilon,1+\epsilon\right)A_t \right) \right] \]
-{{< /raw >}}
+$$
+L^{\mathrm{clip}}(\theta) = \mathbb{E}_t \left[ \min \left( r_t(\theta)A_t,\, \operatorname{clip} \left(r_t(\theta),1-\epsilon,1+\epsilon\right)A_t \right) \right]
+$$
 
 因此 rollout worker 必须保存 behavior policy 的 log probability：
 
-{{< raw >}}
-\[ \log \mu(a_t\mid s_t) \]
-{{< /raw >}}
+$$
+\log \mu(a_t\mid s_t)
+$$
 
 训练时再计算当前 policy 的：
 
-{{< raw >}}
-\[ \log \pi_\theta(a_t\mid s_t) \]
-{{< /raw >}}
+$$
+\log \pi_\theta(a_t\mid s_t)
+$$
 
 二者相减即可得到 log importance ratio。
 
@@ -196,9 +196,9 @@ worker 每完成若干 requests、每隔若干秒，或每到 generation boundar
 
 这会改变实际训练分布：
 
-{{< raw >}}
-\[ p_{\mathrm{train}}(x) \neq p_{\mathrm{prompt}}(x) \]
-{{< /raw >}}
+$$
+p_{\mathrm{train}}(x) \neq p_{\mathrm{prompt}}(x)
+$$
 
 而且偏差不是随机的，它和 difficulty、output length、reward、reasoning style 可能相关。Seer 论文批评异步和 Partial Rollout，重点就在这里：快生成的短样本会不成比例地进入较早 training batches。
 
@@ -208,9 +208,9 @@ worker 每完成若干 requests、每隔若干秒，或每到 generation boundar
 
 GRPO 对同一 prompt 的 $G$ 个 responses 做组内 reward normalization。典型 advantage 是：
 
-{{< raw >}}
-\[ A_i = \frac{ r_i-\operatorname{mean}(r_1,\ldots,r_G) }{ \operatorname{std}(r_1,\ldots,r_G)+\delta } \]
-{{< /raw >}}
+$$
+A_i = \frac{ r_i-\operatorname{mean}(r_1,\ldots,r_G) }{ \operatorname{std}(r_1,\ldots,r_G)+\delta }
+$$
 
 因此，单个 response 完成后不能立即得到最终 group advantage；通常要等同组 $G$ 个 responses 的 reward 都准备好。
 

@@ -298,13 +298,9 @@ DLLM 的优势不应该被压缩成“更快”。更快当然重要，但现在
 
 ## 14. 我对这条线的判断
 
-我不觉得 DLLM 会在短期内把 AR LLM 整体替换掉。AR 不是偶然胜出的，它拥有极其强的概率分解、训练简洁性和系统惯性。
+短期内，DLLM 更像是对 AR LLM 的补充，而不是整体替代。AR 的概率分解、训练流程和 serving stack 已经非常成熟；DLLM 的优势则需要在具体任务和预算下重新测量。
 
-但我也不觉得 DLLM 只是一个“看起来像扩散的 BERT”。更准确的判断是：
-
-**DLLM 是一种把语言生成从 next-token prediction 推向 iterative refinement 的范式。**
-
-这件事一旦成立，它就不一定要在所有任务上正面打败 AR 才有价值。它可以先在这些场景里赢：
+更准确的判断是：**DLLM 把语言生成从 next-token prediction 推向 iterative refinement。** 这不要求它在所有任务上超过 AR，而是要求它在某些任务上用可接受的质量换来更好的并行度、编辑能力或服务效率：
 
 - infilling 和局部编辑；
 - 代码补全与代码修复；
@@ -314,13 +310,7 @@ DLLM 的优势不应该被压缩成“更快”。更快当然重要，但现在
 - 高吞吐、短回答、可批量提交 token 的服务场景；
 - 多模态理解中需要双向对齐和局部重建的任务。
 
-长远看，最可能留下来的也许不是纯 AR 或纯 diffusion，而是中间形态：block-wise、set-wise、semi-autoregressive、cache-aware 的混合模型。它们会保留 AR 的系统优势，又吸收 diffusion 的并行修复和双向条件。
-
-如果用一句话总结 DLLM 的方法史，我会这样写：
-
-**早期 DLLM 在问“扩散能不能生成文本”；现在 DLLM 在问“语言模型能不能从写作机器变成编辑机器”。**
-
-这个问题值得继续追。
+比较 DLLM 与 AR 时，不能只看单次 accuracy 或平均生成速度。至少应固定输出长度和质量阈值，同时报告 denoising steps、block size、cache 命中方式、峰值显存、端到端延迟、吞吐和后训练成本。当前最值得继续验证的，正是 block-wise、semi-autoregressive、cache-aware 等混合形态能否在这些约束下稳定占优。
 
 ## 参考链接
 
