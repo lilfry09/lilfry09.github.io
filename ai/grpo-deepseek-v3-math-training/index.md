@@ -151,9 +151,7 @@ $$
 对回答中的第 $t$ 个 token：
 
 $$
-\ell^{\mathrm{old}}_{i,t}
-=
-\log\pi_{\theta_{\mathrm{old}}}
+\ell^{\mathrm{old}}_{i,t} = \log\pi_{\theta_{\mathrm{old}}}
 (o_{i,t}\mid q,o_{i,<t}).
 $$
 
@@ -196,9 +194,7 @@ GRPO 的关键做法是用同一道题生成的一组回答估计相对 baseline
 对同一道题的 $G$ 个 reward 做组内标准化：
 
 $$
-A_i
-=
-\frac{r_i-\bar r}{s_r+\delta},
+A_i = \frac{r_i-\bar r}{s_r+\delta},
 \qquad
 \bar r=\frac{1}{G}\sum_{j=1}^{G}r_j.
 $$
@@ -244,9 +240,7 @@ $$
 现在四份回答、四个 advantage 都已经固定。训练阶段不再重新采样，而是把题目和回答喂回当前 actor，得到每个实际生成 token 的当前 log-probability：
 
 $$
-\ell_{i,t}
-=
-\log\pi_\theta(o_{i,t}\mid q,o_{i,<t}).
+\ell_{i,t} = \log\pi_\theta(o_{i,t}\mid q,o_{i,<t}).
 $$
 
 因果注意力保证位置 $t$ 的输出只能使用题目和之前的前缀，不能偷看后面的 token。
@@ -288,15 +282,11 @@ def token_logps(model, input_ids, attention_mask):
 当前回答是旧策略采样出来的，但同一批回答可能被重复更新多次，因此需要比较当前策略是否已经偏离采样策略：
 
 $$
-\rho_{i,t}
-=
-\frac{
+\rho_{i,t} = \frac{
 \pi_\theta(o_{i,t}\mid q,o_{i,<t})
 }{
 \pi_{\theta_{\mathrm{old}}}(o_{i,t}\mid q,o_{i,<t})
-}
-=
-\exp\left(
+} = \exp\left(
 \ell_{i,t}-\ell^{\mathrm{old}}_{i,t}
 \right).
 $$
@@ -329,12 +319,8 @@ $$
 这里必须保留一个边界：逐 token 的 $\rho_{i,t}$ 不是整条回答分布变化的完整校正。整段回答的概率比是：
 
 $$
-\rho_i^{\mathrm{seq}}
-=
-\frac{\pi_\theta(o_i\mid q)}
-{\pi_{\mathrm{old}}(o_i\mid q)}
-=
-\prod_t\rho_{i,t}.
+\rho_i^{\mathrm{seq}} = \frac{\pi_\theta(o_i\mid q)}
+{\pi_{\mathrm{old}}(o_i\mid q)} = \prod_t\rho_{i,t}.
 $$
 
 逐 token clipped surrogate 与先把 ratio 连乘、再对整段 clip 并不等价。本文采用的是 DeepSeekMath 中适合解释 token 级梯度的形式，不能把它直接称为 DeepSeek-V3 未公开实现的逐行复现。
@@ -350,9 +336,7 @@ $$
 为了避免在同一批旧样本上沿同一方向更新过头，引入 $\epsilon$-clip：
 
 $$
-\ell^{\mathrm{policy}}_{i,t}
-=
--\min\left(
+\ell^{\mathrm{policy}}_{i,t} = -\min\left(
 \rho_{i,t}A_i,\;
 \operatorname{clip}
 (\rho_{i,t},1-\epsilon,1+\epsilon)A_i
@@ -375,31 +359,21 @@ clip 不会硬性保证 $\rho$ 永远落在 $[0.8,1.2]$ 内。它只是改变目
 参考模型对同一个 token 的 log-probability 为：
 
 $$
-\ell^{\mathrm{ref}}_{i,t}
-=
-\log\pi_{\mathrm{ref}}(o_{i,t}\mid q,o_{i,<t}).
+\ell^{\mathrm{ref}}_{i,t} = \log\pi_{\mathrm{ref}}(o_{i,t}\mid q,o_{i,<t}).
 $$
 
 一种常见的采样 KL 惩罚写作：
 
 $$
-\Delta_{i,t}
-=
-\ell^{\mathrm{ref}}_{i,t}-\ell_{i,t},
+\Delta_{i,t} = \ell^{\mathrm{ref}}_{i,t}-\ell_{i,t},
 \qquad
-k_{i,t}
-=
-\exp(\Delta_{i,t})-\Delta_{i,t}-1.
+k_{i,t} = \exp(\Delta_{i,t})-\Delta_{i,t}-1.
 $$
 
 于是单个 token 的总损失为：
 
 $$
-\ell_{i,t}
-=
-\ell^{\mathrm{policy}}_{i,t}
-+
-\beta k_{i,t}.
+\ell_{i,t} = \ell^{\mathrm{policy}}_{i,t} + \beta k_{i,t}.
 $$
 
 策略项推动模型朝高 reward 方向改变，KL 项限制这种改变不要过度偏离参考策略。
@@ -411,9 +385,7 @@ $$
 对一组回答，先按每个回答的有效 token 数归一化，再对回答取平均：
 
 $$
-L(\theta)
-=
-\frac{1}{G}
+L(\theta) = \frac{1}{G}
 \sum_{i=1}^{G}
 \frac{1}{|o_i|}
 \sum_{t=1}^{|o_i|}
@@ -441,9 +413,7 @@ $$
 由于 $A$ 和旧策略概率固定：
 
 $$
-\nabla_\theta\ell
-=
--A\rho\,
+\nabla_\theta\ell = -A\rho\,
 \nabla_\theta
 \log\pi_\theta(o_t\mid q,o_{<t}).
 $$
@@ -485,9 +455,7 @@ $$
 所以：
 
 $$
-\frac{\partial\ell}{\partial z_a}
-=
--A\rho(1-p_a).
+\frac{\partial\ell}{\partial z_a} = -A\rho(1-p_a).
 $$
 
 第一次更新前 $\rho=1$。对高 reward 回答中的某个 token：
@@ -499,9 +467,7 @@ $$
 则：
 
 $$
-\frac{\partial\ell}{\partial z_a}
-=
--1.5(1-0.6)=-0.6.
+\frac{\partial\ell}{\partial z_a} = -1.5(1-0.6)=-0.6.
 $$
 
 梯度下降会倾向于提高该 token 的 logit。对低 reward 回答中的某个 token：
@@ -513,9 +479,7 @@ $$
 则：
 
 $$
-\frac{\partial\ell}{\partial z_a}
-=
--(-0.5)(1-0.3)=0.35,
+\frac{\partial\ell}{\partial z_a} = -(-0.5)(1-0.3)=0.35,
 $$
 
 梯度下降会倾向于降低该 token 的 logit。

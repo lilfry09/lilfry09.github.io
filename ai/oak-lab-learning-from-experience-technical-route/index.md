@@ -123,7 +123,7 @@ OaK Architecture 的公开描述是：从经验中发现 temporal abstractions�
 
 为了理解 Oak Lab 的技术选择，可以把 NetworkIDBD 看成三条同时运行的状态更新：预测状态、参数状态和步长状态。下面不是 Oak Lab 公布的完整伪代码，而是根据 IDBD 家族的公开定义抽象出的最小执行图。
 
-设网络在时间步 $t$ 接收输入 $x_t$，输出 $hat y_t=f_{w_t}(x_t)$，即时损失为
+设网络在时间步 $t$ 接收输入 $x_t$，输出 $\hat y_t=f_{w_t}(x_t)$，即时损失为
 
 $$
 \ell_t=\frac{1}{2}(y_t-\hat y_t)^2.
