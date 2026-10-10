@@ -1,0 +1,15 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Reinforcement Learning - 标签 - lilfry's library</title><link>https://lilfry09.github.io/tags/reinforcement-learning/</link><description>Reinforcement Learning - 标签 - lilfry's library</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lilfry@sjtu.edu.cn (lilfry)</managingEditor><webMaster>lilfry@sjtu.edu.cn (lilfry)</webMaster><copyright>All rights reserved.</copyright><lastBuildDate>Sat, 10 Oct 2026 19:20:18 +0800</lastBuildDate><atom:link href="https://lilfry09.github.io/tags/reinforcement-learning/" rel="self" type="application/rss+xml"/><item><title>GRPO 训练 DeepSeek-V3 的数学能力：从 rollout 到参数更新</title><link>https://lilfry09.github.io/ai/grpo-deepseek-v3-math-training/</link><pubDate>Sat, 10 Oct 2026 19:20:18 +0800</pubDate><author>fry</author><guid>https://lilfry09.github.io/ai/grpo-deepseek-v3-math-training/</guid><description><![CDATA[<p>假设模型面对一道数学题，四次生成中只有一次答对。训练系统不会把标准答案当作交叉熵标签直接喂回模型，而是把四份回答放在一起比较：答对的回答得到正的相对优势，答错的回答得到负的相对优势，再通过当前模型对这些 token 的概率计算梯度。</p>
+<p>这就是本文要复原的核心链路：</p>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-text">
+        <span class="code-title"><i class="arrow fas fa-angle-right fa-fw" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h fa-fw" aria-hidden="true"></i></span>
+        <span class="copy" title="复制到剪贴板"><i class="far fa-copy fa-fw" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">prompt
+</span></span><span class="line"><span class="cl">  → 旧策略采样多份回答
+</span></span><span class="line"><span class="cl">  → reward 函数打分
+</span></span><span class="line"><span class="cl">  → 组内标准化得到 advantage
+</span></span><span class="line"><span class="cl">  → 当前策略重新计算 log-probability
+</span></span><span class="line"><span class="cl">  → ratio + clip + KL 构成 loss
+</span></span><span class="line"><span class="cl">  → backward() 更新 actor 参数</span></span></code></pre></div></div>
+<p>本文只讨论<strong>可验证最终答案的数学任务</strong>，并使用教学设定解释机制。DeepSeek-V3 的完整训练还包含预训练、SFT、代码与写作等任务，以及从 DeepSeek-R1 系列蒸馏推理能力的后训练流程；下面的数学例子不是官方训练配置的逐项复现。<a href="https://arxiv.org/html/2412.19437v2#S5" target="_blank" rel="noopener noreffer ">DeepSeek-V3 技术报告，第 5 节</a></p>]]></description></item></channel></rss>
