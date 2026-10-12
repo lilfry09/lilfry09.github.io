@@ -31,7 +31,7 @@ FL(p_t) = -\alpha_t(1 - p_t)^\gamma \log(p_t)
 \alpha = 0.25
 \]<p>如果少数类仍然学得不好，可以适当提高少数类权重。如果模型训练不稳定，或者整体性能下降，可以降低 \(\gamma\)，例如尝试 \(\gamma = 1\)。</p><p>对于多分类任务，Focal Loss 也可以扩展使用。做法通常是在 softmax 之后取真实类别对应的概率，然后套用类似公式：</p>\[
 FL = -\alpha_y(1 - p_y)^\gamma \log(p_y)
-\]<p>其中 \(p_y\) 是模型对真实类别 \(y\) 的预测概率，\(\alpha_y\) 是该类别对应的权重。</p><h2 id=pytorch-中的-focal-loss-示例>PyTorch 中的 Focal Loss 示例</h2><p>下面是一个适用于二分类任务的 PyTorch 实现。输入一般是 logits，也就是模型最后一层没有经过 sigmoid 的输出。</p><div class="code-block code-line-numbers" style="counter-reset:code-block 0"><div class="code-header language-python"><span class=code-title><i class="arrow fas fa-angle-right fa-fw" aria-hidden=true></i></span>
+\]<p>其中 \(p_y\) 是模型对真实类别 \(y\) 的预测概率，\(\alpha_y\) 是该类别对应的权重。</p><h2 id=pytorch-中的-focal-loss-示例>PyTorch 中的 Focal Loss 示例</h2><p>下面是一个适用于二分类任务的 PyTorch 实现。输入一般是 logits，也就是模型最后一层没有经过 sigmoid 的输出。</p><div class="code-block code-line-numbers open" style="counter-reset:code-block 0"><div class="code-header language-python"><span class=code-title><i class="arrow fas fa-angle-right fa-fw" aria-hidden=true></i></span>
 <span class=ellipses><i class="fas fa-ellipsis-h fa-fw" aria-hidden=true></i></span>
 <span class=copy title=复制到剪贴板><i class="far fa-copy fa-fw" aria-hidden=true></i></span></div><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>import</span> <span class=nn>torch</span>
 </span></span><span class=line><span class=cl><span class=kn>import</span> <span class=nn>torch.nn</span> <span class=k>as</span> <span class=nn>nn</span>
