@@ -55,8 +55,7 @@ U_z^{(t)} =
 \left\langle
 \phi^{(t,r)}(z),
 \psi_{\text{proxy}}^{(t,r)}
-\right\rangle
--
+\right\rangle -
 \eta_t^2 \sum_r
 \left\langle
 \phi^{(t,r)}(z),
