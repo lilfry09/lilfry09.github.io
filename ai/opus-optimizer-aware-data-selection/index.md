@@ -50,8 +50,7 @@ OPUS 先构造一个 proxy，表示模型希望改善的目标方向。然后在
 在论文的低维投影表示中，单条候选样本的 utility 可以写成：
 
 $$
-U_z^{(t)}
-=
+U_z^{(t)} =
 \eta_t \sum_r
 \left\langle
 \phi^{(t,r)}(z),
@@ -123,8 +122,7 @@ OPUS 用了两层压缩。
 对线性层 $W_r$，单个样本的梯度可以写成输入激活和反向误差信号的外积：
 
 $$
-\nabla_{W_r}\mathcal{L}(z)
-=
+\nabla_{W_r}\mathcal{L}(z) =
 a_r^{(z)} \otimes b_r^{(z)}
 $$
 
@@ -135,8 +133,7 @@ $$
 utility 最后需要的是不同方向之间的内积，不是高维梯度本身。OPUS 因而用 CountSketch 把有效更新压到低维空间：
 
 $$
-\phi^{(t,r)}(z)
-=
+\phi^{(t,r)}(z) =
 \Pi_r\left(P_t\nabla_{W_r}\mathcal{L}(z)\right)
 $$
 
@@ -185,8 +182,7 @@ OPUS 最有价值的地方，不是又发明了一个质量分类器，而是把
 这三者连起来以后，数据就不再有一个脱离训练过程的固定“质量分”。它的价值变成了一个条件量：
 
 $$
-\text{value}(z)
-=
+\text{value}(z) =
 f(z,\theta_t,\text{optimizer state},\text{proxy},\hat B_t)
 $$
 
